@@ -1,0 +1,17 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.snap2pay.webservice.mapper;
+
+/**
+ *
+ * @author keerthanathangaraju
+ */
+public interface BeanMapper {
+    String BEAN_REST_ACTION_S2P = "RestS2PAction";
+    String BEAN_REST_CONTROLLER_S2P = "RestS2PController";
+    String BEAN_SHELF_VIST_DAO = "ShelfVisitDAOImpl";
+    
+}
