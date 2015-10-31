@@ -5,17 +5,20 @@
  */
 
 package com.snap2pay.webservice.mapper;
+
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
+
 /**
- *
  * @author keerthanathangaraju
  */
 public interface ParamMapper {
-    String CATEGORY_ID    =  "categoryId";
-	String LATITUDE =  "latitude";
-	String LONGITUDE =  "longitude";
-	String USER_ID   =  "userId";
-	
-	String TIMESTAMP = "timestamp";
+    String HOST_ID="hostId";
+    String IMAGEUUID="imageUUID";
+    String CATEGORY_ID = "categoryId";
+    String LATITUDE = "latitude";
+    String LONGITUDE = "longitude";
+    String USER_ID = "userId";
+
+    String TIMESTAMP = "timestamp";
 }

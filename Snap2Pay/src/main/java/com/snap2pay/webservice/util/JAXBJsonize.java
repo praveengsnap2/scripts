@@ -34,67 +34,64 @@ import com.sun.jersey.json.impl.JSONMarshaller;
 
 public class JAXBJsonize {
 
-	public static String convertToJson(Object c) {
-		StringWriter sw = null;
-		try {
-			JAXBContext context = JSONJAXBContext.newInstance(c.getClass());
+    public static String convertToJson(Object c) {
+        StringWriter sw = null;
+        try {
+            JAXBContext context = JSONJAXBContext.newInstance(c.getClass());
 
-			sw = new StringWriter();
-                        com.sun.jersey.json.impl.JSONMarshaller marshaller = new com.sun.jersey.json.impl.JSONMarshaller(context,
-                                JSONConfiguration.DEFAULT);
+            sw = new StringWriter();
+            com.sun.jersey.json.impl.JSONMarshaller marshaller = new com.sun.jersey.json.impl.JSONMarshaller(context,
+                    JSONConfiguration.DEFAULT);
 
-                        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-                        marshaller.setJsonEnabled(true);
-                        marshaller.marshal(c, sw);
- 
-		} catch (Exception e) {
-			return e.getMessage();
-		}
+            marshaller.setJsonEnabled(true);
+            marshaller.marshal(c, sw);
 
-		return sw.toString();
-	}
-	
-	public static Object convertToJavaObject(String jsonString, Class clazz) {
+        } catch (Exception e) {
+            return e.getMessage();
+        }
 
-		Object out = null;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);	
-			InputStream is = new ByteArrayInputStream(jsonString.getBytes());
+        return sw.toString();
+    }
 
-			out = mapper.readValue(is, clazz);
+    public static Object convertToJavaObject(String jsonString, Class clazz) {
 
-			return out;
+        Object out = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+            InputStream is = new ByteArrayInputStream(jsonString.getBytes());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
-		}
+            out = mapper.readValue(is, clazz);
 
-		return out;
-	}
-	
-	public static Object convertToJavaObjectJAXB(String jsonString, Class clazz)
-	{
-		Object out = null;
-		try
-		{
-		JAXBContext jc = JAXBContext.newInstance(clazz);
-	   	 System.out.println("class="+clazz);
-	        JSONObject obj = new JSONObject(jsonString.toString());
-	        Configuration config = new Configuration();
-	        MappedNamespaceConvention con = new MappedNamespaceConvention(config);
-	        XMLStreamReader xmlStreamReader = new MappedXMLStreamReader(obj, con);
-	 
-	        Unmarshaller unmarshaller = jc.createUnmarshaller();
-	         out = unmarshaller.unmarshal(xmlStreamReader);
-	        System.out.println("jsonString="+jsonString);
-	        System.out.println("classObject="+out.toString());
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	        return out;
-	}
+            return out;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        }
+
+        return out;
+    }
+
+    public static Object convertToJavaObjectJAXB(String jsonString, Class clazz) {
+        Object out = null;
+        try {
+            JAXBContext jc = JAXBContext.newInstance(clazz);
+            System.out.println("class=" + clazz);
+            JSONObject obj = new JSONObject(jsonString.toString());
+            Configuration config = new Configuration();
+            MappedNamespaceConvention con = new MappedNamespaceConvention(config);
+            XMLStreamReader xmlStreamReader = new MappedXMLStreamReader(obj, con);
+
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            out = unmarshaller.unmarshal(xmlStreamReader);
+            System.out.println("jsonString=" + jsonString);
+            System.out.println("classObject=" + out.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return out;
+    }
 }

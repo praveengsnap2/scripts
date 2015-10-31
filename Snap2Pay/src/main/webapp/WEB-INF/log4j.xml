@@ -9,16 +9,16 @@
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d] [%p] [%t] [%c:%F:%L] - %m%n"/>
         </layout>
-    </appender> 
-  
+    </appender>
+
     <category name="s2p">
-        <priority value ="debug" />
-        <appender-ref ref="Snap2Pay" />
+        <priority value="debug"/>
+        <appender-ref ref="Snap2Pay"/>
     </category>
-	
+
     <root>
         <level value="info"/>
         <appender-ref ref="Snap2Pay"/>
     </root>
-	
+
 </log4j:configuration>

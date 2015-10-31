@@ -5,39 +5,73 @@
  */
 
 package com.snap2pay.webservice.model;
+
 import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.mongodb.gridfs.GridFS;
 
 /**
- *
  * @author keerthanathangaraju
  */
 @Document
-public class ShelfVisit {
+public class InputObject {
 
     @Id
     private String visitId;
-    
+    private String hostId;
     private Date visitDate;
-    
     private String shopId;
-    
-    private String shelfId;
-    
     private String categoryId;
-    
     private String userId;
-    
-    //Might change to GRIDFS
-    private String imageUrl;
-    
-//    private GridFS image;
-    
+    private String timeStamp;
+    private String imageFilePath;
+    private String imageUUID;
     private String latitude;
-    
     private String longitude;
+    private Integer responseCode;
+    private String responseMessage;
+
+
+    public String getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
+    }
+
+    public String getImageUUID() {
+        return imageUUID;
+    }
+
+    public void setImageUUID(String imageUUID) {
+        this.imageUUID = imageUUID;
+    }
+
+    public Integer getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(Integer responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public void setResponseMessage(String responseMessage) {
+        this.responseMessage = responseMessage;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public String getVisitId() {
         return visitId;
@@ -63,14 +97,6 @@ public class ShelfVisit {
         this.shopId = shopId;
     }
 
-    public String getShelfId() {
-        return shelfId;
-    }
-
-    public void setShelfId(String shelfId) {
-        this.shelfId = shelfId;
-    }
-
     public String getCategoryId() {
         return categoryId;
     }
@@ -87,12 +113,12 @@ public class ShelfVisit {
         this.userId = userId;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageFilePath() {
+        return imageFilePath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageFilePath(String imageFilePath) {
+        this.imageFilePath = imageFilePath;
     }
 
 //    public GridFS getImage() {
@@ -118,5 +144,5 @@ public class ShelfVisit {
     public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
-    
+
 }
