@@ -40,7 +40,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         imageStore.setLatitude(inputObject.getLatitude());
         imageStore.setLongitude(inputObject.getLongitude());
         imageStore.setTimeStamp(inputObject.getTimeStamp());
-        imageStore.setStatus("Stored");
+        imageStore.setStoreId(storeMasterDao.getStoreId(inputObject.getLongitude(),inputObject.getLatitude()));
+        imageStore.setStatus("new");
         processImageDao.insert(imageStore);
 
     }

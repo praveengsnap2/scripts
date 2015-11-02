@@ -10,6 +10,8 @@ import com.snap2pay.webservice.model.InputObject;
 import com.snap2pay.webservice.model.ShelfAnalysisInput;
 import com.snap2pay.webservice.rest.action.RestS2PAction;
 
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -144,7 +146,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getJob")
-    public Snap2PayOutput getJob(
+    public void getJob(
             @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -152,12 +154,28 @@ public class RestS2PController {
         LOGGER.info("---------------Controller Starts----------------\n");
         LOGGER.info("Inside S2P/getJob");
         try {
-            Snap2PayOutput rio;
             InputObject inputObject = new InputObject();
 
             inputObject.setHostId(hostId);
 
-            return restS2PAction.getJob(inputObject);
+            LinkedHashMap<String, String>result= restS2PAction.getJob(inputObject);
+            //attaching the image
+
+            File f = new File(result.get("imageFilePath"));
+            FileInputStream inStream = new FileInputStream(f);
+
+            response.setContentLength((int) f.length()+1024);
+            response.setHeader("Content-Disposition","attachment; filename="+result.get("imageUUID"));
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+
+            while ((bytesRead = inStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inStream.close();
+            outputStream.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,7 +189,6 @@ public class RestS2PController {
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends----------------\n");
-            return rio;
         }
     }
 

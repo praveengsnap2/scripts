@@ -14,6 +14,7 @@ import com.snap2pay.webservice.service.ProcessImageService;
 import com.snap2pay.webservice.service.ShelfAnalysisService;
 import com.snap2pay.webservice.util.Snap2PayOutput;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,6 +27,9 @@ import org.springframework.context.ApplicationContext;
         import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
         import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 
 /**
  * @author keerthanathangaraju
@@ -70,7 +74,7 @@ public class RestS2PAction {
         return reportIO;
     }
 
-    public Snap2PayOutput getJob(InputObject inputObject) {
+    public LinkedHashMap<String,String> getJob(InputObject inputObject) {
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
 
         LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
@@ -82,7 +86,8 @@ public class RestS2PAction {
         reportInput.put("hostId", inputObject.getHostId());
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
-        return reportIO;
+
+        return result;
     }
 
     public Snap2PayOutput storeShelfAnalysis(ShelfAnalysisInput shelfAnalysisInput){
@@ -130,12 +135,14 @@ public class RestS2PAction {
                 "base-spring-ctx.xml");
         RestS2PAction restS2PAction = (RestS2PAction) context.getBean("RestS2PAction");
         LOGGER.info("Checking logger");
+
+
         InputObject inputObject = new InputObject();
         inputObject.setCategoryId("test");
-        inputObject.setLatitude("0000.0000");
-        inputObject.setLongitude("0000.0000");
+        inputObject.setLatitude("45.56531392");
+        inputObject.setLongitude("-122.8443362");
         inputObject.setTimeStamp("2008-01-01 00:00:01");
         inputObject.setUserId("agsachin");
-        restS2PAction.saveImage(inputObject);
+        System.out.println(restS2PAction.saveImage(inputObject));
     }
 }

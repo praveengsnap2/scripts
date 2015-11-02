@@ -94,6 +94,14 @@ public class MyHashMapType {
     public MyHashMapType() {
         mapProperty = new LinkedHashMap<String, String>();
     }
+
+
+    @Override
+    public String toString() {
+        return "MyHashMapType{" +
+                "mapProperty=" + mapProperty +
+                '}';
+    }
 }
 
 

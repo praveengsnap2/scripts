@@ -21,19 +21,8 @@ public class ImageStore {
         super();
     }
 
-    public ImageStore(String storeId, String imageUUID, String userId, String imageFilePath, String categoryId, String latitude, String longitude, String timeStamp,String status) {
+    public ImageStore(String imageUUID, String userId, String imageFilePath, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String status) {
         this.storeId = storeId;
-        this.imageUUID = imageUUID;
-        this.userId = userId;
-        this.ImageFilePath = imageFilePath;
-        this.categoryId = categoryId;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.timeStamp = timeStamp;
-        this.status=status;
-    }
-
-    public ImageStore(String imageUUID, String userId, String imageFilePath, String categoryId, String latitude, String longitude, String timeStamp, String status) {
         this.imageUUID = imageUUID;
         this.userId = userId;
         this.ImageFilePath = imageFilePath;

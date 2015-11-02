@@ -68,6 +68,12 @@ public class Snap2PayOutput {
         LOGGER.log(Level.DEBUG, "I reached default no-args constructor of Class Snap2PayOutput.");
     }
 
-
+    @Override
+    public String toString() {
+        return "Snap2PayOutput{" +
+                "metaDetail=" + metaDetail +
+                ", row=" + row +
+                '}';
+    }
 }
 

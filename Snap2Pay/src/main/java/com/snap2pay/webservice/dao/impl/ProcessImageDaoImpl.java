@@ -33,7 +33,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void insert(ImageStore imageStore) {
-        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -46,7 +46,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(5, imageStore.getLatitude());
             ps.setString(6, imageStore.getLongitude());
             ps.setString(7, imageStore.getTimeStamp());
-            ps.setString(8, imageStore.getStatus());
+            ps.setString(8, imageStore.getStoreId());
+            ps.setString(9, imageStore.getStatus());
             ps.executeUpdate();
             ps.close();
 
@@ -100,34 +101,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     }
 
-    @Override
-    public void updateStoreID(String imageUUID, String storeId) {
-        String sql = "UPDATE ImageStore SET storeId = ? WHERE imageUUID = ? ";
-        Connection conn = null;
-
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, storeId);
-            ps.setString(2, imageUUID);
-            ps.executeUpdate();
-            ps.close();
-
-        } catch (SQLException e) {
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-                    LOGGER.error("exception", e);
-                }
-            }
-        }
-    }
 
     @Override
     public ImageStore getImageByStatus(String hostId,String status) {
@@ -140,10 +113,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, hostId);
             ps.setString(2, status);
-            ps.setMaxRows(1);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("Status"));
+                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("UserId"), rs.getString("ImageFilePath"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("Status"));
             }
             rs.close();
             ps.close();
@@ -174,7 +146,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             int numberOfRows=0;
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(2,status);
+            ps.setString(1,status);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 numberOfRows = rs.getInt(1);
