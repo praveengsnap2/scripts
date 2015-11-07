@@ -7,40 +7,50 @@ import java.util.List;
  */
 public class ShelfAnalysisInput {
 
-    String imageUUID;
-    String storeId;
-    String categoryId;
-    List<Skus> skus;
+  String imageUUID;
+  String storeId;
+  String categoryId;
+  List<Skus> skus;
 
-    public String getImageUUID() {
-        return imageUUID;
-    }
+  public String getImageUUID() {
+    return imageUUID;
+  }
 
-    public void setImageUUID(String imageUUID) {
-        this.imageUUID = imageUUID;
-    }
+  public void setImageUUID(String imageUUID) {
+    this.imageUUID = imageUUID;
+  }
 
-    public String getStoreId() {
-        return storeId;
-    }
+  public String getStoreId() {
+    return storeId;
+  }
 
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
+  public void setStoreId(String storeId) {
+    this.storeId = storeId;
+  }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
+  public String getCategoryId() {
+    return categoryId;
+  }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
+  public void setCategoryId(String categoryId) {
+    this.categoryId = categoryId;
+  }
 
-    public List<Skus> getSkus() {
-        return skus;
-    }
+  public List<Skus> getSkus() {
+    return skus;
+  }
 
-    public void setSkus(List<Skus> skus) {
-        this.skus = skus;
-    }
+  public void setSkus(List<Skus> skus) {
+    this.skus = skus;
+  }
+
+  @Override
+  public String toString() {
+    return "ShelfAnalysisInput{" +
+      "imageUUID='" + imageUUID + '\'' +
+      ", storeId='" + storeId + '\'' +
+      ", categoryId='" + categoryId + '\'' +
+      ", skus=" + skus +
+      '}';
+  }
 }

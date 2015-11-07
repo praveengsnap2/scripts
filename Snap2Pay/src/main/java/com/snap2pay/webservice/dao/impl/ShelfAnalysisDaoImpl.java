@@ -21,81 +21,86 @@ import java.sql.SQLException;
 @Scope("prototype")
 public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+  private static Logger LOGGER = Logger.getLogger("s2p");
 
-    @Autowired
-    private DataSource dataSource;
+  @Autowired
+  private DataSource dataSource;
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+  public void setDataSource(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
 
-    @Override
-    public void storeShelfAnalysis(ShelfAnalysis shelfAnalysis) {
-        String sql = "INSERT INTO ShelfAnalysis (imageUUID,upc,pog,osa,facings,priceLabel,storeId,categoryId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Connection conn = null;
+  @Override
+  public void storeShelfAnalysis(ShelfAnalysis shelfAnalysis) {
+    LOGGER.info("---------------ShelfAnalysisDaoImpl Starts storeShelfAnalysis----------------\n");
+    String sql = "INSERT INTO ShelfAnalysis (imageUUID,upc,pog,osa,facings,priceLabel,storeId,categoryId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    Connection conn = null;
 
+    try {
+      conn = dataSource.getConnection();
+      PreparedStatement ps = conn.prepareStatement(sql);
+      ps.setString(1, shelfAnalysis.getImageUUID());
+      ps.setString(2, shelfAnalysis.getUpc());
+      ps.setString(3, shelfAnalysis.getPog());
+      ps.setString(4, shelfAnalysis.getOsa());
+      ps.setString(5, shelfAnalysis.getFacings());
+      ps.setString(6, shelfAnalysis.getPriceLabel());
+      ps.setString(7, shelfAnalysis.getStoreId());
+      ps.setString(8, shelfAnalysis.getCategoryId());
+      ps.executeUpdate();
+      ps.close();
+      LOGGER.info("---------------ShelfAnalysisDaoImpl Ends storeShelfAnalysis----------------\n");
+
+    } catch (SQLException e) {
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
+
+    } finally {
+      if (conn != null) {
         try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, shelfAnalysis.getImageUUID());
-            ps.setString(2, shelfAnalysis.getUpc());
-            ps.setString(3, shelfAnalysis.getPog());
-            ps.setString(4, shelfAnalysis.getOsa());
-            ps.setString(5, shelfAnalysis.getFacings());
-            ps.setString(6, shelfAnalysis.getPriceLabel());
-            ps.setString(7, shelfAnalysis.getStoreId());
-            ps.setString(8, shelfAnalysis.getCategoryId());
-            ps.executeUpdate();
-            ps.close();
-
+          conn.close();
         } catch (SQLException e) {
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-                    LOGGER.error("exception", e);
-                }
-            }
+          LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+          LOGGER.error("exception", e);
         }
+      }
     }
+  }
 
-    @Override
-    public ShelfAnalysis getShelfAnalysis(String imageUUID) {
-        String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
+  @Override
+  public ShelfAnalysis getShelfAnalysis(String imageUUID) {
+    LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysis----------------\n");
+    String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
 
-        Connection conn = null;
-        ShelfAnalysis shelfAnalysis = null;
+    Connection conn = null;
+    ShelfAnalysis shelfAnalysis = null;
+    try {
+      conn = dataSource.getConnection();
+      PreparedStatement ps = conn.prepareStatement(sql);
+      ps.setString(1, imageUUID);
+      ResultSet rs = ps.executeQuery();
+      if (rs.next()) {
+        shelfAnalysis = new ShelfAnalysis(rs.getString("imageUUID"), rs.getString("upc"), rs.getString("pog"), rs.getString("osa"), rs.getString("facings"), rs.getString("priceLabel"), rs.getString("storeId"), rs.getString("categoryId"));
+      }
+      rs.close();
+      ps.close();
+      LOGGER.info("---------------ShelfAnalysisDaoImpl Ends getShelfAnalysis----------------\n");
+
+      return shelfAnalysis;
+    } catch (SQLException e) {
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
+      throw new RuntimeException(e);
+    } finally {
+      if (conn != null) {
         try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, imageUUID);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                shelfAnalysis = new ShelfAnalysis(rs.getString("imageUUID"),rs.getString("upc"),rs.getString("pog"),rs.getString("osa"),rs.getString("facings"),rs.getString("priceLabel"),rs.getString("storeId"),rs.getString("categoryId"));
-            }
-            rs.close();
-            ps.close();
-            return shelfAnalysis;
+          conn.close();
         } catch (SQLException e) {
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-                    LOGGER.error("exception", e);
-                }
-            }
+          LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+          LOGGER.error("exception", e);
         }
+      }
     }
+  }
 }

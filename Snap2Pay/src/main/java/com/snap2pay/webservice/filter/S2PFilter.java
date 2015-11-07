@@ -21,19 +21,19 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class S2PFilter implements Filter {
 
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
+  public void init(FilterConfig filterConfig) throws ServletException {
+  }
 
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if (request != null && request.getParameterValues("format") != null && request.getParameterValues("format")[0] != null && request.getParameterValues("format")[0].equalsIgnoreCase("json")) {
+  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+    HttpServletRequest request = (HttpServletRequest) servletRequest;
+    HttpServletResponse response = (HttpServletResponse) servletResponse;
+    if (request != null && request.getParameterValues("format") != null && request.getParameterValues("format")[0] != null && request.getParameterValues("format")[0].equalsIgnoreCase("json")) {
 //			format = request.getParameterValues("format")[0].toString();
-            response.setContentType("application/json");
-        }
+      response.setContentType("application/json");
     }
+  }
 
-    public void destroy() {
-    }
+  public void destroy() {
+  }
 
 }

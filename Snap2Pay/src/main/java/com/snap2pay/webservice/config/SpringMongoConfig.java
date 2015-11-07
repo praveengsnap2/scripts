@@ -20,14 +20,14 @@ import com.mongodb.MongoClient;
 @Configuration
 public class SpringMongoConfig extends AbstractMongoConfiguration {
 
-    @Override
-    public String getDatabaseName() {
-        return "Snap2Pay";
-    }
+  @Override
+  public String getDatabaseName() {
+    return "Snap2Pay";
+  }
 
-    @Override
-    @Bean
-    public Mongo mongo() throws Exception {
-        return new MongoClient("127.0.0.1");
-    }
+  @Override
+  @Bean
+  public Mongo mongo() throws Exception {
+    return new MongoClient("127.0.0.1");
+  }
 }

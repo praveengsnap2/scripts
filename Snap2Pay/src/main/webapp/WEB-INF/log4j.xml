@@ -1,6 +1,6 @@
 <log4j:configuration>
     <appender name="Snap2Pay" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/Users/keerthanathangaraju/logs/Snap2Pay.log"/>
+        <param name="file" value="/tmp/logs/Snap2Pay.log"/>
 
         <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Pay.log"/>-->
         <param name="DatePattern" value="'.' yyyy-MM-dd"/>

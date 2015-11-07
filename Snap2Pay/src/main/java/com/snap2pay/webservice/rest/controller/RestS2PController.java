@@ -13,6 +13,7 @@ import com.snap2pay.webservice.rest.action.RestS2PAction;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.util.*;
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DefaultValue;
@@ -22,6 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -36,7 +38,9 @@ import com.snap2pay.webservice.util.Snap2PayOutput;
 import java.io.File;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.core.Request;
 import javax.xml.bind.JAXBElement;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -50,249 +54,269 @@ import org.springframework.beans.factory.annotation.Value;
 @Scope("request")
 public class RestS2PController {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
-    @Autowired
-    @Qualifier(BeanMapper.BEAN_REST_ACTION_S2P)
-    private RestS2PAction restS2PAction;
+  private static Logger LOGGER = Logger.getLogger("s2p");
 
-    @Value(value = "{appProp.filePath}")
-    private String filePath;
+  @Autowired
+  @Qualifier(BeanMapper.BEAN_REST_ACTION_S2P)
+  private RestS2PAction restS2PAction;
 
-    @Autowired
-    ServletContext servletContext;
+  @Value(value = "{appProp.filePath}")
+  private String filePath;
 
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/saveImage")
-    public Snap2PayOutput saveImage(
-            @QueryParam(ParamMapper.CATEGORY_ID) @DefaultValue("-9") String categoryId,
-            @QueryParam(ParamMapper.LATITUDE) @DefaultValue("-9") String latitude,
-            @QueryParam(ParamMapper.LONGITUDE) @DefaultValue("-9") String longitude,
-            @QueryParam(ParamMapper.TIMESTAMP) @DefaultValue("-9") String timeStamp,
-            @QueryParam(ParamMapper.USER_ID) @DefaultValue("N/A") String userId,
-            @Context HttpServletRequest request,
-            @Context HttpServletResponse response
-    ) {
-        LOGGER.info("---------------Controller Starts----------------\n");
-        LOGGER.info("Inside S2P/saveImage ");
-        try {
-            UUID uniqueKey = UUID.randomUUID();
-            InputObject inputObject = new InputObject();
-            inputObject.setImageUUID(uniqueKey.toString());
-            inputObject.setCategoryId(categoryId);
-            inputObject.setLatitude(latitude);
-            inputObject.setLongitude(longitude);
-            inputObject.setTimeStamp(timeStamp);
-            inputObject.setUserId(userId);
+  @Autowired
+  ServletContext servletContext;
 
-
+  @POST
+  @Produces({MediaType.APPLICATION_JSON})
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Path("/saveImage")
+  public Snap2PayOutput saveImage(
+    @QueryParam(ParamMapper.CATEGORY_ID) @DefaultValue("-9") String categoryId,
+    @QueryParam(ParamMapper.LATITUDE) @DefaultValue("-9") String latitude,
+    @QueryParam(ParamMapper.LONGITUDE) @DefaultValue("-9") String longitude,
+    @QueryParam(ParamMapper.TIMESTAMP) @DefaultValue("-9") String timeStamp,
+    @QueryParam(ParamMapper.USER_ID) @DefaultValue("N/A") String userId,
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+  ) {
+    LOGGER.info("---------------Controller Starts saveImage----------------\n");
+    try {
+      UUID uniqueKey = UUID.randomUUID();
+      InputObject inputObject = new InputObject();
+      inputObject.setImageUUID(uniqueKey.toString());
+      inputObject.setCategoryId(categoryId);
+      inputObject.setLatitude(latitude);
+      inputObject.setLongitude(longitude);
+      inputObject.setTimeStamp(timeStamp);
+      inputObject.setUserId(userId);
 
 
-                //Create a factory for disk-based file items
-            DiskFileItemFactory factory = new DiskFileItemFactory();
+      //Create a factory for disk-based file items
+      DiskFileItemFactory factory = new DiskFileItemFactory();
 
-                // Configure a repository (to ensure a secure temp location is used)
-            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            factory.setRepository(repository);
+      // Configure a repository (to ensure a secure temp location is used)
+      File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+      factory.setRepository(repository);
 
-                // Create a new file upload handler
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            String result = "";
-                // Parse the request
-            List<FileItem> items = upload.parseRequest(request);
-                // Process the uploaded items
-            Iterator<FileItem> iter = items.iterator();
-            while (iter.hasNext()) {
-                FileItem item = iter.next();
-                String name = item.getFieldName();
-                String value = item.getString();
-                if (item.isFormField()) {
-                    LOGGER.info("Form field " + name + " with value "
-                            + value + " detected.");
-                } else {
-                    File uploadedFile = new File( "/usr/share/s2pImages/"+userId + "/" + uniqueKey.toString());
-                    //File uploadedFile = new File("/Users/sachin/s2pImages/" + userId + "/" + item.getName());
+      // Create a new file upload handler
+      ServletFileUpload upload = new ServletFileUpload(factory);
+      String result = "";
+      // Parse the request
+      List<FileItem> items = upload.parseRequest(request);
+      // Process the uploaded items
+      Iterator<FileItem> iter = items.iterator();
+      while (iter.hasNext()) {
+        FileItem item = iter.next();
+        String name = item.getFieldName();
+        String value = item.getString();
+        if (item.isFormField()) {
+          LOGGER.info("Form field " + name + " with value "
+            + value + " detected.");
+        } else {
+          File uploadedFile = new File("/usr/share/s2pImages/" + userId + "/" + uniqueKey.toString());
+          //File uploadedFile = new File("/Users/sachin/s2pImages/" + userId + "/" + item.getName());
 
-                    if (!uploadedFile.exists()) {
-                        uploadedFile.getParentFile().mkdirs();
-                    }
-                    item.write(uploadedFile);
-                    inputObject.setImageFilePath(uploadedFile.getAbsolutePath());
+          if (!uploadedFile.exists()) {
+            uploadedFile.getParentFile().mkdirs();
+          }
+          item.write(uploadedFile);
+          inputObject.setImageFilePath(uploadedFile.getAbsolutePath());
 
-                    result = ("File field " + name + " with file name "
-                            + item.getName() + " detected.");
-                    LOGGER.info(result);
-                }
-            }
-            return restS2PAction.saveImage(inputObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
-
-            inputList.put("userId", userId);
-            inputList.put("poutstatus", "-5");
-
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends----------------\n");
-            return rio;
+          result = ("File field " + name + " with file name "
+            + item.getName() + " detected.");
+          LOGGER.info(result);
         }
+      }
+      LOGGER.info("---------------Controller Ends saveImage----------------\n");
+
+      return restS2PAction.saveImage(inputObject);
+    } catch (Exception e) {
+      e.printStackTrace();
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
+
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
+
+      inputList.put("userId", userId);
+      inputList.put("poutstatus", "-5");
+
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends----------------\n");
+      return rio;
     }
+  }
 
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/getJob")
-    public void getJob(
-            @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
-            @Context HttpServletRequest request,
-            @Context HttpServletResponse response
-    ) {
-        LOGGER.info("---------------Controller Starts----------------\n");
-        LOGGER.info("Inside S2P/getJob");
-        try {
-            InputObject inputObject = new InputObject();
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Path("/getJob")
+  public Snap2PayOutput getJob(
+    @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+  ) {
+    LOGGER.info("---------------Controller Starts getJob----------------\n");
+    try {
+      InputObject inputObject = new InputObject();
+      inputObject.setHostId(hostId);
 
-            inputObject.setHostId(hostId);
+      LOGGER.info("---------------Controller Ends getJob----------------\n");
+      return restS2PAction.getJob(inputObject);
 
-            LinkedHashMap<String, String>result= restS2PAction.getJob(inputObject);
-            //attaching the image
+    } catch (Exception e) {
+      e.printStackTrace();
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
 
-            File f = new File(result.get("imageFilePath"));
-            FileInputStream inStream = new FileInputStream(f);
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
+      inputList.put("hostId", hostId);
+      inputList.put("poutstatus", "-5");
 
-            response.setContentLength((int) f.length()+1024);
-            response.setHeader("Content-Disposition","attachment; filename="+result.get("imageUUID"));
-            OutputStream outputStream = response.getOutputStream();
-            byte[] buffer = new byte[4096];
-            int bytesRead = -1;
-
-            while ((bytesRead = inStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-
-            inStream.close();
-            outputStream.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
-
-           inputList.put("poutstatus", "-5");
-
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends----------------\n");
-        }
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends getJob----------------\n");
+      return rio;
     }
+  }
 
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/storeShelfAnalysis")
-    public Snap2PayOutput storeShelfAnalysis(
-            JAXBElement<ShelfAnalysisInput>p,
-            @Context HttpServletRequest request,
-            @Context HttpServletResponse response
-    ) {
-        LOGGER.info("---------------Controller Starts----------------\n");
-        LOGGER.info("Inside S2P/storeShelfAnalysis");
-        try {
+  @GET
+  @Produces({"image/jpeg", "image/png"})
+  @Path("/getImage")
+  public Response getImage(
+    @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+    @QueryParam(ParamMapper.USER_ID) @DefaultValue("-9") String userId,
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+  ) {
+    LOGGER.info("---------------Controller Starts getImage----------------\n");
+    try {
 
-            ShelfAnalysisInput shelfAnalysisInput=p.getValue();
+      File f = new File("/usr/share/s2pImages/" + userId + "/" + imageUUID);
+      Response.ResponseBuilder r = Response.ok((Object) f);
+      r.header("Content-Disposition", "attachment; filename=" + imageUUID);
+      LOGGER.info("---------------Controller Ends getImage----------------\n");
+      return r.build();
 
+    } catch (Exception e) {
+      e.printStackTrace();
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
 
-            return restS2PAction.storeShelfAnalysis(shelfAnalysisInput);
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
+      inputList.put("imageUUID", imageUUID);
+      inputList.put("userID", userId);
+      inputList.put("poutstatus", "-5");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
-
-            inputList.put("poutstatus", "-5");
-
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends----------------\n");
-            return rio;
-        }
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends getImage----------------\n");
+      return Response.serverError().build();
     }
+  }
 
+  @POST
+  @Produces({MediaType.APPLICATION_JSON})
+  @Path("/storeShelfAnalysis")
+  public Snap2PayOutput storeShelfAnalysis(
+    //@QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+    JAXBElement<ShelfAnalysisInput> p,
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+  ) {
+    LOGGER.info("---------------Controller Starts storeShelfAnalysis----------------\n");
+    try {
 
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/getShelfAnalysis")
-    public Snap2PayOutput getShelfAnalysis(
-            @QueryParam(ParamMapper.IMAGEUUID) @DefaultValue("-9") String imageUUID,
-            @Context HttpServletRequest request,
-            @Context HttpServletResponse response
-    ) {
-        LOGGER.info("---------------Controller Starts----------------\n");
-        LOGGER.info("Inside S2P/getShelfAnalysis");
-        try {
-            Snap2PayOutput rio;
-            InputObject inputObject = new InputObject();
+      ShelfAnalysisInput shelfAnalysisInput = p.getValue();
+      System.out.println(shelfAnalysisInput.toString());
+      // shelfAnalysisInput.setImageUUID(imageUUID);
+      LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
 
-            inputObject.setImageUUID(imageUUID);
+      return restS2PAction.storeShelfAnalysis(shelfAnalysisInput);
 
-            return restS2PAction.getShelfAnalysis(inputObject);
+    } catch (Exception e) {
+      e.printStackTrace();
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
 
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
+      inputList.put("poutstatus", "-5");
 
-            inputList.put("poutstatus", "-5");
-            inputList.put("imageUUID", imageUUID);
-
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends----------------\n");
-            return rio;
-        }
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
+      return rio;
     }
+  }
 
 
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/checkS2P")
-    public Snap2PayOutput checkS2P(
-            @Context HttpServletRequest request,
-            @Context HttpServletResponse response
-    ) {
-        LOGGER.info("---------------Controller Starts----------------\n");
-        LOGGER.info("Inside S2P/checkS2P");
-        try {
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Path("/getShelfAnalysis")
+  public Snap2PayOutput getShelfAnalysis(
+    @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+  ) {
+    LOGGER.info("---------------Controller Starts getShelfAnalysis----------------\n");
+    try {
+      Snap2PayOutput rio;
+      InputObject inputObject = new InputObject();
 
-            inputList.put("success", "Success");
+      inputObject.setImageUUID(imageUUID);
 
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends----------------\n");
-            return rio;
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
+      LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
+      return restS2PAction.getShelfAnalysis(inputObject);
 
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
+    } catch (Exception e) {
+      e.printStackTrace();
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
 
-            inputList.put("poutstatus", "-5");
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
 
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends----------------\n");
-            return rio;
-        }
+      inputList.put("poutstatus", "-5");
+      inputList.put("imageUUID", imageUUID);
+
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
+      return rio;
     }
+  }
+
+
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Path("/checkS2P")
+  public Snap2PayOutput checkS2P(
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response
+  ) {
+    LOGGER.info("---------------Controller Starts checkS2P----------------\n");
+    LOGGER.info("Inside S2P/checkS2P");
+    try {
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
+
+      inputList.put("success", "Success");
+
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends checkS2P----------------\n");
+      return rio;
+    } catch (Exception e) {
+      e.printStackTrace();
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
+
+      Snap2PayOutput rio;
+      HashMap<String, String> inputList = new HashMap<String, String>();
+
+      inputList.put("poutstatus", "-5");
+
+      rio = new Snap2PayOutput(null, inputList);
+      LOGGER.info("---------------Controller Ends checkS2P----------------\n");
+      return rio;
+    }
+  }
 }

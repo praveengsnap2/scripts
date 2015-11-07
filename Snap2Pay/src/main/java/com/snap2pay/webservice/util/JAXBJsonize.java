@@ -34,64 +34,64 @@ import com.sun.jersey.json.impl.JSONMarshaller;
 
 public class JAXBJsonize {
 
-    public static String convertToJson(Object c) {
-        StringWriter sw = null;
-        try {
-            JAXBContext context = JSONJAXBContext.newInstance(c.getClass());
+  public static String convertToJson(Object c) {
+    StringWriter sw = null;
+    try {
+      JAXBContext context = JSONJAXBContext.newInstance(c.getClass());
 
-            sw = new StringWriter();
-            com.sun.jersey.json.impl.JSONMarshaller marshaller = new com.sun.jersey.json.impl.JSONMarshaller(context,
-                    JSONConfiguration.DEFAULT);
+      sw = new StringWriter();
+      com.sun.jersey.json.impl.JSONMarshaller marshaller = new com.sun.jersey.json.impl.JSONMarshaller(context,
+        JSONConfiguration.DEFAULT);
 
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            marshaller.setJsonEnabled(true);
-            marshaller.marshal(c, sw);
+      marshaller.setJsonEnabled(true);
+      marshaller.marshal(c, sw);
 
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-
-        return sw.toString();
+    } catch (Exception e) {
+      return e.getMessage();
     }
 
-    public static Object convertToJavaObject(String jsonString, Class clazz) {
+    return sw.toString();
+  }
 
-        Object out = null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-            InputStream is = new ByteArrayInputStream(jsonString.getBytes());
+  public static Object convertToJavaObject(String jsonString, Class clazz) {
 
-            out = mapper.readValue(is, clazz);
+    Object out = null;
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      mapper.configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+      InputStream is = new ByteArrayInputStream(jsonString.getBytes());
 
-            return out;
+      out = mapper.readValue(is, clazz);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
-        }
+      return out;
 
-        return out;
+    } catch (Exception e) {
+      e.printStackTrace();
+      e.getMessage();
     }
 
-    public static Object convertToJavaObjectJAXB(String jsonString, Class clazz) {
-        Object out = null;
-        try {
-            JAXBContext jc = JAXBContext.newInstance(clazz);
-            System.out.println("class=" + clazz);
-            JSONObject obj = new JSONObject(jsonString.toString());
-            Configuration config = new Configuration();
-            MappedNamespaceConvention con = new MappedNamespaceConvention(config);
-            XMLStreamReader xmlStreamReader = new MappedXMLStreamReader(obj, con);
+    return out;
+  }
 
-            Unmarshaller unmarshaller = jc.createUnmarshaller();
-            out = unmarshaller.unmarshal(xmlStreamReader);
-            System.out.println("jsonString=" + jsonString);
-            System.out.println("classObject=" + out.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return out;
+  public static Object convertToJavaObjectJAXB(String jsonString, Class clazz) {
+    Object out = null;
+    try {
+      JAXBContext jc = JAXBContext.newInstance(clazz);
+      System.out.println("class=" + clazz);
+      JSONObject obj = new JSONObject(jsonString.toString());
+      Configuration config = new Configuration();
+      MappedNamespaceConvention con = new MappedNamespaceConvention(config);
+      XMLStreamReader xmlStreamReader = new MappedXMLStreamReader(obj, con);
+
+      Unmarshaller unmarshaller = jc.createUnmarshaller();
+      out = unmarshaller.unmarshal(xmlStreamReader);
+      System.out.println("jsonString=" + jsonString);
+      System.out.println("classObject=" + out.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return out;
+  }
 }

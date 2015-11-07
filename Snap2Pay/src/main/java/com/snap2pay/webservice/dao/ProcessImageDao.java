@@ -9,9 +9,14 @@ import java.util.LinkedHashMap;
  */
 public interface ProcessImageDao {
 
-    public void insert(ImageStore imageStore);
-    public ImageStore findByImageUUId(String imageUUId);
-    public ImageStore getImageByStatus(String hostId,String status);
-    public Integer getJobCount(String status);
-    public void updateStatus(String status, String imageUUID);
+  public void insert(ImageStore imageStore);
+
+  public ImageStore findByImageUUId(String imageUUId);
+
+  public ImageStore getImageByStatus(String status);
+
+  public Integer getJobCount(String status);
+
+  public void updateStatusAndHost(String hostId, String status, String imageUUID);
+  public void updateStatus(String status, String imageUUID);
 }
