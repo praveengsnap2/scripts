@@ -15,9 +15,13 @@ public interface BeanMapper {
 
   String BEAN_PROCESS_IMAGE_SERVICE = "ProcessImageServiceImpl";
   String BEAN_SHELF_ANALYSIS_SERVICE = "ShelfAnalysisServiceImpl";
+  String BEAN_PRODUCT_MASTER_SERVICE = "ProductMasterServiceImpl";
 
 
   String BEAN_IMAGE_STORE_DAO = "ProcessImageDaoImpl";
   String BEAN_SHELF_ANALYSIS_DAO = "ShelfAnalysisDaoImpl";
   String BEAN_STORE_MASTER_DAO = "StoreMasterDaoImpl";
+  String BEAN_PRODUCT_MASTER_DAO = "ProductMasterDaoImpl";
+
+
 }

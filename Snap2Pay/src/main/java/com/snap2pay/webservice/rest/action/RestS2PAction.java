@@ -9,18 +9,11 @@ package com.snap2pay.webservice.rest.action;
 
 import com.snap2pay.webservice.mapper.BeanMapper;
 import com.snap2pay.webservice.model.InputObject;
-//import com.snap2pay.webservice.service.ShelfVisitDAO;
 import com.snap2pay.webservice.model.ShelfAnalysisInput;
 import com.snap2pay.webservice.service.ProcessImageService;
+import com.snap2pay.webservice.service.ProductMasterService;
 import com.snap2pay.webservice.service.ShelfAnalysisService;
 import com.snap2pay.webservice.util.Snap2PayOutput;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +22,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Response;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author keerthanathangaraju
@@ -45,25 +41,27 @@ public class RestS2PAction {
   private ProcessImageService processImageService;
 
   @Autowired
+  @Qualifier(BeanMapper.BEAN_PRODUCT_MASTER_SERVICE)
+  private ProductMasterService productMasterService;
+
+
+  @Autowired
   @Qualifier(BeanMapper.BEAN_SHELF_ANALYSIS_SERVICE)
   private ShelfAnalysisService shelfAnalysisService;
 
 
   public Snap2PayOutput saveImage(InputObject inputObject) {
     LOGGER.info("---------------RestAction Starts saveImage----------------\n");
-
-    List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
     List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+    List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+
+   // resultList=generateData();
+
 
     LOGGER.info("user : " + inputObject.getUserId());
-    processImageService.storeImageDetails(inputObject);
+    resultList = processImageService.storeImageDetails(inputObject);
+    resultListToPass.addAll(resultList);
     LOGGER.info("StoreImageDetails done");
-
-    LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
-    result.put("responseCode", "200");
-    result.put("responseMessage", "Image Stored Successfully");
-    result.put("filePath", inputObject.getImageFilePath());
-    resultListToPass.add(result);
 
     HashMap<String, String> reportInput = new HashMap<String, String>();
     reportInput.put("categoryId", inputObject.getCategoryId());
@@ -71,12 +69,18 @@ public class RestS2PAction {
     reportInput.put("longitude", inputObject.getLongitude());
     reportInput.put("userId", inputObject.getUserId());
     reportInput.put("TimeStamp", inputObject.getTimeStamp());
+    reportInput.put("responseCode", "200");
+    reportInput.put("responseMessage", "Image Stored Successfully");
+    reportInput.put("filePath", inputObject.getImageFilePath());
+    reportInput.put("headers","UPC, Left Top X, Left Top Y, Width, Height, Promotion, Price, Price_Flag");
+
     LOGGER.debug("column list done");
 
     Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
     LOGGER.info("---------------RestAction Ends saveImage----------------\n");
     return reportIO;
   }
+
 
   public Snap2PayOutput getJob(InputObject inputObject) {
     LOGGER.info("---------------RestAction Starts getJob----------------\n");
@@ -94,6 +98,24 @@ public class RestS2PAction {
     LOGGER.info("---------------RestAction Ends getJob----------------\n");
     return reportIO;
   }
+
+  public Snap2PayOutput getUpcDetails(InputObject inputObject) {
+    LOGGER.info("---------------RestAction Starts getUpcDetails----------------\n");
+    List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+    LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+    result = productMasterService.getUpcDetails(inputObject);
+
+    resultListToPass.add(result);
+
+    HashMap<String, String> reportInput = new HashMap<String, String>();
+    reportInput.put("upc", inputObject.getUpc());
+
+    Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+    LOGGER.info("---------------RestAction Ends getUpcDetails----------------\n");
+    return reportIO;
+  }
+
 
   public Snap2PayOutput storeShelfAnalysis(ShelfAnalysisInput shelfAnalysisInput) {
     LOGGER.info("---------------RestAction Starts storeShelfAnalysis----------------\n");
@@ -113,8 +135,8 @@ public class RestS2PAction {
 
     HashMap<String, String> reportInput = new HashMap<String, String>();
     reportInput.put("imageUUID", shelfAnalysisInput.getImageUUID());
-    reportInput.put("storeId", shelfAnalysisInput.getStoreId());
-    reportInput.put("categoryId", shelfAnalysisInput.getCategoryId());
+    reportInput.put("storeId", shelfAnalysisInput.getStoreID());
+    reportInput.put("categoryId", shelfAnalysisInput.getCategoryID());
 
 
     Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
@@ -141,6 +163,16 @@ public class RestS2PAction {
     return reportIO;
   }
 
+  public File getUpcImage(InputObject inputObject) {
+    LOGGER.info("---------------RestAction Starts getUpcImage----------------\n");
+
+    LOGGER.info("upc : " + inputObject.getUpc());
+
+    LOGGER.info("---------------RestAction Ends getUpcImage----------------\n");
+
+    return productMasterService.getUpcImage(inputObject);
+  }
+
   public static void main(String[] args) {
     ApplicationContext context = new ClassPathXmlApplicationContext(
       "base-spring-ctx.xml");
@@ -155,5 +187,16 @@ public class RestS2PAction {
     inputObject.setTimeStamp("2008-01-01 00:00:01");
     inputObject.setUserId("agsachin");
     System.out.println(restS2PAction.saveImage(inputObject));
+  }
+
+  public void storeThumbnails() {
+    LOGGER.info("---------------RestAction Starts getShelfAnalysis----------------\n");
+
+    productMasterService.storeThumbnails();
+
+    LOGGER.info("getShelfAnalysis done");
+
+
+    LOGGER.info("---------------RestAction Ends getShelfAnalysis----------------\n");
   }
 }

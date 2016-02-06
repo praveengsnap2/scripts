@@ -1,17 +1,16 @@
 package com.snap2pay.webservice.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import org.apache.log4j.Logger;
-
-import org.apache.log4j.Level;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 
 @XmlType(propOrder = {"metaDetail", "row"})
@@ -28,6 +27,29 @@ public class Snap2PayOutput {
 
   @XmlElementWrapper(name = "ResultSet")
   private List<MyHashMapType> row = new ArrayList<MyHashMapType>();
+
+//  @XmlElementWrapper(name = "DataSet")
+//  private List<MyHashMapType> dataRow = new ArrayList<MyHashMapType>();
+//
+//  public List<MyHashMapType> getDataRow() {
+//    return dataRow;
+//  }
+//
+//  public void setDataRow(List<MyHashMapType> dataRow) {
+//    if (dataRow != null && !dataRow.isEmpty()) {
+//      for (LinkedHashMap<String, String> myMap : dataRow) {
+//        MyHashMapType m = new MyHashMapType();
+//        m.setLinkedMapProperty(myMap);
+//        row.add(m);
+//      }
+//    } else {
+//      LinkedHashMap<String, String> myMap = new LinkedHashMap<String, String>();
+//      myMap.put("Message", "No Data Returned");
+//      MyHashMapType m = new MyHashMapType();
+//      m.setLinkedMapProperty(myMap);
+//      row.add(m);
+//    }
+//  }
 
   public void setMetaDetail(HashMap<String, String> inputMap) {
     metaDetail.setMapProperty(inputMap);
@@ -62,6 +84,14 @@ public class Snap2PayOutput {
     this.setMetaDetail(inputList);
   }
 
+//  public Snap2PayOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList, List<java.util.LinkedHashMap<String, Object>> dataSet) {
+//    LOGGER.error("Inside Snap2PayOutput");
+//
+//    this.setRow(resultSet);
+//    this.se
+//    this.setMetaDetail(inputList);
+//  }
+//
 
   public Snap2PayOutput() {
     super();

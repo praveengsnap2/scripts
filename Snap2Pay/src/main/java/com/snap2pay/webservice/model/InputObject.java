@@ -5,11 +5,11 @@
  */
 
 package com.snap2pay.webservice.model;
-
-import java.util.Date;
-
+//
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 /**
  * @author keerthanathangaraju
@@ -19,6 +19,7 @@ public class InputObject {
 
   @Id
   private String visitId;
+  private String upc;
   private String hostId;
   private Date visitDate;
   private String shopId;
@@ -29,9 +30,25 @@ public class InputObject {
   private String imageUUID;
   private String latitude;
   private String longitude;
+  private String sync;
   private Integer responseCode;
   private String responseMessage;
 
+  public String getSync() {
+    return sync;
+  }
+
+  public void setSync(String sync) {
+    this.sync = sync;
+  }
+
+  public String getUpc() {
+    return upc;
+  }
+
+  public void setUpc(String upc) {
+    this.upc = upc;
+  }
 
   public String getHostId() {
     return hostId;
@@ -152,7 +169,7 @@ public class InputObject {
       ", hostId='" + hostId + '\'' +
       ", visitDate=" + visitDate +
       ", shopId='" + shopId + '\'' +
-      ", categoryId='" + categoryId + '\'' +
+      ", categoryID='" + categoryId + '\'' +
       ", userId='" + userId + '\'' +
       ", timeStamp='" + timeStamp + '\'' +
       ", imageFilePath='" + imageFilePath + '\'' +

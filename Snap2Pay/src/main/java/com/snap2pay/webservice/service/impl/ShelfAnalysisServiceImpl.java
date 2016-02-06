@@ -42,12 +42,14 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
     for (Skus s : skus) {
       shelfAnalysis.setImageUUID(shelfAnalysisInput.getImageUUID());
       shelfAnalysis.setUpc(s.getUpc());
-      shelfAnalysis.setPog(s.getPog());
-      shelfAnalysis.setOsa(s.getOsa());
-      shelfAnalysis.setFacings(s.getFacings());
-      shelfAnalysis.setPriceLabel(s.getPriceLabel());
-      shelfAnalysis.setStoreId(shelfAnalysisInput.getStoreId());
-      shelfAnalysis.setCategoryId(shelfAnalysisInput.getCategoryId());
+      shelfAnalysis.setExpected_facings(s.getExpected_facings());
+      shelfAnalysis.setOn_shelf_availability(s.getOn_shelf_availability());
+      shelfAnalysis.setDetected_facings(s.getDetected_facings());
+      shelfAnalysis.setPromotion_label_present(s.getPromotion_label_present());
+      shelfAnalysis.setPrice(s.getPrice());
+      shelfAnalysis.setPromo_price(s.getPromo_price());
+      shelfAnalysis.setStoreId(shelfAnalysisInput.getStoreID());
+      shelfAnalysis.setCategoryId(shelfAnalysisInput.getCategoryID());
       shelfAnalysisDao.storeShelfAnalysis(shelfAnalysis);
     }
     String status="done";
@@ -64,14 +66,15 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
     LinkedHashMap<String, String> shelfAnalysisResult = new LinkedHashMap<String, String>();
     shelfAnalysisResult.put("imageUUID", shelfAnalysis.getImageUUID());
     shelfAnalysisResult.put("upc", shelfAnalysis.getUpc());
-    shelfAnalysisResult.put("pog", shelfAnalysis.getPog());
-    shelfAnalysisResult.put("osa", shelfAnalysis.getOsa());
-    shelfAnalysisResult.put("facing", shelfAnalysis.getFacings());
-    shelfAnalysisResult.put("priceLabel", shelfAnalysis.getPriceLabel());
+    shelfAnalysisResult.put("pog", shelfAnalysis.getExpected_facings());
+    shelfAnalysisResult.put("osa", shelfAnalysis.getOn_shelf_availability());
+    shelfAnalysisResult.put("facing", shelfAnalysis.getDetected_facings());
+    shelfAnalysisResult.put("priceLabel", shelfAnalysis.getPrice());
     shelfAnalysisResult.put("storeId", shelfAnalysis.getStoreId());
     shelfAnalysisResult.put("categoryId", shelfAnalysis.getCategoryId());
     LOGGER.info("---------------ShelfAnalysisServiceImpl Ends getShelfAnalysis----------------\n");
 
     return shelfAnalysisResult;
   }
+
 }

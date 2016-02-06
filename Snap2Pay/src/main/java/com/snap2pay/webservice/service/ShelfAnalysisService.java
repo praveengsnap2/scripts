@@ -13,4 +13,5 @@ public interface ShelfAnalysisService {
   public void storeShelfAnalysis(ShelfAnalysisInput shelfAnalysisInput);
 
   public LinkedHashMap<String, String> getShelfAnalysis(String imageUUID);
+
 }

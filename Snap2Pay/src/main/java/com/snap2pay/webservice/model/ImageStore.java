@@ -6,8 +6,8 @@ package com.snap2pay.webservice.model;
 public class ImageStore {
 
   String imageUUID;
-  String userId;
   String ImageFilePath;
+  String userId;
   String categoryId;
   String latitude;
   String longitude;
@@ -21,7 +21,7 @@ public class ImageStore {
     super();
   }
 
-  public ImageStore(String imageUUID, String userId, String imageFilePath, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String status) {
+  public ImageStore(String imageUUID,  String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String status) {
     this.storeId = storeId;
     this.imageUUID = imageUUID;
     this.userId = userId;
@@ -119,7 +119,7 @@ public class ImageStore {
       "imageUUID='" + imageUUID + '\'' +
       ", userId='" + userId + '\'' +
       ", ImageFilePath='" + ImageFilePath + '\'' +
-      ", categoryId='" + categoryId + '\'' +
+      ", categoryID='" + categoryId + '\'' +
       ", latitude='" + latitude + '\'' +
       ", longitude='" + longitude + '\'' +
       ", timeStamp='" + timeStamp + '\'' +

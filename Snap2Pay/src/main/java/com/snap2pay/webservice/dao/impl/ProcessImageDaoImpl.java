@@ -3,6 +3,7 @@ package com.snap2pay.webservice.dao.impl;
 import com.snap2pay.webservice.dao.ProcessImageDao;
 import com.snap2pay.webservice.mapper.BeanMapper;
 import com.snap2pay.webservice.model.ImageStore;
+import com.snap2pay.webservice.util.ShellUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,7 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 
 /**
  * Created by sachin on 10/17/15.
@@ -120,7 +120,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
       ps.setString(1, status);
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
-        imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("UserId"), rs.getString("ImageFilePath"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("Status"));
+        imageStore = new ImageStore(rs.getString("ImageUUID"),  rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("Status"));
       }
       rs.close();
       ps.close();
@@ -242,5 +242,43 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
       }
     }
+  }
+
+  @Override
+  public void updateStoreId(String storeId, String imageUUID) {
+    LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus----------------\n");
+    String sql = "UPDATE ImageStore SET storeId = ? WHERE imageUUID = ? ";
+    Connection conn = null;
+
+    try {
+      conn = dataSource.getConnection();
+      PreparedStatement ps = conn.prepareStatement(sql);
+      ps.setString(1, storeId);
+      ps.setString(2, imageUUID);
+      ps.executeUpdate();
+      ps.close();
+      LOGGER.info("---------------ProcessImageDaoImpl Ends updateStatus----------------\n");
+
+
+    } catch (SQLException e) {
+      LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+      LOGGER.error("exception", e);
+
+    } finally {
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException e) {
+          LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+          LOGGER.error("exception", e);
+        }
+      }
+    }
+  }
+
+  @Override
+  public String invokeImageAnalysis(String image, String category, String uuid, String retailer, String store) {
+      String result = ShellUtil.executeCommand(image, category, uuid, retailer, store);
+      return result;
   }
 }

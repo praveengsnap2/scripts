@@ -6,9 +6,6 @@
 
 package com.snap2pay.webservice.mapper;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.QueryParam;
-
 /**
  * @author keerthanathangaraju
  */
@@ -19,6 +16,7 @@ public interface ParamMapper {
   String LATITUDE = "latitude";
   String LONGITUDE = "longitude";
   String USER_ID = "userId";
-
+  String SYNC = "sync";
+  String UPC = "upc";
   String TIMESTAMP = "timestamp";
 }

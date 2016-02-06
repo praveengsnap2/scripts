@@ -7,10 +7,12 @@ public class ShelfAnalysis {
 
   String imageUUID;
   String upc;
-  String pog;
-  String osa;
-  String facings;
-  String priceLabel;
+  String expected_facings;
+  String on_shelf_availability;
+  String detected_facings;
+  String promotion_label_present;
+  String price;
+  String promo_price;
   String storeId;
   String categoryId;
 
@@ -18,15 +20,33 @@ public class ShelfAnalysis {
     super();
   }
 
-  public ShelfAnalysis(String imageUUID, String upc, String pog, String osa, String facings, String priceLabel, String storeId, String categoryId) {
+  public ShelfAnalysis(String imageUUID, String upc, String expected_facings, String on_shelf_availability, String detected_facings, String promotion_label_present, String price, String promo_price, String storeId, String categoryId) {
     this.imageUUID = imageUUID;
     this.upc = upc;
-    this.pog = pog;
-    this.osa = osa;
-    this.facings = facings;
-    this.priceLabel = priceLabel;
+    this.expected_facings = expected_facings;
+    this.on_shelf_availability = on_shelf_availability;
+    this.detected_facings = detected_facings;
+    this.promotion_label_present = promotion_label_present;
+    this.price = price;
+    this.promo_price = promo_price;
     this.storeId = storeId;
     this.categoryId = categoryId;
+  }
+
+  public String getPromotion_label_present() {
+    return promotion_label_present;
+  }
+
+  public void setPromotion_label_present(String promotion_label_present) {
+    this.promotion_label_present = promotion_label_present;
+  }
+
+  public String getPromo_price() {
+    return promo_price;
+  }
+
+  public void setPromo_price(String promo_price) {
+    this.promo_price = promo_price;
   }
 
   public String getImageUUID() {
@@ -45,36 +65,36 @@ public class ShelfAnalysis {
     this.upc = upc;
   }
 
-  public String getPog() {
-    return pog;
+  public String getExpected_facings() {
+    return expected_facings;
   }
 
-  public void setPog(String pog) {
-    this.pog = pog;
+  public void setExpected_facings(String expected_facings) {
+    this.expected_facings = expected_facings;
   }
 
-  public String getOsa() {
-    return osa;
+  public String getOn_shelf_availability() {
+    return on_shelf_availability;
   }
 
-  public void setOsa(String osa) {
-    this.osa = osa;
+  public void setOn_shelf_availability(String on_shelf_availability) {
+    this.on_shelf_availability = on_shelf_availability;
   }
 
-  public String getFacings() {
-    return facings;
+  public String getDetected_facings() {
+    return detected_facings;
   }
 
-  public void setFacings(String facings) {
-    this.facings = facings;
+  public void setDetected_facings(String detected_facings) {
+    this.detected_facings = detected_facings;
   }
 
-  public String getPriceLabel() {
-    return priceLabel;
+  public String getPrice() {
+    return price;
   }
 
-  public void setPriceLabel(String priceLabel) {
-    this.priceLabel = priceLabel;
+  public void setPrice(String price) {
+    this.price = price;
   }
 
   public String getStoreId() {
@@ -98,10 +118,12 @@ public class ShelfAnalysis {
     return "ShelfAnalysis{" +
       "imageUUID='" + imageUUID + '\'' +
       ", upc='" + upc + '\'' +
-      ", pog='" + pog + '\'' +
-      ", osa='" + osa + '\'' +
-      ", facings='" + facings + '\'' +
-      ", priceLabel='" + priceLabel + '\'' +
+      ", expected_facings='" + expected_facings + '\'' +
+      ", on_shelf_availability='" + on_shelf_availability + '\'' +
+      ", detected_facings='" + detected_facings + '\'' +
+      ", promotion_label_present='" + promotion_label_present + '\'' +
+      ", price='" + price + '\'' +
+      ", promo_price='" + promo_price + '\'' +
       ", storeId='" + storeId + '\'' +
       ", categoryId='" + categoryId + '\'' +
       '}';

@@ -3,12 +3,16 @@ package com.snap2pay.webservice.dao.impl;
 import com.snap2pay.webservice.dao.ShelfAnalysisDao;
 import com.snap2pay.webservice.mapper.BeanMapper;
 import com.snap2pay.webservice.model.ShelfAnalysis;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.script.*;
 import javax.sql.DataSource;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +38,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
   @Override
   public void storeShelfAnalysis(ShelfAnalysis shelfAnalysis) {
     LOGGER.info("---------------ShelfAnalysisDaoImpl Starts storeShelfAnalysis----------------\n");
-    String sql = "INSERT INTO ShelfAnalysis (imageUUID,upc,pog,osa,facings,priceLabel,storeId,categoryId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO ShelfAnalysis (imageUUID, product_code, expected_facings, on_shelf_availability, detected_facings, promotion_label_present, price, promo_price, storeId, categoryId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     Connection conn = null;
 
     try {
@@ -42,12 +46,14 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
       PreparedStatement ps = conn.prepareStatement(sql);
       ps.setString(1, shelfAnalysis.getImageUUID());
       ps.setString(2, shelfAnalysis.getUpc());
-      ps.setString(3, shelfAnalysis.getPog());
-      ps.setString(4, shelfAnalysis.getOsa());
-      ps.setString(5, shelfAnalysis.getFacings());
-      ps.setString(6, shelfAnalysis.getPriceLabel());
-      ps.setString(7, shelfAnalysis.getStoreId());
-      ps.setString(8, shelfAnalysis.getCategoryId());
+      ps.setString(3, shelfAnalysis.getExpected_facings());
+      ps.setString(4, shelfAnalysis.getOn_shelf_availability());
+      ps.setString(5, shelfAnalysis.getDetected_facings());
+      ps.setString(6, shelfAnalysis.getPromotion_label_present());
+      ps.setString(7, shelfAnalysis.getPrice());
+      ps.setString(8, shelfAnalysis.getPromo_price());
+      ps.setString(9, shelfAnalysis.getStoreId());
+      ps.setString(10, shelfAnalysis.getCategoryId());
       ps.executeUpdate();
       ps.close();
       LOGGER.info("---------------ShelfAnalysisDaoImpl Ends storeShelfAnalysis----------------\n");
@@ -81,7 +87,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
       ps.setString(1, imageUUID);
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
-        shelfAnalysis = new ShelfAnalysis(rs.getString("imageUUID"), rs.getString("upc"), rs.getString("pog"), rs.getString("osa"), rs.getString("facings"), rs.getString("priceLabel"), rs.getString("storeId"), rs.getString("categoryId"));
+        shelfAnalysis = new ShelfAnalysis(rs.getString("imageUUID"), rs.getString("product_code"), rs.getString("expected_facings"), rs.getString("on_shelf_availability"), rs.getString("detected_facings"), rs.getString("promotion_label_present"), rs.getString("price"), rs.getString("promo_price"), rs.getString("storeId"), rs.getString("categoryId"));
       }
       rs.close();
       ps.close();
@@ -103,4 +109,18 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
       }
     }
   }
+
+
+    public static void main(String[] args) throws ScriptException, IOException {
+
+        StringWriter writer = new StringWriter(); //ouput will be stored here
+
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptContext context = new SimpleScriptContext();
+
+        context.setWriter(writer); //configures output redirection
+        ScriptEngine engine = manager.getEngineByName("python");
+        engine.eval(new FileReader("/Users/sachin/test/test.py"), context);
+        System.out.println(writer.toString());
+    }
 }

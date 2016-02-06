@@ -9,4 +9,5 @@ public interface ShelfAnalysisDao {
   public void storeShelfAnalysis(ShelfAnalysis shelfAnalysis);
 
   public ShelfAnalysis getShelfAnalysis(String imageUUID);
+
 }
