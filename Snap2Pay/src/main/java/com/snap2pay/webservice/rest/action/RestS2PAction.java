@@ -191,13 +191,10 @@ public class RestS2PAction {
   }
 
   public void storeThumbnails() {
-    LOGGER.info("---------------RestAction Starts getShelfAnalysis----------------\n");
+    LOGGER.info("---------------RestAction Starts storeThumbnails----------------\n");
 
     productMasterService.storeThumbnails();
 
-    LOGGER.info("getShelfAnalysis done");
-
-
-    LOGGER.info("---------------RestAction Ends getShelfAnalysis----------------\n");
+    LOGGER.info("---------------RestAction Ends storeThumbnails----------------\n");
   }
 }

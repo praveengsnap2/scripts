@@ -109,6 +109,9 @@ public class RestS2PController {
 
           if (!uploadedFile.exists()) {
             uploadedFile.getParentFile().mkdirs();
+              uploadedFile.getParentFile().setReadable(true);
+              uploadedFile.getParentFile().setWritable(true);
+              uploadedFile.getParentFile().setExecutable(true);
           }
           item.write(uploadedFile);
           inputObject.setImageFilePath(uploadedFile.getAbsolutePath());
@@ -118,8 +121,9 @@ public class RestS2PController {
           LOGGER.info(result);
         }
       }
+        LOGGER.info("---------------Controller Starts saveImage with details "+inputObject+"----------------\n");
 
-      return restS2PAction.saveImage(inputObject);
+        return restS2PAction.saveImage(inputObject);
     } catch (Exception e) {
       e.printStackTrace();
       LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
