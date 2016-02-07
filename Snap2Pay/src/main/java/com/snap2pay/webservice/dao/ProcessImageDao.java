@@ -18,5 +18,4 @@ public interface ProcessImageDao {
   public void updateStatusAndHost(String hostId, String status, String imageUUID);
   public void updateStatus(String status, String imageUUID);
   public void updateStoreId(String storeId, String imageUUID);
-  public String invokeImageAnalysis(String image, String category, String uuid, String retailer, String store);
-}
+ }

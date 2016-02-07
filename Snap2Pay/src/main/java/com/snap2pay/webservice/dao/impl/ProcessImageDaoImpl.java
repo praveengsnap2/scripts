@@ -3,7 +3,6 @@ package com.snap2pay.webservice.dao.impl;
 import com.snap2pay.webservice.dao.ProcessImageDao;
 import com.snap2pay.webservice.mapper.BeanMapper;
 import com.snap2pay.webservice.model.ImageStore;
-import com.snap2pay.webservice.util.ShellUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -33,7 +32,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
   @Override
   public void insert(ImageStore imageStore) {
-    LOGGER.info("---------------ProcessImageDaoImpl Starts insert----------------\n");
+    LOGGER.info("---------------ProcessImageDaoImpl Starts insert "+imageStore+"----------------\n");
     String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     Connection conn = null;
 
@@ -274,16 +273,5 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
       }
     }
-  }
-
-  @Override
-  public String invokeImageAnalysis(String image, String category, String uuid, String retailer, String store) {
-      LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
-      LOGGER.info("---------------image="+image+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
-      ShellUtil shellUtil = new ShellUtil();
-      String result = shellUtil.executeCommand(image, category, uuid, retailer, store);
-      LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
-
-      return "test";
   }
 }

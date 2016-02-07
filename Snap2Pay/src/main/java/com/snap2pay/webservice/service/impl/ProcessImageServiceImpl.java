@@ -7,6 +7,7 @@ import com.snap2pay.webservice.mapper.BeanMapper;
 import com.snap2pay.webservice.model.ImageStore;
 import com.snap2pay.webservice.model.InputObject;
 import com.snap2pay.webservice.service.ProcessImageService;
+import com.snap2pay.webservice.util.ShellUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,7 +64,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     if (inputObject.getSync().equals("true")) {
         String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
         LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
-        String result = processImageDao.invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
+        String result = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
         List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
         return generateData();
@@ -161,6 +162,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
 
         return resultList;
+    }
+    public String invokeImageAnalysis(String image, String category, String uuid, String retailer, String store) {
+        LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
+        LOGGER.info("---------------image="+image+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
+        ShellUtil shellUtil = new ShellUtil();
+        String result = shellUtil.executeCommand(image, category, uuid, retailer, store);
+        LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
+
+        return "test";
     }
 
 }

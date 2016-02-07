@@ -6,7 +6,7 @@
          version="3.0">
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/classes/*-ctx.xml</param-value>
+        <param-value>/WEB-INF/classes/base-spring-ctx.xml</param-value>
     </context-param>
     <context-param>
         <param-name>webAppRootKey</param-name>
