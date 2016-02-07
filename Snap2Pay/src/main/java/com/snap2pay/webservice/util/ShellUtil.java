@@ -1,12 +1,13 @@
 package com.snap2pay.webservice.util;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 /**
  * Created by sachin on 2/4/16.
  */
 public class ShellUtil {
-    private static org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2p");
 
     public static String executeCommand(String image,String category,String uuid,String retailer,String store) {
         String response = "";
