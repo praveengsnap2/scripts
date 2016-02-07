@@ -221,7 +221,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     for (String name :imageNameList) {
       try {
-        File file = new File("/home/naveen/Image_Thumbnails"+name);
+        File file = new File("/home/naveen/Image_Thumbnails/"+name);
         fis = new FileInputStream(file);
         conn = dataSource.getConnection();
         conn.setAutoCommit(false);
