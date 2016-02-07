@@ -10,8 +10,8 @@
     </context-param>
     <context-param>
         <param-name>webAppRootKey</param-name>
-        <!--<param-value>/usr/share/apache-tomcat-8.0.26/webapps/Snap2Pay/</param-value>-->
-        <param-value>/Library/Tomcat/webapps/Snap2Pay/</param-value>
+        <param-value>/usr/share/apache-tomcat-8.0.30/webapps/Snap2Pay-1.0/</param-value>
+        <!--<param-value>/Library/Tomcat/webapps/Snap2Pay/</param-value>-->
     </context-param>
 
     <context-param>
