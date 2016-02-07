@@ -48,7 +48,7 @@ public class ProductMaster {
     this.height = height;
     this.width = width;
     this.depth = depth;
-      this.product_rating=product_rating;
+    this.product_rating=product_rating;
   }
 
     public String getProduct_rating() {

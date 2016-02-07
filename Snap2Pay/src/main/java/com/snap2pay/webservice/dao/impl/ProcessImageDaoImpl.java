@@ -280,8 +280,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
   public String invokeImageAnalysis(String image, String category, String uuid, String retailer, String store) {
       LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
       LOGGER.info("---------------image="+image+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
-
-      String result = ShellUtil.executeCommand(image, category, uuid, retailer, store);
+      ShellUtil shellUtil = new ShellUtil();
+      String result = shellUtil.executeCommand(image, category, uuid, retailer, store);
       LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
 
       return "test";
