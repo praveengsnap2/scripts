@@ -24,9 +24,10 @@ public class ProductMaster {
   String height;
   String width;
   String depth;
+  String product_rating;
 
 
-  public ProductMaster(String upc, String mfg_name, String brand_name, String product_type, String product_short_name, String product_long_name, String low_fat, String fat_free, String gluten_free, String why_buy_1, String why_buy_2, String why_buy_3, String why_buy_4, String romance_copy_1, String romance_copy_2, String romance_copy_3, String romance_copy_4, String height, String width, String depth) {
+  public ProductMaster(String upc, String mfg_name, String brand_name, String product_type, String product_short_name, String product_long_name, String low_fat, String fat_free, String gluten_free, String why_buy_1, String why_buy_2, String why_buy_3, String why_buy_4, String romance_copy_1, String romance_copy_2, String romance_copy_3, String romance_copy_4, String height, String width, String depth,String product_rating) {
     this.upc = upc;
     this.mfg_name = mfg_name;
     this.brand_name = brand_name;
@@ -47,9 +48,18 @@ public class ProductMaster {
     this.height = height;
     this.width = width;
     this.depth = depth;
+      this.product_rating=product_rating;
   }
 
-  public String getUpc() {
+    public String getProduct_rating() {
+        return product_rating;
+    }
+
+    public void setProduct_rating(String product_rating) {
+        this.product_rating = product_rating;
+    }
+
+    public String getUpc() {
     return upc;
   }
 
@@ -209,29 +219,30 @@ public class ProductMaster {
     this.depth = depth;
   }
 
-  @Override
-  public String toString() {
-    return "ProductMaster{" +
-      "upc='" + upc + '\'' +
-      ", mfg_name='" + mfg_name + '\'' +
-      ", brand_name='" + brand_name + '\'' +
-      ", product_type='" + product_type + '\'' +
-      ", product_short_name='" + product_short_name + '\'' +
-      ", product_long_name='" + product_long_name + '\'' +
-      ", low_fat='" + low_fat + '\'' +
-      ", fat_free='" + fat_free + '\'' +
-      ", gluten_free='" + gluten_free + '\'' +
-      ", why_buy_1='" + why_buy_1 + '\'' +
-      ", why_buy_2='" + why_buy_2 + '\'' +
-      ", why_buy_3='" + why_buy_3 + '\'' +
-      ", why_buy_4='" + why_buy_4 + '\'' +
-      ", romance_copy_1='" + romance_copy_1 + '\'' +
-      ", romance_copy_2='" + romance_copy_2 + '\'' +
-      ", romance_copy_3='" + romance_copy_3 + '\'' +
-      ", romance_copy_4='" + romance_copy_4 + '\'' +
-      ", height='" + height + '\'' +
-      ", width='" + width + '\'' +
-      ", depth='" + depth + '\'' +
-      '}';
-  }
+    @Override
+    public String toString() {
+        return "ProductMaster{" +
+                "upc='" + upc + '\'' +
+                ", mfg_name='" + mfg_name + '\'' +
+                ", brand_name='" + brand_name + '\'' +
+                ", product_type='" + product_type + '\'' +
+                ", product_short_name='" + product_short_name + '\'' +
+                ", product_long_name='" + product_long_name + '\'' +
+                ", low_fat='" + low_fat + '\'' +
+                ", fat_free='" + fat_free + '\'' +
+                ", gluten_free='" + gluten_free + '\'' +
+                ", why_buy_1='" + why_buy_1 + '\'' +
+                ", why_buy_2='" + why_buy_2 + '\'' +
+                ", why_buy_3='" + why_buy_3 + '\'' +
+                ", why_buy_4='" + why_buy_4 + '\'' +
+                ", romance_copy_1='" + romance_copy_1 + '\'' +
+                ", romance_copy_2='" + romance_copy_2 + '\'' +
+                ", romance_copy_3='" + romance_copy_3 + '\'' +
+                ", romance_copy_4='" + romance_copy_4 + '\'' +
+                ", height='" + height + '\'' +
+                ", width='" + width + '\'' +
+                ", depth='" + depth + '\'' +
+                ", product_rating='" + product_rating + '\'' +
+                '}';
+    }
 }

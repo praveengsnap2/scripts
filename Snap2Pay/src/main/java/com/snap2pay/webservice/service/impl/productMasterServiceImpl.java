@@ -54,7 +54,8 @@ public class productMasterServiceImpl implements ProductMasterService {
     upcDetails.put("romance_copy_4",productMaster.getRomance_copy_4());
     upcDetails.put("height",productMaster.getHeight());
     upcDetails.put("width",productMaster.getWidth());
-    upcDetails.put("depth",productMaster.getDepth());
+      upcDetails.put("depth",productMaster.getDepth());
+      upcDetails.put("product_rating",productMaster.getProduct_rating());
 
     LOGGER.info("---------------ProductMasterDao Ends getUpcDetails----------------\n");
 
