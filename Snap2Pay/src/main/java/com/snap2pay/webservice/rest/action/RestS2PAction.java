@@ -105,11 +105,12 @@ public class RestS2PAction {
 
     LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
     result = productMasterService.getUpcDetails(inputObject);
-
+    File image = productMasterService.getUpcImage(inputObject);
     resultListToPass.add(result);
 
     HashMap<String, String> reportInput = new HashMap<String, String>();
     reportInput.put("upc", inputObject.getUpc());
+    reportInput.put("imagePth",image.getAbsolutePath());
 
     Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
     LOGGER.info("---------------RestAction Ends getUpcDetails----------------\n");

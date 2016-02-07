@@ -46,6 +46,8 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
         productMaster = new ProductMaster(rs.getString("UPC"), rs.getString("MFG_NAME"), rs.getString("BRAND_NAME"), rs.getString("PRODUCT_TYPE"), rs.getString("PRODUCT_SHORT_NAME"), rs.getString("PRODUCT_LONG_NAME"), rs.getString("low_fat"), rs.getString("fat_free"), rs.getString("gluten_free"), rs.getString("why_buy_1"), rs.getString("why_buy_2"), rs.getString("why_buy_3"), rs.getString("why_buy_4"), rs.getString("romance_copy_1"), rs.getString("romance_copy_2"), rs.getString("romance_copy_3"), rs.getString("romance_copy_4"), rs.getString("height"), rs.getString("width"), rs.getString("depth"));
+          LOGGER.info("---------------ProductMasterDaoImpl - "+productMaster.toString()+"----------------\n");
+
       }
       rs.close();
       ps.close();
@@ -83,8 +85,9 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
       ps.setString(1, upc);
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
-        String name = rs.getString(1);
-        filePath = "/tmp/snap2buy/image/" + name;
+          String name = rs.getString(1);
+          LOGGER.info("---------------ProductMasterDaoImpl - getThumbnails image found "+name+"----------------\n");
+          filePath = "/tmp/snap2buy/image/" + name;
         image = new File(filePath);
         FileOutputStream fos = new FileOutputStream(image);
 
@@ -94,6 +97,12 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
           fos.write(buffer);
         }
         fos.close();
+      }
+        else{
+          String name = "default.jpg";
+          LOGGER.info("---------------ProductMasterDaoImpl - getThumbnails "+name+"----------------\n");
+          filePath = "/tmp/snap2buy/image/" + name;
+          image = new File(filePath);
       }
       rs.close();
       ps.close();
