@@ -1,5 +1,9 @@
 package com.snap2pay.webservice.service.impl;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.snap2pay.webservice.dao.ProcessImageDao;
 import com.snap2pay.webservice.dao.ShelfAnalysisDao;
 import com.snap2pay.webservice.dao.StoreMasterDao;
@@ -64,10 +68,9 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     if (inputObject.getSync().equals("true")) {
         String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
         LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
-        String result = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
-        List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        List<java.util.LinkedHashMap<String, String>> result = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
         LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
-        return generateData();
+        return result;
     }else
         {LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
 
@@ -163,14 +166,36 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         return resultList;
     }
-    public String invokeImageAnalysis(String image, String category, String uuid, String retailer, String store) {
+    public  List<java.util.LinkedHashMap<String, String>> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store) {
         LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
-        LOGGER.info("---------------image="+image+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
+        LOGGER.info("---------------imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         ShellUtil shellUtil = new ShellUtil();
-        String result = shellUtil.executeCommand(image, category, uuid, retailer, store);
-        LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
+        String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store);
+        if (true) {
+            result = result.replaceAll("\n", "").replaceAll("\n", "");
+            String[] trimStart = result.split("Exited with error code 1");
+            String[] trimLast = trimStart[1].split("Stderr");
+            String jsonString = trimLast[0];
+            System.out.println("jsonString=" + jsonString);
 
-        return "test";
+            JsonObject obj = new JsonParser().parse(jsonString).getAsJsonObject();
+            JsonArray skusArray = obj.get("skus").getAsJsonArray();
+            for (JsonElement skus : skusArray) {
+                JsonObject upcEntry = skus.getAsJsonObject();
+                java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
+                temp.put("upc", upcEntry.get("upc").getAsString());
+                temp.put("x", upcEntry.get("x").getAsString());
+                temp.put("y", upcEntry.get("y").getAsString());
+                temp.put("width", upcEntry.get("width").getAsString());
+                temp.put("height", upcEntry.get("height").getAsString());
+                resultList.add(temp);
+            }
+            LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
+            return resultList;
+        }else{
+            return generateData();
+        }
     }
 
 }

@@ -9,21 +9,19 @@ import java.util.logging.Logger;
 public class ShellUtil {
     private static Logger LOGGER = Logger.getLogger("s2p");
 
-    public static String executeCommand(String image,String category,String uuid,String retailer,String store) {
+    public static String executeCommand(String imageFilePath,String category,String uuid,String retailer,String store) {
         String response = "";
         Boolean waitForResponse=true;
-        String command ="test.sh";
-        File f = new File("/home/ubuntu/caffe");
-
-        LOGGER.info("exist" + f.isDirectory());
+        String command ="invoke_image_analysis.sh";
+        File f = new File("/root");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash",command);
 
-        pb.environment().put("image",image );
-        pb.environment().put("category",category );
-        pb.environment().put("uuid",uuid );
-        pb.environment().put("retailer",retailer );
-        pb.environment().put("store",store );
+        pb.environment().put("Image_File_Path",imageFilePath );
+        pb.environment().put("Category",category );
+        pb.environment().put("Uuid",uuid );
+        pb.environment().put("Retailer_Code",retailer );
+        pb.environment().put("Store_Id",store );
         pb.directory(f);
         pb.redirectErrorStream(true);
 
