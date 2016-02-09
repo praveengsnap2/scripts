@@ -172,7 +172,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         ShellUtil shellUtil = new ShellUtil();
         String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store);
-        if (true) {
+        if (result.contains("{")) {
             LOGGER.info("---------------ProcessImageDaoImpl  result="+result+"----------------");
             result = result.replaceAll("\n", "").replaceAll("\n", "");
 //            String[] trimStart = result.split("Exited with error code 1");

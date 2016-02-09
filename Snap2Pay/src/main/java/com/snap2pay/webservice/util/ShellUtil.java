@@ -1,7 +1,8 @@
 package com.snap2pay.webservice.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
-import java.util.logging.Logger;
 
 /**
  * Created by sachin on 2/4/16.
@@ -16,7 +17,7 @@ public class ShellUtil {
         File f = new File("/root");
         LOGGER.info("---------------ShellUtil imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
 
-        ProcessBuilder pb = new ProcessBuilder("/bin/bash","-c",command);
+        ProcessBuilder pb = new ProcessBuilder("/bin/bash",command);
 
         pb.environment().put("Image_File_Path",imageFilePath );
         pb.environment().put("Category",category );
@@ -44,6 +45,7 @@ public class ShellUtil {
             LOGGER.info("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         }
+        LOGGER.info("---------------ShellUtil response="+response);
         return response;
     }
     public static String convertStreamToStr(InputStream is) throws IOException {
