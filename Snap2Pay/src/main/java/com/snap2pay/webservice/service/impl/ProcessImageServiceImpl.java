@@ -167,16 +167,18 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         return resultList;
     }
     public  List<java.util.LinkedHashMap<String, String>> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store) {
-        LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
-        LOGGER.info("---------------imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts invokeImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         ShellUtil shellUtil = new ShellUtil();
         String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store);
         if (true) {
+            LOGGER.info("---------------ProcessImageDaoImpl  result="+result+"----------------");
             result = result.replaceAll("\n", "").replaceAll("\n", "");
-            String[] trimStart = result.split("Exited with error code 1");
-            String[] trimLast = trimStart[1].split("Stderr");
-            String jsonString = trimLast[0];
+//            String[] trimStart = result.split("Exited with error code 1");
+//            String[] trimLast = trimStart[1].split("Stderr");
+//            String jsonString = trimLast[0];
+            String jsonString = result.substring(result.indexOf("{"),result.lastIndexOf("}"));
             System.out.println("jsonString=" + jsonString);
 
             JsonObject obj = new JsonParser().parse(jsonString).getAsJsonObject();

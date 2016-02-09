@@ -14,8 +14,9 @@ public class ShellUtil {
         Boolean waitForResponse=true;
         String command ="invoke_image_analysis.sh";
         File f = new File("/root");
+        LOGGER.info("---------------ShellUtil imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
 
-        ProcessBuilder pb = new ProcessBuilder("/bin/bash",command);
+        ProcessBuilder pb = new ProcessBuilder("/bin/bash","-c",command);
 
         pb.environment().put("Image_File_Path",imageFilePath );
         pb.environment().put("Category",category );
