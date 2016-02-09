@@ -178,19 +178,19 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 //            String[] trimStart = result.split("Exited with error code 1");
 //            String[] trimLast = trimStart[1].split("Stderr");
 //            String jsonString = trimLast[0];
-            String jsonString = result.substring(result.indexOf("{"),result.lastIndexOf("}"));
-            System.out.println("jsonString=" + jsonString);
+            String jsonString = result.substring(result.indexOf("{"),result.lastIndexOf("}")+1);
+            LOGGER.info("---------------jsonString=" + jsonString + "---------------");
 
             JsonObject obj = new JsonParser().parse(jsonString).getAsJsonObject();
             JsonArray skusArray = obj.get("skus").getAsJsonArray();
             for (JsonElement skus : skusArray) {
                 JsonObject upcEntry = skus.getAsJsonObject();
                 java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
-                temp.put("upc", upcEntry.get("upc").getAsString());
-                temp.put("x", upcEntry.get("x").getAsString());
-                temp.put("y", upcEntry.get("y").getAsString());
-                temp.put("width", upcEntry.get("width").getAsString());
-                temp.put("height", upcEntry.get("height").getAsString());
+                temp.put("UPC", upcEntry.get("upc").getAsString());
+                temp.put("Left Top X", upcEntry.get("x").getAsString());
+                temp.put("Left Top Y", upcEntry.get("y").getAsString());
+                temp.put("Width", upcEntry.get("width").getAsString());
+                temp.put("Height", upcEntry.get("height").getAsString());
                 resultList.add(temp);
             }
             LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");

@@ -11,13 +11,6 @@ Destination_Dir="/tmp/processImage/"
 #Retailer_Code=$5
 #Store_Id=$6
 
-User_ID="0"
-Image_File_Path="0"
-Category="0"
-Uuid="0"
-Retailer_Code="0"
-Store_Id="0"
-
 cmd1 = `scp ${Image_File_Path} ${GPU_MACHINE}:${Destination_Dir}/${Uuid}.jpg`
 
-result = `pssh -e err -h host.txt -i "cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}"`
+pssh -e err -h host.txt -i "cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}"
