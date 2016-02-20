@@ -5,126 +5,139 @@ package com.snap2pay.webservice.model;
  */
 public class ImageStore {
 
-  String imageUUID;
-  String ImageFilePath;
-  String userId;
-  String categoryId;
-  String latitude;
-  String longitude;
-  String timeStamp;
-  String storeId;
-  String status;
-  String hostId;
+    String imageUUID;
+    String ImageFilePath;
+    String userId;
+    String categoryId;
+    String latitude;
+    String longitude;
+    String timeStamp;
+    String storeId;
+    String status;
+    String hostId;
+    String dateId;
 
 
-  public ImageStore() {
-    super();
-  }
+    public ImageStore() {
+        super();
+    }
 
-  public ImageStore(String imageUUID,  String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String status) {
-    this.storeId = storeId;
-    this.imageUUID = imageUUID;
-    this.userId = userId;
-    this.ImageFilePath = imageFilePath;
-    this.categoryId = categoryId;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.timeStamp = timeStamp;
-    this.status = status;
-  }
+    public ImageStore(String imageUUID, String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String status, String dateId) {
+        this.imageUUID = imageUUID;
+        ImageFilePath = imageFilePath;
+        this.userId = userId;
+        this.categoryId = categoryId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.timeStamp = timeStamp;
+        this.storeId = storeId;
+        this.status = status;
+        this.dateId = dateId;
+    }
 
-  public String getStatus() {
-    return status;
-  }
+    public String getDateId() {
+        return dateId;
+    }
 
-  public void setStatus(String status) {
-    this.status = status;
-  }
+    public void setDateId(String dateId) {
+        this.dateId = dateId;
+    }
 
-  public String getHostId() {
-    return hostId;
-  }
+    public String getStatus() {
+        return status;
+    }
 
-  public void setHostId(String hostId) {
-    this.hostId = hostId;
-  }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-  public String getStoreId() {
-    return storeId;
-  }
+    public String getHostId() {
+        return hostId;
+    }
 
-  public void setStoreId(String storeId) {
-    this.storeId = storeId;
-  }
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
+    }
 
-  public String getImageFilePath() {
-    return ImageFilePath;
-  }
+    public String getStoreId() {
+        return storeId;
+    }
 
-  public void setImageFilePath(String imageFilePath) {
-    ImageFilePath = imageFilePath;
-  }
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
 
-  public String getImageUUID() {
-    return imageUUID;
-  }
+    public String getImageFilePath() {
+        return ImageFilePath;
+    }
 
-  public void setImageUUID(String imageUUID) {
-    this.imageUUID = imageUUID;
-  }
+    public void setImageFilePath(String imageFilePath) {
+        ImageFilePath = imageFilePath;
+    }
 
-  public String getUserId() {
-    return userId;
-  }
+    public String getImageUUID() {
+        return imageUUID;
+    }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
+    public void setImageUUID(String imageUUID) {
+        this.imageUUID = imageUUID;
+    }
 
-  public String getCategoryId() {
-    return categoryId;
-  }
+    public String getUserId() {
+        return userId;
+    }
 
-  public void setCategoryId(String categoryId) {
-    this.categoryId = categoryId;
-  }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-  public String getLatitude() {
-    return latitude;
-  }
+    public String getCategoryId() {
+        return categoryId;
+    }
 
-  public void setLatitude(String latitude) {
-    this.latitude = latitude;
-  }
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
 
-  public String getLongitude() {
-    return longitude;
-  }
+    public String getLatitude() {
+        return latitude;
+    }
 
-  public void setLongitude(String longitude) {
-    this.longitude = longitude;
-  }
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 
-  public String getTimeStamp() {
-    return timeStamp;
-  }
+    public String getLongitude() {
+        return longitude;
+    }
 
-  public void setTimeStamp(String timeStamp) {
-    this.timeStamp = timeStamp;
-  }
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
-  @Override
-  public String toString() {
-    return "ImageStore{" +
-      "imageUUID='" + imageUUID + '\'' +
-      ", userId='" + userId + '\'' +
-      ", ImageFilePath='" + ImageFilePath + '\'' +
-      ", categoryID='" + categoryId + '\'' +
-      ", latitude='" + latitude + '\'' +
-      ", longitude='" + longitude + '\'' +
-      ", timeStamp='" + timeStamp + '\'' +
-      ", storeId='" + storeId + '\'' +
-      '}';
-  }
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageStore{" +
+                "imageUUID='" + imageUUID + '\'' +
+                ", ImageFilePath='" + ImageFilePath + '\'' +
+                ", userId='" + userId + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", timeStamp='" + timeStamp + '\'' +
+                ", storeId='" + storeId + '\'' +
+                ", status='" + status + '\'' +
+                ", hostId='" + hostId + '\'' +
+                ", dateId='" + dateId + '\'' +
+                '}';
+    }
 }
 

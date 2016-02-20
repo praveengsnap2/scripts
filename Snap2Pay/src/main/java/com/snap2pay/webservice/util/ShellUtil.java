@@ -10,20 +10,20 @@ import java.io.*;
 public class ShellUtil {
     private static Logger LOGGER = Logger.getLogger("s2p");
 
-    public static String executeCommand(String imageFilePath,String category,String uuid,String retailer,String store) {
+    public static String executeCommand(String imageFilePath, String category, String uuid, String retailer, String store) {
         String response = "";
-        Boolean waitForResponse=true;
-        String command ="invoke_image_analysis.sh";
+        Boolean waitForResponse = true;
+        String command = "invoke_image_analysis.sh";
         File f = new File("/root");
-        LOGGER.info("---------------ShellUtil imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
+        LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
 
-        ProcessBuilder pb = new ProcessBuilder("/bin/bash",command);
+        ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
 
-        pb.environment().put("Image_File_Path",imageFilePath );
-        pb.environment().put("Category",category );
-        pb.environment().put("Uuid",uuid );
-        pb.environment().put("Retailer_Code",retailer );
-        pb.environment().put("Store_Id",store );
+        pb.environment().put("Image_File_Path", imageFilePath);
+        pb.environment().put("Category", category);
+        pb.environment().put("Uuid", uuid);
+        pb.environment().put("Retailer_Code", retailer);
+        pb.environment().put("Store_Id", store);
         pb.directory(f);
         pb.redirectErrorStream(true);
 
@@ -45,9 +45,10 @@ public class ShellUtil {
             LOGGER.info("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         }
-        LOGGER.info("---------------ShellUtil response="+response);
+        LOGGER.info("---------------ShellUtil response=" + response);
         return response;
     }
+
     public static String convertStreamToStr(InputStream is) throws IOException {
         if (is != null) {
             Writer writer = new StringWriter();
@@ -63,8 +64,7 @@ public class ShellUtil {
                 is.close();
             }
             return writer.toString();
-        }
-        else {
+        } else {
             return "null";
         }
     }

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ProcessImageService {
 
-  public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject);
 
-  public LinkedHashMap<String, String> getJob(InputObject inputObject);
+    public LinkedHashMap<String, String> getJob(InputObject inputObject);
 }

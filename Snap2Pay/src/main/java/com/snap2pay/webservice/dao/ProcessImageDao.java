@@ -7,15 +7,17 @@ import com.snap2pay.webservice.model.ImageStore;
  */
 public interface ProcessImageDao {
 
-  public void insert(ImageStore imageStore);
+    public void insert(ImageStore imageStore);
 
-  public ImageStore findByImageUUId(String imageUUId);
+    public ImageStore findByImageUUId(String imageUUId);
 
-  public ImageStore getImageByStatus(String status);
+    public ImageStore getImageByStatus(String status);
 
-  public Integer getJobCount(String status);
+    public Integer getJobCount(String status);
 
-  public void updateStatusAndHost(String hostId, String status, String imageUUID);
-  public void updateStatus(String status, String imageUUID);
-  public void updateStoreId(String storeId, String imageUUID);
- }
+    public void updateStatusAndHost(String hostId, String status, String imageUUID);
+
+    public void updateStatus(String status, String imageUUID);
+
+    public void updateStoreId(String storeId, String imageUUID);
+}

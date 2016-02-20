@@ -10,6 +10,8 @@ import java.io.File;
 public interface ProductMasterDao {
 
     public ProductMaster getUpcDetails(String upc);
+
     public void storeThumbnails();
+
     public File getThumbnails(String upc);
 }

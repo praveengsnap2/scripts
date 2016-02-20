@@ -29,100 +29,104 @@ import java.util.List;
 @Scope("prototype")
 public class ProcessImageServiceImpl implements ProcessImageService {
 
-  private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2p");
 
-  @Autowired
-  @Qualifier(BeanMapper.BEAN_IMAGE_STORE_DAO)
-  private ProcessImageDao processImageDao;
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_IMAGE_STORE_DAO)
+    private ProcessImageDao processImageDao;
 
-  @Autowired
-  @Qualifier(BeanMapper.BEAN_STORE_MASTER_DAO)
-  private StoreMasterDao storeMasterDao;
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_STORE_MASTER_DAO)
+    private StoreMasterDao storeMasterDao;
 
-  @Autowired
-  @Qualifier(BeanMapper.BEAN_SHELF_ANALYSIS_DAO)
-  private ShelfAnalysisDao shelfAnalysisDao;
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_SHELF_ANALYSIS_DAO)
+    private ShelfAnalysisDao shelfAnalysisDao;
 
 
-  @Override
-  public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {
+    @Override
+    public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {
 
-    LOGGER.info("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
 
-    ImageStore imageStore = new ImageStore();
-    imageStore.setImageUUID(inputObject.getImageUUID());
-    imageStore.setImageFilePath(inputObject.getImageFilePath());
-    imageStore.setUserId(inputObject.getUserId());
-    imageStore.setCategoryId(inputObject.getCategoryId());
-    imageStore.setLatitude(inputObject.getLatitude());
-    imageStore.setLongitude(inputObject.getLongitude());
-    imageStore.setTimeStamp(inputObject.getTimeStamp());
-      String storeId=storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude());
+        ImageStore imageStore = new ImageStore();
+        imageStore.setImageUUID(inputObject.getImageUUID());
+        imageStore.setImageFilePath(inputObject.getImageFilePath());
+        imageStore.setUserId(inputObject.getUserId());
+        imageStore.setCategoryId(inputObject.getCategoryId());
+        imageStore.setLatitude(inputObject.getLatitude());
+        imageStore.setLongitude(inputObject.getLongitude());
+        imageStore.setTimeStamp(inputObject.getTimeStamp());
+        imageStore.setDateId(inputObject.getVisitDate());
 
-      LOGGER.info("--------------storeId="+storeId+"-----------------\n");
+        String storeId = storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude());
 
-      imageStore.setStoreId(storeId);
-      imageStore.setStatus("new");
-    processImageDao.insert(imageStore);
+        LOGGER.info("--------------storeId=" + storeId + "-----------------\n");
 
-    if (inputObject.getSync().equals("true")) {
-        String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
-        LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
-        List<java.util.LinkedHashMap<String, String>> result = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
-        LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
-        return result;
-    }else
-        {LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
+        imageStore.setStoreId(storeId);
+        imageStore.setStatus("new");
+        processImageDao.insert(imageStore);
+
+        if (inputObject.getSync().equals("true")) {
+            String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
+            LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
+            List<java.util.LinkedHashMap<String, String>> result = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
+            LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
+            return result;
+        } else {
+            LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
 
             return generateData();
         }
-  }
-
-  @Override
-  public LinkedHashMap<String, String> getJob(InputObject inputObject) {
-    LOGGER.info("---------------ProcessImageServiceImpl Starts getJob----------------\n");
-
-
-    LinkedHashMap<String, String> unProcessedJob = new LinkedHashMap<String, String>();
-    String status = "new";
-    Integer newJobCount = processImageDao.getJobCount(status);
-    if (newJobCount > 1) {
-
-      ImageStore imageStore = processImageDao.getImageByStatus(status);
-      status = "processing";
-
-      LOGGER.info("got this job imageStore" + imageStore.toString());
-
-      processImageDao.updateStatusAndHost(inputObject.getHostId(), status, imageStore.getImageUUID());
-      String storeId=storeMasterDao.getStoreId(imageStore.getLongitude(),imageStore.getLatitude());
-      processImageDao.updateStoreId(storeId,imageStore.getImageUUID());
-      String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
-
-      Integer remainingJob = newJobCount - 1;
-      unProcessedJob.put("imageUUID", imageStore.getImageUUID());
-      unProcessedJob.put("categoryId", imageStore.getCategoryId());
-      unProcessedJob.put("imageFilePath", imageStore.getImageFilePath());
-      unProcessedJob.put("latitude", imageStore.getLatitude());
-      unProcessedJob.put("longitude", imageStore.getLongitude());
-      unProcessedJob.put("storeId", storeId);
-      unProcessedJob.put("timeStamp", imageStore.getTimeStamp());
-      unProcessedJob.put("userId", imageStore.getUserId());
-      unProcessedJob.put("retailerChainCode", retailerChainCode);
-
-
-      unProcessedJob.put("remainingJob", remainingJob.toString());
-    } else {
-      unProcessedJob.put("remainingJob", newJobCount.toString());
     }
-    LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails----------------\n");
 
-    return unProcessedJob;
-  }
+    @Override
+    public LinkedHashMap<String, String> getJob(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getJob----------------\n");
+
+
+        LinkedHashMap<String, String> unProcessedJob = new LinkedHashMap<String, String>();
+        String status = "new";
+        Integer newJobCount = processImageDao.getJobCount(status);
+        if (newJobCount > 1) {
+
+            ImageStore imageStore = processImageDao.getImageByStatus(status);
+            status = "processing";
+
+            LOGGER.info("got this job imageStore" + imageStore.toString());
+
+            processImageDao.updateStatusAndHost(inputObject.getHostId(), status, imageStore.getImageUUID());
+            String storeId = storeMasterDao.getStoreId(imageStore.getLongitude(), imageStore.getLatitude());
+            processImageDao.updateStoreId(storeId, imageStore.getImageUUID());
+            String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
+
+            Integer remainingJob = newJobCount - 1;
+            unProcessedJob.put("imageUUID", imageStore.getImageUUID());
+            unProcessedJob.put("categoryId", imageStore.getCategoryId());
+            unProcessedJob.put("imageFilePath", imageStore.getImageFilePath());
+            unProcessedJob.put("latitude", imageStore.getLatitude());
+            unProcessedJob.put("longitude", imageStore.getLongitude());
+            unProcessedJob.put("storeId", storeId);
+            unProcessedJob.put("timeStamp", imageStore.getTimeStamp());
+            unProcessedJob.put("userId", imageStore.getUserId());
+            unProcessedJob.put("dateId", imageStore.getDateId());
+            unProcessedJob.put("retailerChainCode", retailerChainCode);
+
+
+            unProcessedJob.put("remainingJob", remainingJob.toString());
+        } else {
+            unProcessedJob.put("remainingJob", newJobCount.toString());
+        }
+        LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails----------------\n");
+
+        return unProcessedJob;
+    }
+
     private List<LinkedHashMap<String, String>> generateData() {
         List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
 
 
-        String sampleData= "884912017864, 0, 0, 365, 473, Y, 4.9, STORE LOW\n" +
+        String sampleData = "884912017864, 0, 0, 365, 473, Y, 4.9, STORE LOW\n" +
                 "884912017864, 356, 0, 411, 482, Y, 4.9, STORE LOW\n" +
                 "884912005632, 786, 0, 318, 469, Y, 2.5, STORE AVERAGE\n" +
                 "884912005632, 1109, 0, 366, 469, Y, 2.5, STORE AVERAGE\n" +
@@ -150,15 +154,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 "038000318467, 1431, 2604, 391, 601, N, 2.9, STORE AVERAGE\n" +
                 "038000786471, 1817, 2746, 298, 483, N, 2.9, STORE HIGH";
 
-        String headerString ="UPC, Left Top X, Left Top Y, Width, Height, Promotion, Price, Price_Flag";
+        String headerString = "UPC, Left Top X, Left Top Y, Width, Height, Promotion, Price, Price_Flag";
         String[] line = sampleData.split("\n");
 
-        for (String s :line){
+        for (String s : line) {
             String[] column = s.split(", ");
             String[] headers = headerString.split(", ");
             java.util.LinkedHashMap<String, String> x = new java.util.LinkedHashMap<String, String>();
-            for (int i=0; i <headers.length ;i++){
-                LOGGER.info("---------------headers[i],column[i]----------------\n"+headers[i]+":"+column[i]);
+            for (int i = 0; i < headers.length; i++) {
+                LOGGER.info("---------------headers[i],column[i]----------------\n" + headers[i] + ":" + column[i]);
                 x.put(headers[i], column[i]);
             }
             resultList.add(x);
@@ -166,19 +170,20 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         return resultList;
     }
-    public  List<java.util.LinkedHashMap<String, String>> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store) {
+
+    public List<java.util.LinkedHashMap<String, String>> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts invokeImageAnalysis----------------\n");
-        LOGGER.info("---------------ProcessImageDaoImpl imageFilePath="+imageFilePath+", category="+category+", uuid="+uuid+", retailer="+retailer+", store="+store+"----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         ShellUtil shellUtil = new ShellUtil();
         String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store);
         if (result.contains("{")) {
-            LOGGER.info("---------------ProcessImageDaoImpl  result="+result+"----------------");
+            LOGGER.info("---------------ProcessImageDaoImpl  result=" + result + "----------------");
             result = result.replaceAll("\n", "").replaceAll("\n", "");
 //            String[] trimStart = result.split("Exited with error code 1");
 //            String[] trimLast = trimStart[1].split("Stderr");
 //            String jsonString = trimLast[0];
-            String jsonString = result.substring(result.indexOf("{"),result.lastIndexOf("}")+1);
+            String jsonString = result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1);
             LOGGER.info("---------------jsonString=" + jsonString + "---------------");
 
             JsonObject obj = new JsonParser().parse(jsonString).getAsJsonObject();
@@ -195,7 +200,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             }
             LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
             return resultList;
-        }else{
+        } else {
             return generateData();
         }
     }

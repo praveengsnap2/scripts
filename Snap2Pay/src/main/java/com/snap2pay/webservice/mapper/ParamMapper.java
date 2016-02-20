@@ -10,13 +10,13 @@ package com.snap2pay.webservice.mapper;
  * @author keerthanathangaraju
  */
 public interface ParamMapper {
-  String IMAGE_UUID = "imageUUID";
-  String HOST_ID = "hostId";
-  String CATEGORY_ID = "categoryId";
-  String LATITUDE = "latitude";
-  String LONGITUDE = "longitude";
-  String USER_ID = "userId";
-  String SYNC = "sync";
-  String UPC = "upc";
-  String TIMESTAMP = "timestamp";
+    String IMAGE_UUID = "imageUUID";
+    String HOST_ID = "hostId";
+    String CATEGORY_ID = "categoryId";
+    String LATITUDE = "latitude";
+    String LONGITUDE = "longitude";
+    String USER_ID = "userId";
+    String SYNC = "sync";
+    String UPC = "upc";
+    String TIMESTAMP = "timeStamp";
 }

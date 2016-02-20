@@ -17,16 +17,17 @@ import java.util.List;
 @XmlRootElement(name = "S2PResponse")
 public class Snap2PayOutput {
 
-  private MyHashMapType metaDetail = new MyHashMapType();
-  private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2p");
+    private MyHashMapType metaDetail = new MyHashMapType();
+    @XmlElementWrapper(name = "ResultSet")
+    private List<MyHashMapType> row = new ArrayList<MyHashMapType>();
 
-  @XmlElement(name = "MetaInfo")
-  public MyHashMapType getMetaDetail() {
-    return metaDetail;
-  }
+    public Snap2PayOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList) {
+        LOGGER.error("Inside Snap2PayOutput");
 
-  @XmlElementWrapper(name = "ResultSet")
-  private List<MyHashMapType> row = new ArrayList<MyHashMapType>();
+        this.setRow(resultSet);
+        this.setMetaDetail(inputList);
+    }
 
 //  @XmlElementWrapper(name = "DataSet")
 //  private List<MyHashMapType> dataRow = new ArrayList<MyHashMapType>();
@@ -51,38 +52,23 @@ public class Snap2PayOutput {
 //    }
 //  }
 
-  public void setMetaDetail(HashMap<String, String> inputMap) {
-    metaDetail.setMapProperty(inputMap);
-  }
-
-  public List<MyHashMapType> getRow() {
-    return row;
-  }
-
-  public void setRow(List<java.util.LinkedHashMap<String, String>> resultSet) {
-
-    if (resultSet != null && !resultSet.isEmpty()) {
-      for (LinkedHashMap<String, String> myMap : resultSet) {
-        MyHashMapType m = new MyHashMapType();
-        m.setLinkedMapProperty(myMap);
-        row.add(m);
-      }
-    } else {
-      LinkedHashMap<String, String> myMap = new LinkedHashMap<String, String>();
-      myMap.put("Message", "No Data Returned");
-      MyHashMapType m = new MyHashMapType();
-      m.setLinkedMapProperty(myMap);
-      row.add(m);
+    public Snap2PayOutput() {
+        super();
+        LOGGER.log(Level.DEBUG, "I reached default no-args constructor of Class Snap2PayOutput.");
     }
 
-  }
+    @XmlElement(name = "MetaInfo")
+    public MyHashMapType getMetaDetail() {
+        return metaDetail;
+    }
 
-  public Snap2PayOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList) {
-    LOGGER.error("Inside Snap2PayOutput");
+    public void setMetaDetail(HashMap<String, String> inputMap) {
+        metaDetail.setMapProperty(inputMap);
+    }
 
-    this.setRow(resultSet);
-    this.setMetaDetail(inputList);
-  }
+    public List<MyHashMapType> getRow() {
+        return row;
+    }
 
 //  public Snap2PayOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList, List<java.util.LinkedHashMap<String, Object>> dataSet) {
 //    LOGGER.error("Inside Snap2PayOutput");
@@ -93,17 +79,30 @@ public class Snap2PayOutput {
 //  }
 //
 
-  public Snap2PayOutput() {
-    super();
-    LOGGER.log(Level.DEBUG, "I reached default no-args constructor of Class Snap2PayOutput.");
-  }
+    public void setRow(List<java.util.LinkedHashMap<String, String>> resultSet) {
 
-  @Override
-  public String toString() {
-    return "Snap2PayOutput{" +
-      "metaDetail=" + metaDetail +
-      ", row=" + row +
-      '}';
-  }
+        if (resultSet != null && !resultSet.isEmpty()) {
+            for (LinkedHashMap<String, String> myMap : resultSet) {
+                MyHashMapType m = new MyHashMapType();
+                m.setLinkedMapProperty(myMap);
+                row.add(m);
+            }
+        } else {
+            LinkedHashMap<String, String> myMap = new LinkedHashMap<String, String>();
+            myMap.put("Message", "No Data Returned");
+            MyHashMapType m = new MyHashMapType();
+            m.setLinkedMapProperty(myMap);
+            row.add(m);
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "Snap2PayOutput{" +
+                "metaDetail=" + metaDetail +
+                ", row=" + row +
+                '}';
+    }
 }
 
