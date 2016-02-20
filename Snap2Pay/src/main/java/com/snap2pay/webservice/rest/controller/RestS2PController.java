@@ -71,6 +71,7 @@ public class RestS2PController {
             InputObject inputObject = new InputObject();
 
             if((!timeStamp.isEmpty())||(timeStamp!=null)||(timeStamp!="-9")) {
+                LOGGER.info("---------------Controller----"+timeStamp+"---------------");
                 Date date = new Date(timeStamp);
                 DateFormat format = new SimpleDateFormat("yyyyMMdd");
                 format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
