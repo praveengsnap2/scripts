@@ -51,7 +51,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Override
     public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
 
         ImageStore imageStore = new ImageStore();
         imageStore.setImageUUID(inputObject.getImageUUID());
@@ -65,7 +65,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         String storeId = storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude());
 
-        LOGGER.debug("--------------storeId=" + storeId + "-----------------\n");
+        LOGGER.info("--------------storeId=" + storeId + "-----------------\n");
 
         imageStore.setStoreId(storeId);
         imageStore.setStatus("new");
@@ -73,14 +73,14 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         if (inputObject.getSync().equals("true")) {
             String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
-            LOGGER.debug("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
+            LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
             List<ImageAnalysis> imageAnalysisList =  invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
-            LOGGER.debug("--------------imageAnalysisList="+imageAnalysisList+"-----------------\n");
+            LOGGER.info("--------------imageAnalysisList="+imageAnalysisList+"-----------------\n");
             processImageDao.storeImageAnalysis(imageAnalysisList);
-            LOGGER.debug("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
+            LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
         } else {
-            LOGGER.debug("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
+            LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
             List<java.util.LinkedHashMap<String, String>> result=new ArrayList<java.util.LinkedHashMap<String, String>>();
             return result;
         }
@@ -88,7 +88,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
     @Override
     public LinkedHashMap<String, String> getJob(InputObject inputObject) {
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts getJob----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getJob----------------\n");
 
 
         LinkedHashMap<String, String> unProcessedJob = new LinkedHashMap<String, String>();
@@ -99,7 +99,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             ImageStore imageStore = processImageDao.getImageByStatus(status);
             status = "processing";
 
-            LOGGER.debug("got this job imageStore" + imageStore.toString());
+            LOGGER.info("got this job imageStore" + imageStore.toString());
 
             processImageDao.updateStatusAndHost(inputObject.getHostId(), status, imageStore.getImageUUID());
             String storeId = storeMasterDao.getStoreId(imageStore.getLongitude(), imageStore.getLatitude());
@@ -121,26 +121,26 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         } else {
             unProcessedJob.put("remainingJob", newJobCount.toString());
         }
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends storeImageDetails----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails----------------\n");
 
         return unProcessedJob;
     }
 
 
     public List<ImageAnalysis> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts invokeImageAnalysis----------------\n");
-        LOGGER.debug("---------------ProcessImageDaoImpl imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts invokeImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
         List<ImageAnalysis> imageAnalysisList = new ArrayList<ImageAnalysis>();
         ShellUtil shellUtil = new ShellUtil();
         String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store);
         if (result.contains("{")) {
-            LOGGER.debug("---------------ProcessImageDaoImpl  result=" + result + "----------------");
+            LOGGER.info("---------------ProcessImageDaoImpl  result=" + result + "----------------");
             result = result.replaceAll("\n", "").replaceAll("\n", "");
 //            String[] trimStart = result.split("Exited with error code 1");
 //            String[] trimLast = trimStart[1].split("Stderr");
 //            String jsonString = trimLast[0];
             String jsonString = result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1);
-            LOGGER.debug("---------------jsonString=" + jsonString + "---------------");
+            LOGGER.info("---------------jsonString=" + jsonString + "---------------");
 
             JsonObject obj = new JsonParser().parse(jsonString).getAsJsonObject();
             JsonArray skusArray = obj.get("skus").getAsJsonArray();
@@ -155,7 +155,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 imageAnalysis.setHeight(upcEntry.get("height").getAsString().trim());
                 imageAnalysisList.add(imageAnalysis);
             }
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
             return imageAnalysisList;
         } else {
             return imageAnalysisList;
@@ -165,23 +165,23 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Override
     public List<LinkedHashMap<String, String>> runImageAnalysis(String imageUUID) {
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts runImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts runImageAnalysis----------------\n");
 
         ImageStore imageStore =processImageDao.findByImageUUId(imageUUID);
 
-        LOGGER.debug("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
+        LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
 
         String retailerChainCode = storeMasterDao.getRetailerChainCode(imageStore.getStoreId());
 
-        LOGGER.debug("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
+        LOGGER.info("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
 
         List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId());
 
-        LOGGER.debug("--------------runImageAnalysis::imageAnalysisList="+imageAnalysisList+"-----------------\n");
+        LOGGER.info("--------------runImageAnalysis::imageAnalysisList="+imageAnalysisList+"-----------------\n");
 
         processImageDao.storeImageAnalysis(imageAnalysisList);
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
         return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
 
     }
@@ -189,17 +189,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Override
     public List<LinkedHashMap<String, String>> getImageAnalysis(String imageUUID) {
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts getImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getImageAnalysis----------------\n");
         String status = processImageDao.getImageAnalysisStatus(imageUUID);
 
         if (status.equalsIgnoreCase("processed"))
         {
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
-            LOGGER.debug("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
+            LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
         }else{
             List<LinkedHashMap<String, String>> imageAnalysisList = runImageAnalysis(imageUUID);
-            LOGGER.debug("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
+            LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return imageAnalysisList;
         }
 
@@ -207,35 +207,35 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
     @Override
     public List<LinkedHashMap<String, String>> getStoreOptions() {
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts getStoreOptions----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getStoreOptions----------------\n");
 
         List<LinkedHashMap<String,String>> storeMasterList = storeMasterDao.getStoreOptions();
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends getStoreOptions ----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getStoreOptions ----------------\n");
         return storeMasterList;
     }
     @Override
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject) {
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts getImages----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getImages----------------\n");
 
         List<LinkedHashMap<String,String>> imageStoreList = processImageDao.getImages(inputObject.getStoreId(),inputObject.getDateId());
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends getImages ----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getImages ----------------\n");
         return imageStoreList;
     }
     @Override
     public List<LinkedHashMap<String, String>> getStores(InputObject inputObject) {
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts getStores----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getStores----------------\n");
 
         List<LinkedHashMap<String, String>>  storeMasterList = storeMasterDao.getStores(inputObject.getRetailerChainCode(), inputObject.getState(),inputObject.getCity());
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends getStores ----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getStores ----------------\n");
         return storeMasterList;
     }
 
     @Override
     public List<LinkedHashMap<String, String>> doDistributionCheck(InputObject inputObject) {
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts doDistributionCheck----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts doDistributionCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
         LinkedHashMap<String, String> map = processImageDao.getFacing(inputObject.getImageUUID());
 
@@ -257,13 +257,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             result.add(entry);
         }
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends doDistributionCheck ----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends doDistributionCheck ----------------\n");
         return result;
     }
 
     @Override
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject) {
-        LOGGER.debug("---------------ProcessImageServiceImpl Starts doBeforeAfterCheck----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Starts doBeforeAfterCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
 
         LinkedHashMap<String, String> map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
@@ -305,21 +305,21 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             result.add(entry);
         }
 
-        LOGGER.debug("---------------ProcessImageServiceImpl Ends doBeforeAfterCheck ----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends doBeforeAfterCheck ----------------\n");
         return result;
     }
 
 //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
-//        LOGGER.debug("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
-//        LOGGER.debug("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );
+//        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
+//        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );
 //        List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
 //        ShellUtil shellUtil = new ShellUtil();
 //        String result = shellUtil.readResult(imageUUID);
 //        if (result.contains("{")) {
-//            LOGGER.debug("---------------ProcessImageDaoImpl  result=" + result + "----------------");
+//            LOGGER.info("---------------ProcessImageDaoImpl  result=" + result + "----------------");
 //            result = result.replaceAll("\n", "").replaceAll("\n", "");
 //            String jsonString = result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1);
-//            LOGGER.debug("---------------jsonString=" + jsonString + "---------------");
+//            LOGGER.info("---------------jsonString=" + jsonString + "---------------");
 //
 //            JsonObject obj = new JsonParser().parse(jsonString).getAsJsonObject();
 //            JsonArray skusArray = obj.get("skus").getAsJsonArray();
@@ -333,7 +333,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 //                temp.put("Height", upcEntry.get("height").getAsString());
 //                resultList.add(temp);
 //            }
-//            LOGGER.debug("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
+//            LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
 //            return resultList;
 //        } else {
 //            return resultList;

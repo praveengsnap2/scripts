@@ -36,7 +36,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void insert(ImageStore imageStore) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
         String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,Status,dateId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
@@ -55,7 +55,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(10, imageStore.getDateId());
             ps.executeUpdate();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends insert----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends insert----------------\n");
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
@@ -75,7 +75,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public ImageStore findByImageUUId(String imageUUId) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
         String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
 
         Connection conn = null;
@@ -90,7 +90,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -113,7 +113,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public ImageStore getImageByStatus(String status) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts getImageByStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageByStatus----------------\n");
         String sql = "SELECT * FROM ImageStore WHERE status = ?";
 
         Connection conn = null;
@@ -128,7 +128,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends getImageByStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageByStatus----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -149,7 +149,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public Integer getJobCount(String status) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts getJobCount----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getJobCount----------------\n");
         String sql = "SELECT count(*) FROM ImageStore WHERE status = ?";
 
         Connection conn = null;
@@ -165,7 +165,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends getJobCount----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getJobCount----------------\n");
 
             return numberOfRows;
         } catch (SQLException e) {
@@ -186,7 +186,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateStatusAndHost(String hostId, String status, String imageUUID) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts updateStatusAndHost----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatusAndHost----------------\n");
         String sql = "UPDATE ImageStore SET status = ? , hostId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -198,7 +198,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(3, imageUUID);
             ps.executeUpdate();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends updateStatusAndHost----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateStatusAndHost----------------\n");
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
@@ -218,7 +218,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateStatus(String status, String imageUUID) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts updateStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus----------------\n");
         String sql = "UPDATE ImageStore SET status = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -229,7 +229,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(2, imageUUID);
             ps.executeUpdate();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends updateStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateStatus----------------\n");
 
 
         } catch (SQLException e) {
@@ -250,7 +250,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateStoreId(String storeId, String imageUUID) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts updateStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus----------------\n");
         String sql = "UPDATE ImageStore SET storeId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -261,7 +261,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(2, imageUUID);
             ps.executeUpdate();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends updateStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateStatus----------------\n");
 
 
         } catch (SQLException e) {
@@ -282,7 +282,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
      public List<ImageAnalysis> getImageAnalysis(String imageUUID) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts getImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysis----------------\n");
         String sql = "SELECT * FROM ImageAnalysis WHERE imageUUID = ?";
         List<ImageAnalysis> ImageAnalysisList=new ArrayList<ImageAnalysis>();
         Connection conn = null;
@@ -298,7 +298,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends getImageAnalysis----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysis----------------\n");
 
             return ImageAnalysisList;
         } catch (SQLException e) {
@@ -319,7 +319,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public String getImageAnalysisStatus(String imageUUID) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts getImageAnalysisStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysisStatus----------------\n");
         String sql = "SELECT status FROM ImageAnalysis WHERE imageUUID = ?";
         Connection conn = null;
         String status="queryFailed";
@@ -333,7 +333,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends getImageAnalysisStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysisStatus----------------\n");
 
             return status;
         } catch (SQLException e) {
@@ -355,7 +355,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     //change to insert multiple statement at one go
     @Override
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts storeImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts storeImageAnalysis----------------\n");
         String sql = "INSERT INTO ImageAnalysis (imageUUID, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height,status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
@@ -377,7 +377,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 ps.setString(12, imageAnalysis.getStatus());
                 ps.executeUpdate();
                 ps.close();
-                LOGGER.debug("---------------ProcessImageDaoImpl Ends storeImageAnalysis----------------\n");
+                LOGGER.info("---------------ProcessImageDaoImpl Ends storeImageAnalysis----------------\n");
 
             } catch (SQLException e) {
                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
@@ -398,7 +398,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts getImages----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImages----------------\n");
         String sql = "SELECT imageUUID FROM ImageStore WHERE storeId = ? and dateId = ?";
         List<LinkedHashMap<String,String>> imageStoreList=new ArrayList<LinkedHashMap<String,String>>();
         Connection conn = null;
@@ -415,7 +415,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends getImages----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImages----------------\n");
 
             return imageStoreList;
         } catch (SQLException e) {
@@ -436,7 +436,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public LinkedHashMap<String,String> getFacing(String imageUUID) {
-        LOGGER.debug("---------------ProcessImageDaoImpl Starts getFacing----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing----------------\n");
         String sql = "SELECT upc, count(*) as count FROM ImageAnalysis  WHERE imageUUID = ? group by upc";
         LinkedHashMap<String,String> map=new LinkedHashMap<String,String>();
         Connection conn = null;
@@ -450,7 +450,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
 
             return map;
         } catch (SQLException e) {

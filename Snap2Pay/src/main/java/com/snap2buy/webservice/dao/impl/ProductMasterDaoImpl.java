@@ -34,7 +34,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
         ApplicationContext context = new ClassPathXmlApplicationContext(
                 "base-spring-ctx.xml");
         ProductMasterDaoImpl productMasterDaoImpl = (ProductMasterDaoImpl) context.getBean("ProductMasterDaoImpl");
-        LOGGER.debug("Checking logger");
+        LOGGER.info("Checking logger");
 
         productMasterDaoImpl.getThumbnails("381519019340");
 
@@ -46,7 +46,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public ProductMaster getUpcDetails(String upc) {
-        LOGGER.debug("---------------ProductMasterDaoImpl Starts getUpcDetails----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getUpcDetails----------------\n");
         String sql = "SELECT * FROM ProductMaster WHERE UPC = ?";
 
         Connection conn = null;
@@ -81,12 +81,12 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
                         rs.getString("depth"),
                         rs.getString("product_rating")
                 );
-                LOGGER.debug("---------------ProductMasterDaoImpl - " + productMaster.toString() + "----------------\n");
+                LOGGER.info("---------------ProductMasterDaoImpl - " + productMaster.toString() + "----------------\n");
 
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProductMasterDaoImpl Ends getUpcDetails----------------\n");
+            LOGGER.info("---------------ProductMasterDaoImpl Ends getUpcDetails----------------\n");
 
             return productMaster;
         } catch (SQLException e) {
@@ -107,7 +107,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public File getThumbnails(String upc) {
-        LOGGER.debug("---------------ProductMasterDaoImpl Starts getThumbnails----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getThumbnails----------------\n");
         String sql = "SELECT name, image FROM Thumbnails WHERE id = ?";
         String filePath = "filePath not found";
         File image = null;
@@ -120,7 +120,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String name = rs.getString(1);
-                LOGGER.debug("---------------ProductMasterDaoImpl - getThumbnails image found " + name + "----------------\n");
+                LOGGER.info("---------------ProductMasterDaoImpl - getThumbnails image found " + name + "----------------\n");
                 String dirPath = "/tmp/snap2buy/image/";
                 File dir = new File(dirPath);
                 if (!dir.getParentFile().exists()) {
@@ -145,13 +145,13 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
                 fos.close();
             } else {
                 String name = "default.jpg";
-                LOGGER.debug("---------------ProductMasterDaoImpl - getThumbnails " + name + "----------------\n");
+                LOGGER.info("---------------ProductMasterDaoImpl - getThumbnails " + name + "----------------\n");
                 filePath = "/tmp/snap2buy/image/" + name;
                 image = new File(filePath);
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProductMasterDaoImpl Ends getThumbnails----------------\n");
+            LOGGER.info("---------------ProductMasterDaoImpl Ends getThumbnails----------------\n");
 
             return image;
 
@@ -173,7 +173,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public void storeThumbnails() {
-        LOGGER.debug("---------------ProductMasterDaoImpl Starts storeThumbnails----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts storeThumbnails----------------\n");
 
         String sql = "insert into Thumbnails(id, name, image) values (?, ?, ?)";
         String imageNameList[] = {
@@ -202,7 +202,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
                 ps.close();
                 fis.close();
 
-                LOGGER.debug("---------------ProductMasterDaoImpl Ends storeThumbnails----------------\n");
+                LOGGER.info("---------------ProductMasterDaoImpl Ends storeThumbnails----------------\n");
 
             } catch (SQLException e) {
                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
@@ -230,7 +230,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public List<String> getDistributionLists(String listName) {
-        LOGGER.debug("---------------ProductMasterDaoImpl Starts getDistributionLists----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getDistributionLists----------------\n");
         String sql = "SELECT UPC FROM DistributionList WHERE ListName = ?";
 
         Connection conn = null;
@@ -246,7 +246,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ProductMasterDaoImpl Ends getDistributionLists"+listDistributionList.size()+"----------------\n");
+            LOGGER.info("---------------ProductMasterDaoImpl Ends getDistributionLists"+listDistributionList.size()+"----------------\n");
 
             return listDistributionList;
         } catch (SQLException e) {

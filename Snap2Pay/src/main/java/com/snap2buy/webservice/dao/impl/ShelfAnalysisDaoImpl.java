@@ -49,7 +49,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
 
     @Override
     public void storeShelfAnalysis(ShelfAnalysis shelfAnalysis) {
-        LOGGER.debug("---------------ShelfAnalysisDaoImpl Starts storeShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts storeShelfAnalysis----------------\n");
         String sql = "INSERT INTO ShelfAnalysis (imageUUID, product_code, expected_facings, on_shelf_availability, detected_facings, promotion_label_present, price, promo_price, storeId, categoryId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
@@ -68,7 +68,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
             ps.setString(10, shelfAnalysis.getCategoryId());
             ps.executeUpdate();
             ps.close();
-            LOGGER.debug("---------------ShelfAnalysisDaoImpl Ends storeShelfAnalysis----------------\n");
+            LOGGER.info("---------------ShelfAnalysisDaoImpl Ends storeShelfAnalysis----------------\n");
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
@@ -88,7 +88,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
 
     @Override
     public ShelfAnalysis getShelfAnalysis(String imageUUID) {
-        LOGGER.debug("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysis----------------\n");
         String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
 
         Connection conn = null;
@@ -103,7 +103,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------ShelfAnalysisDaoImpl Ends getShelfAnalysis----------------\n");
+            LOGGER.info("---------------ShelfAnalysisDaoImpl Ends getShelfAnalysis----------------\n");
 
             return shelfAnalysis;
         } catch (SQLException e) {

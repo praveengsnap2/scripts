@@ -35,7 +35,7 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
 
     @Override
     public void storeShelfAnalysis(ShelfAnalysisInput shelfAnalysisInput) {
-        LOGGER.debug("---------------ShelfAnalysisServiceImpl Starts storeShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisServiceImpl Starts storeShelfAnalysis----------------\n");
 
         ShelfAnalysis shelfAnalysis = new ShelfAnalysis();
 
@@ -56,13 +56,13 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
         }
         String status = "done";
         processImageDao.updateStatus(status, shelfAnalysisInput.getImageUUID());
-        LOGGER.debug("---------------ShelfAnalysisServiceImpl Ends storeShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisServiceImpl Ends storeShelfAnalysis----------------\n");
 
     }
 
     @Override
     public LinkedHashMap<String, String> getShelfAnalysis(String imageUUID) {
-        LOGGER.debug("---------------ShelfAnalysisServiceImpl Starts getShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisServiceImpl Starts getShelfAnalysis----------------\n");
 
         ShelfAnalysis shelfAnalysis = shelfAnalysisDao.getShelfAnalysis(imageUUID);
         LinkedHashMap<String, String> shelfAnalysisResult = new LinkedHashMap<String, String>();
@@ -74,7 +74,7 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
         shelfAnalysisResult.put("priceLabel", shelfAnalysis.getPrice());
         shelfAnalysisResult.put("storeId", shelfAnalysis.getStoreId());
         shelfAnalysisResult.put("categoryId", shelfAnalysis.getCategoryId());
-        LOGGER.debug("---------------ShelfAnalysisServiceImpl Ends getShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisServiceImpl Ends getShelfAnalysis----------------\n");
 
         return shelfAnalysisResult;
     }

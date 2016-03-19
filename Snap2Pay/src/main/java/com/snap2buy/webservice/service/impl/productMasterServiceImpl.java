@@ -31,7 +31,7 @@ public class productMasterServiceImpl implements ProductMasterService {
 
     @Override
     public LinkedHashMap<String, String> getUpcDetails(InputObject inputObject) {
-        LOGGER.debug("---------------productMasterServiceImpl Starts getUpcDetails----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Starts getUpcDetails----------------\n");
 
 
         LinkedHashMap<String, String> upcDetails = new LinkedHashMap<String, String>();
@@ -61,30 +61,30 @@ public class productMasterServiceImpl implements ProductMasterService {
         upcDetails.put("depth", productMaster.getDepth());
         upcDetails.put("product_rating", productMaster.getProduct_rating());
 
-        LOGGER.debug("---------------productMasterServiceImpl Ends getUpcDetails----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Ends getUpcDetails----------------\n");
 
         return upcDetails;
     }
 
     @Override
     public File getUpcImage(InputObject inputObject) {
-        LOGGER.debug("---------------productMasterServiceImpl Starts getUpcDetails----------------\n");
-        LOGGER.debug("upc : " + inputObject.getUpc());
-        LOGGER.debug("---------------productMasterServiceImpl Ends getUpcDetails----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Starts getUpcDetails----------------\n");
+        LOGGER.info("upc : " + inputObject.getUpc());
+        LOGGER.info("---------------productMasterServiceImpl Ends getUpcDetails----------------\n");
         return productMasterDao.getThumbnails(inputObject.getUpc());
     }
 
     @Override
     public void storeThumbnails() {
-        LOGGER.debug("---------------productMasterServiceImpl Starts storeThumbnails----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Starts storeThumbnails----------------\n");
         productMasterDao.storeThumbnails();
-        LOGGER.debug("---------------productMasterServiceImpl Ends storeThumbnails----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Ends storeThumbnails----------------\n");
     }
     @Override
     public List<LinkedHashMap<String, String>> getDistributionLists(InputObject inputObject) {
-        LOGGER.debug("---------------productMasterServiceImpl Starts getDistributionLists----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Starts getDistributionLists----------------\n");
 
-        LOGGER.debug("--------------getDistributionLists::getListName=" + inputObject.getListName()+"-----------------\n");
+        LOGGER.info("--------------getDistributionLists::getListName=" + inputObject.getListName()+"-----------------\n");
 
         List<String> listDistributionList = productMasterDao.getDistributionLists(inputObject.getListName());
 
@@ -94,7 +94,7 @@ public class productMasterServiceImpl implements ProductMasterService {
             temp.put("upc", mapEntry);
             result.add(temp);
         }
-        LOGGER.debug("---------------productMasterServiceImpl Ends getDistributionLists ----------------\n");
+        LOGGER.info("---------------productMasterServiceImpl Ends getDistributionLists ----------------\n");
         return result;
     }
 }

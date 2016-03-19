@@ -44,7 +44,7 @@ public class CustomGZIPContentEncodingFilter implements ContainerRequestFilter,
     private static Logger LOGGER = Logger.getLogger("s2b");
 
     public ContainerRequest filter(ContainerRequest request) {
-        LOGGER.debug("Inside GZIP Filter ContainerRequest");
+        LOGGER.info("Inside GZIP Filter ContainerRequest");
         if (request.getRequestHeaders().containsKey(
                 HttpHeaders.CONTENT_ENCODING)) {
             if (request.getRequestHeaders()
@@ -65,31 +65,31 @@ public class CustomGZIPContentEncodingFilter implements ContainerRequestFilter,
 
     public ContainerResponse filter(ContainerRequest request,
                                     ContainerResponse response) {
-        LOGGER.debug("Inside GZIP Filter ContainerResponse");
+        LOGGER.info("Inside GZIP Filter ContainerResponse");
         if ((!request.getRequestUri().toString().contains("ReportsAPI"))) {
-            LOGGER.debug("UI Request");
+            LOGGER.info("UI Request");
             if (response.getEntity() != null
                     && request.getRequestHeaders().containsKey(
                     HttpHeaders.ACCEPT_ENCODING)
                     && !response.getHttpHeaders().containsKey(
                     HttpHeaders.CONTENT_ENCODING)) {
-                LOGGER.debug("Request has Accept-Encoding Header");
+                LOGGER.info("Request has Accept-Encoding Header");
                 if (request.getRequestHeaders()
                         .getFirst(HttpHeaders.ACCEPT_ENCODING).contains("gzip")) {
-                    LOGGER.debug("Request has Accept-Encoding:gzip Header");
-                    LOGGER.debug("Zipping Response");
+                    LOGGER.info("Request has Accept-Encoding:gzip Header");
+                    LOGGER.info("Zipping Response");
                     response.getHttpHeaders().add(HttpHeaders.CONTENT_ENCODING,
                             "gzip");
                     response.setContainerResponseWriter(new Adapter(response
                             .getContainerResponseWriter()));
                 } else {
-                    LOGGER.debug("Accept-Encoding Header header value doesnot contain 'gzip' hence Not Zipping Response");
+                    LOGGER.info("Accept-Encoding Header header value doesnot contain 'gzip' hence Not Zipping Response");
                 }
             } else {
-                LOGGER.debug("Accept-Encoding Header Not Present or Content-Encoding header present hence Not Zipping Response");
+                LOGGER.info("Accept-Encoding Header Not Present or Content-Encoding header present hence Not Zipping Response");
             }
         } else {
-            LOGGER.debug("API Request hence Not Zipping Response");
+            LOGGER.info("API Request hence Not Zipping Response");
 
         }
         return response;

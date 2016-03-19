@@ -35,7 +35,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public String getStoreId(String longitude, String latitude) {
-        LOGGER.debug("---------------StoreMasterImpl Starts getStoreId----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getStoreId----------------\n");
         String sql = "SELECT * FROM StoreMaster";
 
         Connection conn = null;
@@ -68,7 +68,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------StoreMasterImpl Ends getStoreId----------------\n");
+            LOGGER.info("---------------StoreMasterImpl Ends getStoreId----------------\n");
 
             return storeId;
         } catch (SQLException e) {
@@ -89,7 +89,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public String getRetailerChainCode(String storeId) {
-        LOGGER.debug("---------------StoreMasterImpl Starts getRetailerChainCode----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getRetailerChainCode----------------\n");
         String sql = "SELECT * FROM StoreMaster WHERE storeId = ? ";
 
         Connection conn = null;
@@ -104,7 +104,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------StoreMasterImpl Ends getRetailerChainCode----------------\n");
+            LOGGER.info("---------------StoreMasterImpl Ends getRetailerChainCode----------------\n");
 
             return retailerChainCode;
         } catch (SQLException e) {
@@ -126,7 +126,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public List<LinkedHashMap<String,String>> getStoreOptions() {
-        LOGGER.debug("---------------StoreMasterImpl Starts getStoreOptions----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getStoreOptions----------------\n");
         String sql = "SELECT RetailerChainCode,State,City FROM StoreMaster group by RetailerChainCode,State,City";
 
         Connection conn = null;
@@ -145,7 +145,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------StoreMasterImpl Ends getStoreOptions"+storeMasterList.size()+"----------------\n");
+            LOGGER.info("---------------StoreMasterImpl Ends getStoreOptions"+storeMasterList.size()+"----------------\n");
 
             return storeMasterList;
         } catch (SQLException e) {
@@ -167,7 +167,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public List<LinkedHashMap<String, String>>  getStores(String retailerChainCode, String state, String city) {
-        LOGGER.debug("---------------StoreMasterImpl Starts getStores----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getStores----------------\n");
         String sql = "SELECT StoreID,Street FROM StoreMaster where RetailerChainCode = ? and State = ? and City = ?";
 
         Connection conn = null;
@@ -189,7 +189,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.debug("---------------StoreMasterImpl Ends getStores----------------\n");
+            LOGGER.info("---------------StoreMasterImpl Ends getStores----------------\n");
 
             return storeMasterList;
         } catch (SQLException e) {

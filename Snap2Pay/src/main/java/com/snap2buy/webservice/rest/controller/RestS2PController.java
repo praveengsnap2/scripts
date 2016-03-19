@@ -65,13 +65,13 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts saveImage----------------\n");
+        LOGGER.info("---------------Controller Starts saveImage----------------\n");
         try {
             UUID uniqueKey = UUID.randomUUID();
             InputObject inputObject = new InputObject();
 
             if((!timeStamp.isEmpty())||(timeStamp!=null)||(timeStamp!="-9")) {
-                LOGGER.debug("---------------Controller----"+timeStamp+"---------------");
+                LOGGER.info("---------------Controller----"+timeStamp+"---------------");
                 Date date = new Date(Long.parseLong(timeStamp));
                 DateFormat format = new SimpleDateFormat("yyyyMMdd");
                 format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
@@ -110,7 +110,7 @@ public class RestS2PController {
                 String name = item.getFieldName();
                 String value = item.getString();
                 if (item.isFormField()) {
-                    LOGGER.debug("Form field " + name + " with value "
+                    LOGGER.info("Form field " + name + " with value "
                             + value + " detected.");
                 } else {
                     File uploadedFile = new File("/usr/share/s2pImages/" + userId + "/" + uniqueKey.toString() + ".jpg");
@@ -127,10 +127,10 @@ public class RestS2PController {
 
                     result = ("File field " + name + " with file name "
                             + item.getName() + " detected.");
-                    LOGGER.debug(result);
+                    LOGGER.info(result);
                 }
             }
-            LOGGER.debug("---------------Controller Starts saveImage with details " + inputObject + "----------------\n");
+            LOGGER.info("---------------Controller Starts saveImage with details " + inputObject + "----------------\n");
 
             return restS2PAction.saveImage(inputObject);
         } catch (Exception e) {
@@ -145,7 +145,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends----------------\n");
+            LOGGER.info("---------------Controller Ends----------------\n");
             return rio;
         }
     }
@@ -158,7 +158,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getJob----------------\n");
+        LOGGER.info("---------------Controller Starts getJob----------------\n");
         try {
             InputObject inputObject = new InputObject();
             inputObject.setHostId(hostId);
@@ -176,7 +176,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getJob----------------\n");
+            LOGGER.info("---------------Controller Ends getJob----------------\n");
             return rio;
         }
     }
@@ -190,7 +190,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getImage----------------\n");
+        LOGGER.info("---------------Controller Starts getImage----------------\n");
         try {
 
             File f = new File("/usr/share/s2pImages/" + userId + "/" + imageUUID + ".jpg");
@@ -210,7 +210,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getImage----------------\n");
+            LOGGER.info("---------------Controller Ends getImage----------------\n");
             return Response.serverError().build();
         }
     }
@@ -224,11 +224,11 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts storeShelfAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts storeShelfAnalysis----------------\n");
         try {
 
             ShelfAnalysisInput shelfAnalysisInput = p.getValue();
-            LOGGER.debug(shelfAnalysisInput.toString());
+            LOGGER.info(shelfAnalysisInput.toString());
             // shelfAnalysisInput.setImageUUID(imageUUID);
 
             return restS2PAction.storeShelfAnalysis(shelfAnalysisInput);
@@ -244,7 +244,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getShelfAnalysis----------------\n");
+            LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
             return rio;
         }
     }
@@ -258,7 +258,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getShelfAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts getShelfAnalysis----------------\n");
         try {
             Snap2PayOutput rio;
             InputObject inputObject = new InputObject();
@@ -279,7 +279,7 @@ public class RestS2PController {
             inputList.put("imageUUID", imageUUID);
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getShelfAnalysis----------------\n");
+            LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
             return rio;
         }
     }
@@ -293,7 +293,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getUpcDetails----------------\n");
+        LOGGER.info("---------------Controller Starts getUpcDetails----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -313,7 +313,7 @@ public class RestS2PController {
             inputList.put("upc", upc);
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getUpcDetails----------------\n");
+            LOGGER.info("---------------Controller Ends getUpcDetails----------------\n");
             return rio;
         }
     }
@@ -326,7 +326,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getUpcImage----------------\n");
+        LOGGER.info("---------------Controller Starts getUpcImage----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -347,7 +347,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getUpcImage----------------\n");
+            LOGGER.info("---------------Controller Ends getUpcImage----------------\n");
             return Response.serverError().build();
         }
     }
@@ -359,7 +359,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts checkS2P----------------\n");
+        LOGGER.info("---------------Controller Starts checkS2P----------------\n");
         try {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
@@ -379,7 +379,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends checkS2P----------------\n");
+            LOGGER.info("---------------Controller Ends checkS2P----------------\n");
             return rio;
         }
     }
@@ -391,7 +391,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts storeThumbnails----------------\n");
+        LOGGER.info("---------------Controller Starts storeThumbnails----------------\n");
         try {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
@@ -412,7 +412,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends checkS2P----------------\n");
+            LOGGER.info("---------------Controller Ends checkS2P----------------\n");
             return rio;
         }
     }
@@ -432,7 +432,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getReport----------------\n");
+        LOGGER.info("---------------Controller Starts getReport----------------\n");
         try {
 
             InputObject inputObject = new InputObject();
@@ -463,7 +463,7 @@ public class RestS2PController {
             inputList.put("brandId", brandId);
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getReport----------------\n");
+            LOGGER.info("---------------Controller Ends getReport----------------\n");
             return rio;
         }
     }
@@ -476,7 +476,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts runImageAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts runImageAnalysis----------------\n");
         try {
             Snap2PayOutput rio;
             InputObject inputObject = new InputObject();
@@ -497,7 +497,7 @@ public class RestS2PController {
             inputList.put("imageUUID", imageUUID);
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends runImageAnalysis----------------\n");
+            LOGGER.info("---------------Controller Ends runImageAnalysis----------------\n");
             return rio;
         }
     }
@@ -509,7 +509,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getImageAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts getImageAnalysis----------------\n");
         try {
 
             InputObject inputObject = new InputObject();
@@ -530,7 +530,7 @@ public class RestS2PController {
             inputList.put("imageUUID", imageUUID);
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getImageAnalysis----------------\n");
+            LOGGER.info("---------------Controller Ends getImageAnalysis----------------\n");
             return rio;
         }
     }
@@ -542,7 +542,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getStoreOptions----------------\n");
+        LOGGER.info("---------------Controller Starts getStoreOptions----------------\n");
         try {
             Snap2PayOutput rio;
 
@@ -559,7 +559,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getStoreOptions----------------\n");
+            LOGGER.info("---------------Controller Ends getStoreOptions----------------\n");
             return rio;
         }
     }
@@ -573,7 +573,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getImages----------------\n");
+        LOGGER.info("---------------Controller Starts getImages----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -592,7 +592,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getImages----------------\n");
+            LOGGER.info("---------------Controller Ends getImages----------------\n");
             return rio;
         }
     }
@@ -607,7 +607,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getStores----------------\n");
+        LOGGER.info("---------------Controller Starts getStores----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -627,7 +627,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getStores----------------\n");
+            LOGGER.info("---------------Controller Ends getStores----------------\n");
             return rio;
         }
     }
@@ -639,10 +639,10 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts getDistributionLists----------------\n");
+        LOGGER.info("---------------Controller Starts getDistributionLists----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            LOGGER.debug("---------------Controller::getDistributionLists::listName="+listName+"----------------\n");
+            LOGGER.info("---------------Controller::getDistributionLists::listName="+listName+"----------------\n");
             inputObject.setListName(listName);
             return restS2PAction.getDistributionLists(inputObject);
 
@@ -657,7 +657,7 @@ public class RestS2PController {
             inputList.put("poutstatus", "-5");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends getDistributionLists----------------\n");
+            LOGGER.info("---------------Controller Ends getDistributionLists----------------\n");
             return rio;
         }
     }
@@ -670,10 +670,10 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts doDistributionCheck----------------\n");
+        LOGGER.info("---------------Controller Starts doDistributionCheck----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            LOGGER.debug("---------------Controller::doDistributionCheck::listName="+listName+"::imageUUID"+imageUUID+"----------------\n");
+            LOGGER.info("---------------Controller::doDistributionCheck::listName="+listName+"::imageUUID"+imageUUID+"----------------\n");
             inputObject.setListName(listName);
             inputObject.setImageUUID(imageUUID);
             return restS2PAction.doDistributionCheck(inputObject);
@@ -689,7 +689,7 @@ public class RestS2PController {
             inputList.put("listName",listName);
             inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends doDistributionCheck----------------\n");
+            LOGGER.info("---------------Controller Ends doDistributionCheck----------------\n");
             return rio;
         }
     }
@@ -703,10 +703,10 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.debug("---------------Controller Starts doBeforeAfterCheck----------------\n");
+        LOGGER.info("---------------Controller Starts doBeforeAfterCheck----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            LOGGER.debug("---------------Controller::doBeforeAfterCheck::imageUUID-1="+prevImageUUID+"::imageUUID-2"+imageUUID+"----------------\n");
+            LOGGER.info("---------------Controller::doBeforeAfterCheck::imageUUID-1="+prevImageUUID+"::imageUUID-2"+imageUUID+"----------------\n");
             inputObject.setPrevImageUUID(prevImageUUID);
             inputObject.setImageUUID(imageUUID);
             return restS2PAction.doBeforeAfterCheck(inputObject);
@@ -722,7 +722,7 @@ public class RestS2PController {
             inputList.put("prevImageUUID",prevImageUUID);
             inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.debug("---------------Controller Ends doBeforeAfterCheck----------------\n");
+            LOGGER.info("---------------Controller Ends doBeforeAfterCheck----------------\n");
             return rio;
         }
     }

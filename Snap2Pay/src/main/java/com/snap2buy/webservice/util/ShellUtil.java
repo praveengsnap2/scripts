@@ -15,7 +15,7 @@ public class ShellUtil {
         Boolean waitForResponse = true;
         String command = "invoke_image_analysis.sh";
         File f = new File("/root");
-        LOGGER.debug("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
+        LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
 
@@ -27,25 +27,25 @@ public class ShellUtil {
         pb.directory(f);
         pb.redirectErrorStream(true);
 
-        LOGGER.debug("Linux command: " + command);
+        LOGGER.info("Linux command: " + command);
 
         try {
             Process shell = pb.start();
             if (waitForResponse) {
                 InputStream shellIn = shell.getInputStream();
                 int shellExitStatus = shell.waitFor();
-                LOGGER.debug("Exit status" + shellExitStatus);
+                LOGGER.info("Exit status" + shellExitStatus);
                 response = convertStreamToStr(shellIn);
                 shellIn.close();
             }
         } catch (IOException e) {
-            LOGGER.debug("Error occured while executing Linux command. Error Description: "
+            LOGGER.info("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         } catch (InterruptedException e) {
-            LOGGER.debug("Error occured while executing Linux command. Error Description: "
+            LOGGER.info("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         }
-        LOGGER.debug("---------------ShellUtil response=" + response);
+        LOGGER.info("---------------ShellUtil response=" + response);
         return response;
     }
 
@@ -54,7 +54,7 @@ public class ShellUtil {
         Boolean waitForResponse = true;
         String command = "read_result.sh";
         File f = new File("/root");
-        LOGGER.debug("---------------ShellUtil imageUUID=" + imageUUID+"----------------\n");
+        LOGGER.info("---------------ShellUtil imageUUID=" + imageUUID+"----------------\n");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
 
@@ -62,25 +62,25 @@ public class ShellUtil {
         pb.directory(f);
         pb.redirectErrorStream(true);
 
-        LOGGER.debug("Linux command: " + command);
+        LOGGER.info("Linux command: " + command);
 
         try {
             Process shell = pb.start();
             if (waitForResponse) {
                 InputStream shellIn = shell.getInputStream();
                 int shellExitStatus = shell.waitFor();
-                LOGGER.debug("Exit status" + shellExitStatus);
+                LOGGER.info("Exit status" + shellExitStatus);
                 response = convertStreamToStr(shellIn);
                 shellIn.close();
             }
         } catch (IOException e) {
-            LOGGER.debug("Error occured while executing Linux command. Error Description: "
+            LOGGER.info("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         } catch (InterruptedException e) {
-            LOGGER.debug("Error occured while executing Linux command. Error Description: "
+            LOGGER.info("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         }
-        LOGGER.debug("---------------ShellUtil response=" + response);
+        LOGGER.info("---------------ShellUtil response=" + response);
         return response;
     }
 
