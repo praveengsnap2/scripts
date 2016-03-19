@@ -21,7 +21,7 @@ public class InputObject {
     @Id
     private String visitId;
     private String retailerChainCode;
-    private String listName;
+    private String listId;
     private String state;
     private String city;
     private String upc;
@@ -62,12 +62,12 @@ public class InputObject {
         this.prevImageUUID = prevImageUUID;
     }
 
-    public String getListName() {
-        return listName;
+    public String getListId() {
+        return listId;
     }
 
-    public void setListName(String listName) {
-        this.listName = listName;
+    public void setListId(String listId) {
+        this.listId = listId;
     }
 
     public String getRetailerChainCode() {
@@ -349,7 +349,7 @@ public class InputObject {
         return "InputObject{" +
                 "visitId='" + visitId + '\'' +
                 ", retailerChainCode='" + retailerChainCode + '\'' +
-                ", listName='" + listName + '\'' +
+                ", listId='" + listId + '\'' +
                 ", state='" + state + '\'' +
                 ", city='" + city + '\'' +
                 ", upc='" + upc + '\'' +

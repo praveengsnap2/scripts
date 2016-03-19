@@ -270,7 +270,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
 
         Set<String> keySet =map.keySet();
-        List<String> listDistributionList= productMasterDao.getUpcForList(inputObject.getListName());
+        List<String> listDistributionList= productMasterDao.getUpcForList(inputObject.getListId());
 
         List<String> dlUpc = new ArrayList<String>();
         for (String unit: listDistributionList){

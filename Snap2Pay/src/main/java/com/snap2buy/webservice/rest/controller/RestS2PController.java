@@ -664,14 +664,14 @@ public class RestS2PController {
     @Path("/doDistributionCheck")
     public Snap2PayOutput doDistributionCheck(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
-            @QueryParam(ParamMapper.LIST_NAME) @DefaultValue("-9") String listName,
+            @QueryParam(ParamMapper.LIST_ID) @DefaultValue("-9") String listId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts doDistributionCheck::doDistributionCheck::listName=" + listName + "::imageUUID=" + imageUUID + "----------------\n");
+        LOGGER.info("---------------Controller Starts doDistributionCheck::doDistributionCheck::listName=" + listId + "::imageUUID=" + imageUUID + "----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            inputObject.setListName(listName);
+            inputObject.setListId(listId);
             inputObject.setImageUUID(imageUUID);
             return restS2PAction.doDistributionCheck(inputObject);
 
@@ -683,7 +683,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("poutstatus", "-5");
-            inputList.put("listName",listName);
+            inputList.put("listName",listId);
             inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doDistributionCheck----------------\n");

@@ -4,15 +4,15 @@ package com.snap2buy.webservice.model;
  * Created by sachin on 3/16/16.
  */
 public class DistributionList {
-    String listName;
     String listId;
+    String listName;
     String owner;
     String createdTime;
     String lastModifiedTime;
 
-    public DistributionList(String listName, String listId, String owner, String createdTime, String lastModifiedTime) {
-        this.listName = listName;
+    public DistributionList(String listId, String listName, String owner, String createdTime, String lastModifiedTime) {
         this.listId = listId;
+        this.listName = listName;
         this.owner = owner;
         this.createdTime = createdTime;
         this.lastModifiedTime = lastModifiedTime;

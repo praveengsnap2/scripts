@@ -29,6 +29,6 @@ public interface ParamMapper {
     String CITY ="city";
     String STATE="state";
     String RETAILER_CHAIN_CODE = "retailerChainCode";
-    String LIST_NAME = "listName";
+    String LIST_ID = "listId";
 
 }
