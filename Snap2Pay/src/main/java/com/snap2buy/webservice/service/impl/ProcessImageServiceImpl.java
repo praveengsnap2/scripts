@@ -176,26 +176,30 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             result.add(map);
             return result;
         }
+        else if (imageStore.getImageStatus().equalsIgnoreCase("done"))
+        {
+            return getImageAnalysis(imageStore.getImageUUID());
 
-        LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
+        }else {
+            LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
 
-        String retailerChainCode = storeMasterDao.getRetailerChainCode(imageStore.getStoreId());
+            String retailerChainCode = storeMasterDao.getRetailerChainCode(imageStore.getStoreId());
 
-        LOGGER.info("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
+            LOGGER.info("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
 
-        List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId());
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId());
 
-        LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
+            LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
-        String imageStatus="done";
-        processImageDao.updateImageAnalysisStatus(imageStatus,imageUUID);
-        LOGGER.info("--------------runImageAnalysis::updateStatus=" + imageStatus + "-----------------\n");
+            String imageStatus = "done";
+            processImageDao.updateImageAnalysisStatus(imageStatus, imageUUID);
+            LOGGER.info("--------------runImageAnalysis::updateStatus=" + imageStatus + "-----------------\n");
 
-        processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
+            processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
 
-        LOGGER.info("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
-        return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
-
+            LOGGER.info("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
+            return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
+        }
     }
 
     @Override
