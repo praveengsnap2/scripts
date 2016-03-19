@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.snap2pay</groupId>
-    <artifactId>Snap2Pay</artifactId>
+    <groupId>com.snap2buy</groupId>
+    <artifactId>Snap2buy</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>Snap2Pay</name>
+    <name>Snap2Buy</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -214,6 +214,11 @@
                 </exclusion>
             </exclusions>
 
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
