@@ -20,6 +20,9 @@ public class ConverterUtil {
             temp.put("LeftTopY", listEntry.getLeftTopY());
             temp.put("Width", listEntry.getWidth());
             temp.put("Height", listEntry.getHeight());
+            temp.put("Promotion", listEntry.getPromotion());
+            temp.put("Price", listEntry.getPrice());
+            temp.put("PriceLabel", listEntry.getPriceLabel());
             result.add(temp);
         }
         return result;
@@ -34,6 +37,9 @@ public class ConverterUtil {
             listEntry.setLeftTopY(mapEntry.get("LeftTopY"));
             listEntry.setWidth(mapEntry.get("Width"));
             listEntry.setHeight(mapEntry.get("Height"));
+            listEntry.setPromotion(mapEntry.get("Promotion"));
+            listEntry.setPrice(mapEntry.get("Price"));
+            listEntry.setPriceLabel(mapEntry.get("PriceLabel"));
             dataList.add(listEntry);
         }
         return dataList;
