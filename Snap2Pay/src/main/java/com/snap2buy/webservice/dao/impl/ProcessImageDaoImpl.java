@@ -37,7 +37,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void insert(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
-        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,Status,dateId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,dateId,imageStatus,shelfStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -51,8 +51,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(6, imageStore.getLongitude());
             ps.setString(7, imageStore.getTimeStamp());
             ps.setString(8, imageStore.getStoreId());
-            ps.setString(9, imageStore.getShelfStatus());
-            ps.setString(10, imageStore.getDateId());
+            ps.setString(9, imageStore.getDateId());
+            ps.setString(10, imageStore.getImageStatus());
+            ps.setString(11, imageStore.getShelfStatus());
             ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends insert----------------\n");

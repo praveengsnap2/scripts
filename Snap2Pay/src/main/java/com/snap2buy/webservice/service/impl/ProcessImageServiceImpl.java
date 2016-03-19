@@ -180,9 +180,9 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
-        String status="done";
-        processImageDao.updateImageAnalysisStatus(status,imageUUID);
-        LOGGER.info("--------------runImageAnalysis::updateStatus=" + status + "-----------------\n");
+        String imageStatus="done";
+        processImageDao.updateImageAnalysisStatus(imageStatus,imageUUID);
+        LOGGER.info("--------------runImageAnalysis::updateStatus=" + imageStatus + "-----------------\n");
 
         processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
 
@@ -242,7 +242,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> doDistributionCheck(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doDistributionCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
-        LinkedHashMap<String, String> map = processImageDao.getFacing(inputObject.getImageUUID());
+
+        LinkedHashMap<String, String> map=new LinkedHashMap<String, String>();
+        String imageStatus=processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
+        if (imageStatus.equalsIgnoreCase("done")) {
+            map = processImageDao.getFacing(inputObject.getImageUUID());
+        }else {
+            getImageAnalysis(inputObject.getPrevImageUUID());
+            map = processImageDao.getFacing(inputObject.getImageUUID());
+        }
 
         Set<String> keySet =map.keySet();
         List<String> listDistributionList= productMasterDao.getDistributionLists(inputObject.getListName());
@@ -289,14 +297,14 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
 
 
-        Set<String> keyset1=map1.keySet();
-        Set<String> keyset2=map2.keySet();
+        Set<String> keySet1=map1.keySet();
+        Set<String> keySet2=map2.keySet();
 
-        Set<String> union = new HashSet<String>(keyset1);
-        union.addAll(keyset2);
+        Set<String> union = new HashSet<String>(keySet1);
+        union.addAll(keySet2);
 
-        Set<String> intersection = new HashSet<String>(keyset1);
-        intersection.retainAll(keyset2);
+        Set<String> intersection = new HashSet<String>(keySet1);
+        intersection.retainAll(keySet2);
 
         for (String unit: union){
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
@@ -307,14 +315,14 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 entry.put("after_facing", map2.get(unit));
                 entry.put("after_osa","1");
             }
-            else if(keyset1.contains(unit)) {
+            else if(keySet1.contains(unit)) {
                 entry.put("upc",unit);
                 entry.put("before_facing", map1.get(unit));
                 entry.put("before_osa","1");
                 entry.put("after_facing", "0");
                 entry.put("after_osa","0");
             }
-            else if (keyset2.contains(unit)){
+            else if (keySet2.contains(unit)){
                 entry.put("upc",unit);
                 entry.put("before_facing", "0");
                 entry.put("before_osa","0");
