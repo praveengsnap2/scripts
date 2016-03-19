@@ -326,7 +326,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"));
+                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"));
                 ImageAnalysisList.add(imageAnalysis);
             }
             rs.close();
@@ -389,7 +389,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts storeImageAnalysis::ImageAnalysisList="+ImageAnalysisList+"::imageStore="+imageStore+"----------------\n");
-        String sql = "INSERT INTO ImageAnalysis (imageUUID, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+        String sql = "INSERT INTO ImageAnalysis (imageUUID, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height promotion price priceLabel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         for (ImageAnalysis imageAnalysis : ImageAnalysisList) {
@@ -407,6 +407,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 ps.setString(9, imageAnalysis.getLeftTopY());
                 ps.setString(10, imageAnalysis.getWidth());
                 ps.setString(11, imageAnalysis.getHeight());
+                ps.setString(12, imageAnalysis.getPromotion());
+                ps.setString(13, imageAnalysis.getPrice());
+                ps.setString(14, imageAnalysis.getPriceLabel());
                 ps.executeUpdate();
                 ps.close();
                 LOGGER.info("---------------ProcessImageDaoImpl Ends storeImageAnalysis----------------\n");
@@ -500,4 +503,5 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
         }
     }
+
 }

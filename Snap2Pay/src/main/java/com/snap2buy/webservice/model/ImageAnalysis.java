@@ -15,13 +15,15 @@ public class ImageAnalysis {
     String leftTopY;
     String width;
     String height;
-
+    String promotion;
+    String price;
+    String priceLabel;
 
     public ImageAnalysis() {
         super();
     }
 
-    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height) {
+    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String promotion, String price, String priceLabel) {
         this.imageUUID = imageUUID;
         this.storeId = storeId;
         this.dateId = dateId;
@@ -33,6 +35,9 @@ public class ImageAnalysis {
         this.leftTopY = leftTopY;
         this.width = width;
         this.height = height;
+        this.promotion = promotion;
+        this.price = price;
+        this.priceLabel = priceLabel;
     }
 
     public String getImageUUID() {
@@ -123,6 +128,30 @@ public class ImageAnalysis {
         this.height = height;
     }
 
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getPriceLabel() {
+        return priceLabel;
+    }
+
+    public void setPriceLabel(String priceLabel) {
+        this.priceLabel = priceLabel;
+    }
+
     @Override
     public String toString() {
         return "ImageAnalysis{" +
@@ -137,6 +166,9 @@ public class ImageAnalysis {
                 ", leftTopY='" + leftTopY + '\'' +
                 ", width='" + width + '\'' +
                 ", height='" + height + '\'' +
+                ", promotion='" + promotion + '\'' +
+                ", price='" + price + '\'' +
+                ", priceLabel='" + priceLabel + '\'' +
                 '}';
     }
 }

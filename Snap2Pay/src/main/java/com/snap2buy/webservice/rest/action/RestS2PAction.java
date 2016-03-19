@@ -304,15 +304,13 @@ public class RestS2PAction {
 
         return reportIO;
     }
-    public Snap2PayOutput getDistributionLists(InputObject inputObject) {
+    public Snap2PayOutput getDistributionLists() {
         LOGGER.info("---------------RestAction Starts getDistributionLists----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
 
-        resultListToPass = productMasterService.getDistributionLists(inputObject);
+        resultListToPass = productMasterService.getDistributionLists();
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
-
-        reportInput.put("listName", inputObject.getListName());
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends getDistributionLists----------------\n");

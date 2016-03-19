@@ -16,6 +16,6 @@ public interface ProductMasterService {
 
     void storeThumbnails();
 
-    public List<LinkedHashMap<String, String>> getDistributionLists(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> getDistributionLists();
 }
 

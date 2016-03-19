@@ -149,11 +149,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 ImageAnalysis imageAnalysis = new ImageAnalysis();
                 JsonObject upcEntry = skus.getAsJsonObject();
                 java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
-                imageAnalysis.setUpc(upcEntry.get("upc").getAsString().trim());
-                imageAnalysis.setLeftTopX(upcEntry.get("x").getAsString().trim());
-                imageAnalysis.setLeftTopY(upcEntry.get("y").getAsString().trim());
-                imageAnalysis.setWidth(upcEntry.get("width").getAsString().trim());
-                imageAnalysis.setHeight(upcEntry.get("height").getAsString().trim());
+                imageAnalysis.setUpc(upcEntry.get("UPC").getAsString().trim());
+                imageAnalysis.setLeftTopX(upcEntry.get("LEFT_TOP_X").getAsString().trim());
+                imageAnalysis.setLeftTopY(upcEntry.get("LEFT_TOP_Y").getAsString().trim());
+                imageAnalysis.setWidth(upcEntry.get("Width").getAsString().trim());
+                imageAnalysis.setHeight(upcEntry.get("Height").getAsString().trim());
+                imageAnalysis.setUpcConfidence(upcEntry.get("UPC_Confidence").getAsString().trim());
+                imageAnalysis.setAlternateUpc(upcEntry.get("Alt_UPC").getAsString().trim());
+                imageAnalysis.setAlternateUpcConfidence(upcEntry.get("Alt_UPC_Confidence").getAsString().trim());
+                imageAnalysis.setPromotion(upcEntry.get("Promotion").getAsString().trim());
+                imageAnalysis.setPrice(upcEntry.get("Price").getAsString().trim());
+                imageAnalysis.setPriceLabel(upcEntry.get("Price_Label").getAsString().trim());
                 imageAnalysisList.add(imageAnalysis);
             }
             LOGGER.info("---------------ProcessImageDaoImpl Ends invokeImageAnalysis----------------\n");
@@ -264,7 +270,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
 
         Set<String> keySet =map.keySet();
-        List<String> listDistributionList= productMasterDao.getDistributionLists(inputObject.getListName());
+        List<String> listDistributionList= productMasterDao.getUpcForList(inputObject.getListName());
 
         List<String> dlUpc = new ArrayList<String>();
         for (String unit: listDistributionList){

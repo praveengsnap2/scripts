@@ -565,6 +565,7 @@ public class RestS2PController {
         }
     }
 
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getImages")
@@ -636,15 +637,12 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getDistributionLists")
     public Snap2PayOutput getDistributionLists(
-            @QueryParam(ParamMapper.LIST_NAME) @DefaultValue("-9") String listName,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getDistributionLists::listName=" + listName + "----------------\n");
+        LOGGER.info("---------------Controller Starts getDistributionLists----------------\n");
         try {
-            InputObject inputObject = new InputObject();
-            inputObject.setListName(listName);
-            return restS2PAction.getDistributionLists(inputObject);
+            return restS2PAction.getDistributionLists();
 
         } catch (Exception e) {
             e.printStackTrace();

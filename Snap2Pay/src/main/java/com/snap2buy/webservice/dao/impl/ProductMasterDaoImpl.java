@@ -2,6 +2,7 @@ package com.snap2buy.webservice.dao.impl;
 
 import com.snap2buy.webservice.dao.ProductMasterDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
+import com.snap2buy.webservice.model.DistributionList;
 import com.snap2buy.webservice.model.ProductMaster;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,26 +230,62 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
     }
 
     @Override
-    public List<String> getDistributionLists(String listName) {
-        LOGGER.info("---------------ProductMasterDaoImpl Starts getDistributionLists::listName="+listName+"----------------\n");
-        String sql = "SELECT UPC FROM DistributionList WHERE ListName = ?";
+    public List<DistributionList> getDistributionLists() {
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getDistributionLists----------------\n");
+        String sql = "SELECT * FROM DistributionList ";
 
         Connection conn = null;
-        List<String> listDistributionList=new ArrayList<String>();
+        List<DistributionList> listDistributionList=new ArrayList<DistributionList>();
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, listName);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                listDistributionList.add(rs.getString("UPC"));
+                DistributionList distributionList=new DistributionList(rs.getString("ListId"),rs.getString("ListName"),rs.getString("Owner"),rs.getString("CreatedTime"),rs.getString("LastModifiedTime"));
+                listDistributionList.add(distributionList);
             }
             rs.close();
             ps.close();
             LOGGER.info("---------------ProductMasterDaoImpl Ends getDistributionLists" + listDistributionList.size() + "----------------\n");
 
             return listDistributionList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<String> getUpcForList(String listId) {
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getUpcForList----------------\n");
+        String sql = "SELECT upc FROM DistributionListMapping where listId = ?";
+
+        Connection conn = null;
+        List<String> listUpc=new ArrayList<String>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,listId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                listUpc.add(rs.getString("upc"));
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProductMasterDaoImpl Ends listUpc" + listUpc.size() + "----------------\n");
+
+            return listUpc;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);

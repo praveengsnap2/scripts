@@ -2,6 +2,7 @@ package com.snap2buy.webservice.service.impl;
 
 import com.snap2buy.webservice.dao.ProductMasterDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
+import com.snap2buy.webservice.model.DistributionList;
 import com.snap2buy.webservice.model.InputObject;
 import com.snap2buy.webservice.model.ProductMaster;
 import com.snap2buy.webservice.service.ProductMasterService;
@@ -81,17 +82,19 @@ public class productMasterServiceImpl implements ProductMasterService {
         LOGGER.info("---------------productMasterServiceImpl Ends storeThumbnails----------------\n");
     }
     @Override
-    public List<LinkedHashMap<String, String>> getDistributionLists(InputObject inputObject) {
+    public List<LinkedHashMap<String, String>> getDistributionLists() {
         LOGGER.info("---------------productMasterServiceImpl Starts getDistributionLists----------------\n");
 
-        LOGGER.info("--------------getDistributionLists::getListName=" + inputObject.getListName()+"-----------------\n");
-
-        List<String> listDistributionList = productMasterDao.getDistributionLists(inputObject.getListName());
+          List<DistributionList> listDistributionList = productMasterDao.getDistributionLists();
 
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
-        for (String mapEntry : listDistributionList) {
+        for (DistributionList mapEntry : listDistributionList) {
             java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
-            temp.put("upc", mapEntry);
+            temp.put("id", mapEntry.getListId());
+            temp.put("name", mapEntry.getListName());
+            temp.put("owner", mapEntry.getOwner());
+            temp.put("createdName", mapEntry.getCreatedTime());
+            temp.put("lastModifiedTime", mapEntry.getLastModifiedTime());
             result.add(temp);
         }
         LOGGER.info("---------------productMasterServiceImpl Ends getDistributionLists ----------------\n");

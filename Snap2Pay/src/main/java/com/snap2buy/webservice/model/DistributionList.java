@@ -6,7 +6,41 @@ package com.snap2buy.webservice.model;
 public class DistributionList {
     String listName;
     String listId;
-    String upc;
+    String owner;
+    String createdTime;
+    String lastModifiedTime;
+
+    public DistributionList(String listName, String listId, String owner, String createdTime, String lastModifiedTime) {
+        this.listName = listName;
+        this.listId = listId;
+        this.owner = owner;
+        this.createdTime = createdTime;
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(String lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
 
     public String getListName() {
         return listName;
@@ -24,20 +58,14 @@ public class DistributionList {
         this.listId = listId;
     }
 
-    public String getUpc() {
-        return upc;
-    }
-
-    public void setUpc(String upc) {
-        this.upc = upc;
-    }
-
     @Override
     public String toString() {
         return "DistributionList{" +
                 "listName='" + listName + '\'' +
                 ", listId='" + listId + '\'' +
-                ", upc='" + upc + '\'' +
+                ", owner='" + owner + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                ", lastModifiedTime='" + lastModifiedTime + '\'' +
                 '}';
     }
 }
