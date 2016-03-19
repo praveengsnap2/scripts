@@ -93,7 +93,7 @@ public class productMasterServiceImpl implements ProductMasterService {
             temp.put("id", mapEntry.getListId());
             temp.put("name", mapEntry.getListName());
             temp.put("owner", mapEntry.getOwner());
-            temp.put("createdName", mapEntry.getCreatedTime());
+            temp.put("createdTime", mapEntry.getCreatedTime());
             temp.put("lastModifiedTime", mapEntry.getLastModifiedTime());
             result.add(temp);
         }
