@@ -30,7 +30,7 @@ import java.util.*;
 @Scope("prototype")
 public class ProcessImageServiceImpl implements ProcessImageService {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     @Qualifier(BeanMapper.BEAN_IMAGE_STORE_DAO)

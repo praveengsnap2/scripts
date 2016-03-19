@@ -25,7 +25,7 @@ import java.sql.SQLException;
 @Scope("prototype")
 public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     private DataSource dataSource;

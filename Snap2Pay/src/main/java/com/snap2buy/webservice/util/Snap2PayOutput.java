@@ -17,7 +17,7 @@ import java.util.List;
 @XmlRootElement(name = "S2PResponse")
 public class Snap2PayOutput {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
     private MyHashMapType metaDetail = new MyHashMapType();
     @XmlElementWrapper(name = "ResultSet")
     private List<MyHashMapType> row = new ArrayList<MyHashMapType>();

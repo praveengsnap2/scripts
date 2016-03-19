@@ -23,7 +23,7 @@ import java.util.List;
 @Scope("prototype")
 public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     @Qualifier(BeanMapper.BEAN_SHELF_ANALYSIS_DAO)

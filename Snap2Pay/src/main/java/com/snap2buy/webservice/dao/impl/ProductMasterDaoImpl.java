@@ -25,7 +25,7 @@ import java.util.List;
 @Component(value = BeanMapper.BEAN_PRODUCT_MASTER_DAO)
 @Scope("prototype")
 public class ProductMasterDaoImpl implements ProductMasterDao {
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     private DataSource dataSource;

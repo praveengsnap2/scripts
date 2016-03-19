@@ -24,7 +24,7 @@ import java.util.List;
 @Scope("prototype")
 public class StoreMasterImpl implements StoreMasterDao {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     private DataSource dataSource;

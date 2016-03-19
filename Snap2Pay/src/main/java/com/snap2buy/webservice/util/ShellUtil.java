@@ -8,7 +8,7 @@ import java.io.*;
  * Created by sachin on 2/4/16.
  */
 public class ShellUtil {
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     public static String executeCommand(String imageFilePath, String category, String uuid, String retailer, String store) {
         String response = "";

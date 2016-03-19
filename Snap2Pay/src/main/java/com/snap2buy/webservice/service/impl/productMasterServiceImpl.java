@@ -23,7 +23,7 @@ import java.util.List;
 @Scope("prototype")
 public class productMasterServiceImpl implements ProductMasterService {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     @Qualifier(BeanMapper.BEAN_PRODUCT_MASTER_DAO)

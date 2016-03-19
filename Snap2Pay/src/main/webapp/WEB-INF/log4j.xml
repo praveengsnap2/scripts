@@ -1,6 +1,6 @@
 <log4j:configuration>
-    <appender name="Snap2Pay" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/tmp/logs/Snap2Pay.log"/>
+    <appender name="Snap2Buy" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/tmp/logs/Snap2Buy.log"/>
 
         <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Pay.log"/>-->
         <param name="DatePattern" value="'.' yyyy-MM-dd"/>
@@ -11,14 +11,14 @@
         </layout>
     </appender>
 
-    <category name="s2p">
+    <category name="s2b">
         <priority value="debug"/>
-        <appender-ref ref="Snap2Pay"/>
+        <appender-ref ref="Snap2Buy"/>
     </category>
 
     <root>
         <level value="info"/>
-        <appender-ref ref="Snap2Pay"/>
+        <appender-ref ref="Snap2Buy"/>
     </root>
 
 </log4j:configuration>

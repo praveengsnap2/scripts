@@ -35,7 +35,7 @@ import java.util.List;
 @Component(value = BeanMapper.BEAN_REST_ACTION_S2P)
 @Scope("prototype")
 public class RestS2PAction {
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     @Autowired
     @Qualifier(BeanMapper.BEAN_PROCESS_IMAGE_SERVICE)

@@ -42,7 +42,7 @@ import java.util.*;
 @Scope("request")
 public class RestS2PController {
 
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
     @Autowired
     ServletContext servletContext;
     @Autowired

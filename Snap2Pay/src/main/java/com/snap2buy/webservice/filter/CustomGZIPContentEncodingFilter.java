@@ -41,7 +41,7 @@ import java.util.zip.GZIPOutputStream;
  */
 public class CustomGZIPContentEncodingFilter implements ContainerRequestFilter,
         ContainerResponseFilter {
-    private static Logger LOGGER = Logger.getLogger("s2p");
+    private static Logger LOGGER = Logger.getLogger("s2b");
 
     public ContainerRequest filter(ContainerRequest request) {
         LOGGER.debug("Inside GZIP Filter ContainerRequest");
