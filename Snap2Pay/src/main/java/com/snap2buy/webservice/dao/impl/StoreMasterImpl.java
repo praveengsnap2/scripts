@@ -35,7 +35,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public String getStoreId(String longitude, String latitude) {
-        LOGGER.info("---------------StoreMasterImpl Starts getStoreId----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getStoreId::longitude="+longitude+"::latitude="+latitude+"----------------\n");
         String sql = "SELECT * FROM StoreMaster";
 
         Connection conn = null;
@@ -89,7 +89,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public String getRetailerChainCode(String storeId) {
-        LOGGER.info("---------------StoreMasterImpl Starts getRetailerChainCode----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getRetailerChainCode::storeId="+storeId+"----------------\n");
         String sql = "SELECT * FROM StoreMaster WHERE storeId = ? ";
 
         Connection conn = null;
@@ -145,7 +145,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------StoreMasterImpl Ends getStoreOptions"+storeMasterList.size()+"----------------\n");
+            LOGGER.info("---------------StoreMasterImpl Ends getStoreOptions" + storeMasterList.size() + "----------------\n");
 
             return storeMasterList;
         } catch (SQLException e) {
@@ -167,7 +167,7 @@ public class StoreMasterImpl implements StoreMasterDao {
 
     @Override
     public List<LinkedHashMap<String, String>>  getStores(String retailerChainCode, String state, String city) {
-        LOGGER.info("---------------StoreMasterImpl Starts getStores----------------\n");
+        LOGGER.info("---------------StoreMasterImpl Starts getStores::retailerChainCode="+retailerChainCode+"::state="+state+"::city="+city+"----------------\n");
         String sql = "SELECT StoreID,Street FROM StoreMaster where RetailerChainCode = ? and State = ? and City = ?";
 
         Connection conn = null;

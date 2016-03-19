@@ -46,7 +46,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public ProductMaster getUpcDetails(String upc) {
-        LOGGER.info("---------------ProductMasterDaoImpl Starts getUpcDetails----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getUpcDetails::upc="+upc+"----------------\n");
         String sql = "SELECT * FROM ProductMaster WHERE UPC = ?";
 
         Connection conn = null;
@@ -107,7 +107,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public File getThumbnails(String upc) {
-        LOGGER.info("---------------ProductMasterDaoImpl Starts getThumbnails----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getThumbnails::upc="+upc+"----------------\n");
         String sql = "SELECT name, image FROM Thumbnails WHERE id = ?";
         String filePath = "filePath not found";
         File image = null;
@@ -230,7 +230,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
 
     @Override
     public List<String> getDistributionLists(String listName) {
-        LOGGER.info("---------------ProductMasterDaoImpl Starts getDistributionLists----------------\n");
+        LOGGER.info("---------------ProductMasterDaoImpl Starts getDistributionLists::listName="+listName+"----------------\n");
         String sql = "SELECT UPC FROM DistributionList WHERE ListName = ?";
 
         Connection conn = null;
@@ -246,7 +246,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProductMasterDaoImpl Ends getDistributionLists"+listDistributionList.size()+"----------------\n");
+            LOGGER.info("---------------ProductMasterDaoImpl Ends getDistributionLists" + listDistributionList.size() + "----------------\n");
 
             return listDistributionList;
         } catch (SQLException e) {

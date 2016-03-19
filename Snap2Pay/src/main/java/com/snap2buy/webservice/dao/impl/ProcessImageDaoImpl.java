@@ -76,7 +76,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public ImageStore findByImageUUId(String imageUUId) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId::imageUUId="+imageUUId+"----------------\n");
         String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
 
         Connection conn = null;
@@ -114,7 +114,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public ImageStore getImageByStatus(String shelfStatus) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageByStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageByStatus::shelfStatus="+shelfStatus+"----------------\n");
         String sql = "SELECT * FROM ImageStore WHERE shelfStatus = ?";
 
         Connection conn = null;
@@ -150,7 +150,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public Integer getJobCount(String shelfStatus) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getJobCount----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getJobCount::shelfStatus="+shelfStatus+"----------------\n");
         String sql = "SELECT count(*) FROM ImageStore WHERE shelfStatus = ?";
 
         Connection conn = null;
@@ -187,7 +187,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateStatusAndHost(String hostId, String shelfStatus, String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatusAndHost----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatusAndHost::hostId="+hostId+"::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
         String sql = "UPDATE ImageStore SET shelfStatus = ? , hostId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -219,7 +219,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateShelfAnalysisStatus(String shelfStatus, String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts updateShelfAnalysisStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateShelfAnalysisStatus::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
         String sql = "UPDATE ImageStore SET shelfStatus = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -251,7 +251,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateImageAnalysisStatus(String imageStatus, String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus::imageStatus="+imageStatus+"::imageUUID="+imageUUID+"----------------\n");
         String sql = "UPDATE ImageStore SET imageStatus = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -283,7 +283,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public void updateStoreId(String storeId, String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus::storeId="+storeId+"::imageUUID="+imageUUID+"----------------\n");
         String sql = "UPDATE ImageStore SET storeId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
@@ -315,7 +315,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
      public List<ImageAnalysis> getImageAnalysis(String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysis::imageUUID="+imageUUID+"----------------\n");
         String sql = "SELECT * FROM ImageAnalysis WHERE imageUUID = ?";
         List<ImageAnalysis> ImageAnalysisList=new ArrayList<ImageAnalysis>();
         Connection conn = null;
@@ -352,7 +352,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public String getImageAnalysisStatus(String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysisStatus----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysisStatus::imageUUID="+imageUUID+"----------------\n");
         String sql = "SELECT imageStatus FROM ImageStore WHERE imageUUID = ?";
         Connection conn = null;
         String imageStatus="queryFailed";
@@ -388,7 +388,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     //change to insert multiple statement at one go
     @Override
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts storeImageAnalysis----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts storeImageAnalysis::ImageAnalysisList="+ImageAnalysisList+"::imageStore="+imageStore+"----------------\n");
         String sql = "INSERT INTO ImageAnalysis (imageUUID, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
         Connection conn = null;
 
@@ -430,7 +430,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getImages----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImages::storeId="+storeId+"::dateId="+dateId+"----------------\n");
         String sql = "SELECT imageUUID FROM ImageStore WHERE storeId = ? and dateId = ?";
         List<LinkedHashMap<String,String>> imageStoreList=new ArrayList<LinkedHashMap<String,String>>();
         Connection conn = null;
@@ -468,7 +468,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public LinkedHashMap<String,String> getFacing(String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::imageUUID="+imageUUID+"----------------\n");
         String sql = "SELECT upc, count(*) as count FROM ImageAnalysis  WHERE imageUUID = ? group by upc";
         LinkedHashMap<String,String> map=new LinkedHashMap<String,String>();
         Connection conn = null;

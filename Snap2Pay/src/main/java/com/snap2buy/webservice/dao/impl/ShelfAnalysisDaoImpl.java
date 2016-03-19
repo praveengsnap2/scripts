@@ -49,7 +49,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
 
     @Override
     public void storeShelfAnalysis(ShelfAnalysis shelfAnalysis) {
-        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts storeShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts storeShelfAnalysis::=shelfAnalysis"+shelfAnalysis.toString()+"----------------\n");
         String sql = "INSERT INTO ShelfAnalysis (imageUUID, product_code, expected_facings, on_shelf_availability, detected_facings, promotion_label_present, price, promo_price, storeId, categoryId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
@@ -88,7 +88,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
 
     @Override
     public ShelfAnalysis getShelfAnalysis(String imageUUID) {
-        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysis----------------\n");
+        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysis::imageUUID="+imageUUID+"----------------\n");
         String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
 
         Connection conn = null;

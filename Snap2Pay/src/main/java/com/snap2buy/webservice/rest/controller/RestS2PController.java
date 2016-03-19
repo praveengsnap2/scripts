@@ -71,7 +71,7 @@ public class RestS2PController {
             InputObject inputObject = new InputObject();
 
             if((!timeStamp.isEmpty())||(timeStamp!=null)||(timeStamp!="-9")) {
-                LOGGER.info("---------------Controller----"+timeStamp+"---------------");
+                LOGGER.info("---------------Controller----" + timeStamp + "---------------");
                 Date date = new Date(Long.parseLong(timeStamp));
                 DateFormat format = new SimpleDateFormat("yyyyMMdd");
                 format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
@@ -158,7 +158,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getJob----------------\n");
+        LOGGER.info("---------------Controller Starts getJob::hostId::="+hostId+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
             inputObject.setHostId(hostId);
@@ -190,7 +190,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getImage----------------\n");
+        LOGGER.info("---------------Controller Starts getImage::imageUUID::="+imageUUID+"::userId::="+userId+"----------------\n");
         try {
 
             File f = new File("/usr/share/s2pImages/" + userId + "/" + imageUUID + ".jpg");
@@ -228,8 +228,8 @@ public class RestS2PController {
         try {
 
             ShelfAnalysisInput shelfAnalysisInput = p.getValue();
-            LOGGER.info(shelfAnalysisInput.toString());
-            // shelfAnalysisInput.setImageUUID(imageUUID);
+
+            LOGGER.info("---------------Controller  storeShelfAnalysis::="+shelfAnalysisInput.toString()+"----------------\n");
 
             return restS2PAction.storeShelfAnalysis(shelfAnalysisInput);
 
@@ -258,7 +258,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getShelfAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts getShelfAnalysis::imageUUID::="+imageUUID+"----------------\n");
         try {
             Snap2PayOutput rio;
             InputObject inputObject = new InputObject();
@@ -293,7 +293,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getUpcDetails----------------\n");
+        LOGGER.info("---------------Controller Starts getUpcDetails::upc::="+upc+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -326,7 +326,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getUpcImage----------------\n");
+        LOGGER.info("---------------Controller Starts getUpcImage::upc"+upc+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -444,6 +444,7 @@ public class RestS2PController {
             inputObject.setFrequency(frequency);
             inputObject.setMarketId(marketId);
             inputObject.setBrandId(brandId);
+            LOGGER.info("---------------Controller getReport::="+inputObject.toString()+"----------------\n");
 
             return restS2PAction.getReport(inputObject);
         } catch (Exception e) {
@@ -476,7 +477,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts runImageAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts runImageAnalysis::imageUUID="+imageUUID+"----------------\n");
         try {
             Snap2PayOutput rio;
             InputObject inputObject = new InputObject();
@@ -509,7 +510,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getImageAnalysis----------------\n");
+        LOGGER.info("---------------Controller Starts getImageAnalysis::imageUUID="+imageUUID+"----------------\n");
         try {
 
             InputObject inputObject = new InputObject();
@@ -573,7 +574,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getImages----------------\n");
+        LOGGER.info("---------------Controller Starts getImages::storeId="+storeId+"::dateId="+dateId+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -607,7 +608,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getStores----------------\n");
+        LOGGER.info("---------------Controller Starts getStores::retailerChainCode="+retailerChainCode+"::state="+state+"::city="+city+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
@@ -639,10 +640,9 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getDistributionLists----------------\n");
+        LOGGER.info("---------------Controller Starts getDistributionLists::listName=" + listName + "----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            LOGGER.info("---------------Controller::getDistributionLists::listName="+listName+"----------------\n");
             inputObject.setListName(listName);
             return restS2PAction.getDistributionLists(inputObject);
 
@@ -670,10 +670,9 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts doDistributionCheck----------------\n");
+        LOGGER.info("---------------Controller Starts doDistributionCheck::doDistributionCheck::listName=" + listName + "::imageUUID=" + imageUUID + "----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            LOGGER.info("---------------Controller::doDistributionCheck::listName="+listName+"::imageUUID"+imageUUID+"----------------\n");
             inputObject.setListName(listName);
             inputObject.setImageUUID(imageUUID);
             return restS2PAction.doDistributionCheck(inputObject);
@@ -703,10 +702,9 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts doBeforeAfterCheck----------------\n");
+        LOGGER.info("---------------Controller Starts doBeforeAfterCheck::imageUUID-1::="+prevImageUUID+"::imageUUID-2::"+imageUUID+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            LOGGER.info("---------------Controller::doBeforeAfterCheck::imageUUID-1="+prevImageUUID+"::imageUUID-2"+imageUUID+"----------------\n");
             inputObject.setPrevImageUUID(prevImageUUID);
             inputObject.setImageUUID(imageUUID);
             return restS2PAction.doBeforeAfterCheck(inputObject);
