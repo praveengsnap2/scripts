@@ -12,7 +12,6 @@ import com.snap2buy.webservice.model.InputObject;
 import com.snap2buy.webservice.model.ShelfAnalysisInput;
 import com.snap2buy.webservice.service.ProcessImageService;
 import com.snap2buy.webservice.service.ProductMasterService;
-import com.snap2buy.webservice.service.QueryGenerationService;
 import com.snap2buy.webservice.service.ShelfAnalysisService;
 import com.snap2buy.webservice.util.Snap2PayOutput;
 import org.apache.log4j.Logger;
@@ -45,9 +44,9 @@ public class RestS2PAction {
     @Qualifier(BeanMapper.BEAN_PRODUCT_MASTER_SERVICE)
     private ProductMasterService productMasterService;
 
-    @Autowired
-    @Qualifier(BeanMapper.BEAN_QUERY_GENERATION_SERVICE)
-    private QueryGenerationService queryGenerationService;
+//    @Autowired
+//    @Qualifier(BeanMapper.BEAN_QUERY_GENERATION_SERVICE)
+//    private QueryGenerationService queryGenerationService;
 
 
     @Autowired
@@ -191,7 +190,7 @@ public class RestS2PAction {
 
         LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
 
-        String query = queryGenerationService.generateQuery(inputObject);
+        //String query = queryGenerationService.generateQuery(inputObject);
 
         LOGGER.info("getShelfAnalysis done");
         resultListToPass.add(result);
