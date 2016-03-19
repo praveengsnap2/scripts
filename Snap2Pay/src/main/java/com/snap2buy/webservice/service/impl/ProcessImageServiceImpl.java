@@ -169,6 +169,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts runImageAnalysis----------------\n");
 
         ImageStore imageStore =processImageDao.findByImageUUId(imageUUID);
+        if (imageStore==null){
+            List<LinkedHashMap<String, String>> result =new ArrayList<LinkedHashMap<String, String>>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+            map.put("message", "no image found for this imageUUId");
+            result.add(map);
+            return result;
+        }
 
         LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
 
