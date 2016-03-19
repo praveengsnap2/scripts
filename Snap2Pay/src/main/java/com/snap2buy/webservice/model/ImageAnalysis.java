@@ -15,14 +15,13 @@ public class ImageAnalysis {
     String leftTopY;
     String width;
     String height;
-    String status;
 
 
     public ImageAnalysis() {
         super();
     }
 
-    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String status) {
+    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height) {
         this.imageUUID = imageUUID;
         this.storeId = storeId;
         this.dateId = dateId;
@@ -34,15 +33,6 @@ public class ImageAnalysis {
         this.leftTopY = leftTopY;
         this.width = width;
         this.height = height;
-        this.status = status;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getImageUUID() {
@@ -147,7 +137,6 @@ public class ImageAnalysis {
                 ", leftTopY='" + leftTopY + '\'' +
                 ", width='" + width + '\'' +
                 ", height='" + height + '\'' +
-                ", status='" + status + '\'' +
                 '}';
     }
 }

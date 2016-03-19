@@ -55,7 +55,7 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
             shelfAnalysisDao.storeShelfAnalysis(shelfAnalysis);
         }
         String status = "done";
-        processImageDao.updateStatus(status, shelfAnalysisInput.getImageUUID());
+        processImageDao.updateShelfAnalysisStatus(status, shelfAnalysisInput.getImageUUID());
         LOGGER.info("---------------ShelfAnalysisServiceImpl Ends storeShelfAnalysis----------------\n");
 
     }

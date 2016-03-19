@@ -343,7 +343,7 @@ public class RestS2PAction {
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
 
-        reportInput.put("listName", inputObject.getPrevImageUUID());
+        reportInput.put("prevImageUUID", inputObject.getPrevImageUUID());
         reportInput.put("imageUUID", inputObject.getImageUUID());
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);

@@ -68,15 +68,16 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("--------------storeId=" + storeId + "-----------------\n");
 
         imageStore.setStoreId(storeId);
-        imageStore.setStatus("new");
+        imageStore.setShelfStatus("new");
         processImageDao.insert(imageStore);
 
         if (inputObject.getSync().equals("true")) {
             String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
             LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
             List<ImageAnalysis> imageAnalysisList =  invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
-            LOGGER.info("--------------imageAnalysisList="+imageAnalysisList+"-----------------\n");
-            processImageDao.storeImageAnalysis(imageAnalysisList);
+            LOGGER.info("--------------imageAnalysisList=" + imageAnalysisList + "-----------------\n");
+            processImageDao.storeImageAnalysis(imageAnalysisList,imageStore);
+            processImageDao.updateImageAnalysisStatus("done",imageStore.getImageUUID());
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
         } else {
@@ -177,9 +178,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId());
 
-        LOGGER.info("--------------runImageAnalysis::imageAnalysisList="+imageAnalysisList+"-----------------\n");
+        LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
-        processImageDao.storeImageAnalysis(imageAnalysisList);
+        String status="done";
+        processImageDao.updateImageAnalysisStatus(status,imageUUID);
+        LOGGER.info("--------------runImageAnalysis::updateStatus=" + status + "-----------------\n");
+
+        processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
         return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
@@ -192,7 +197,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getImageAnalysis----------------\n");
         String status = processImageDao.getImageAnalysisStatus(imageUUID);
 
-        if (status.equalsIgnoreCase("processed"))
+        if (status.equalsIgnoreCase("done"))
         {
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
@@ -265,10 +270,24 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doBeforeAfterCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
+        LinkedHashMap<String, String> map1=new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> map2=new LinkedHashMap<String, String>();
+        String prevImageStatus=processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
+        if (prevImageStatus.equalsIgnoreCase("done")) {
+            map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
+        }else {
+            getImageAnalysis(inputObject.getPrevImageUUID());
+            map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
+        }
 
-        LinkedHashMap<String, String> map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
+        String imageStatus=processImageDao.getImageAnalysisStatus(inputObject.getImageUUID());
+        if (imageStatus.equalsIgnoreCase("done")) {
+            map2 = processImageDao.getFacing(inputObject.getImageUUID());
+        }else{
+            getImageAnalysis(inputObject.getImageUUID());
+            map2= processImageDao.getFacing(inputObject.getImageUUID());
+        }
 
-        LinkedHashMap<String, String> map2 = processImageDao.getFacing(inputObject.getImageUUID());
 
         Set<String> keyset1=map1.keySet();
         Set<String> keyset2=map2.keySet();

@@ -13,16 +13,12 @@ public class ImageStore {
     String longitude;
     String timeStamp;
     String storeId;
-    String status;
     String hostId;
     String dateId;
+    String imageStatus;
+    String shelfStatus;
 
-
-    public ImageStore() {
-        super();
-    }
-
-    public ImageStore(String imageUUID, String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String status, String dateId) {
+    public ImageStore(String imageUUID, String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String dateId, String imageStatus, String shelfStatus) {
         this.imageUUID = imageUUID;
         ImageFilePath = imageFilePath;
         this.userId = userId;
@@ -31,8 +27,29 @@ public class ImageStore {
         this.longitude = longitude;
         this.timeStamp = timeStamp;
         this.storeId = storeId;
-        this.status = status;
         this.dateId = dateId;
+        this.imageStatus = imageStatus;
+        this.shelfStatus = shelfStatus;
+    }
+
+    public String getImageStatus() {
+        return imageStatus;
+    }
+
+    public void setImageStatus(String imageStatus) {
+        this.imageStatus = imageStatus;
+    }
+
+    public String getShelfStatus() {
+        return shelfStatus;
+    }
+
+    public void setShelfStatus(String shelfStatus) {
+        this.shelfStatus = shelfStatus;
+    }
+
+    public ImageStore() {
+        super();
     }
 
     public String getDateId() {
@@ -41,14 +58,6 @@ public class ImageStore {
 
     public void setDateId(String dateId) {
         this.dateId = dateId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getHostId() {
@@ -134,9 +143,10 @@ public class ImageStore {
                 ", longitude='" + longitude + '\'' +
                 ", timeStamp='" + timeStamp + '\'' +
                 ", storeId='" + storeId + '\'' +
-                ", status='" + status + '\'' +
                 ", hostId='" + hostId + '\'' +
                 ", dateId='" + dateId + '\'' +
+                ", imageStatus='" + imageStatus + '\'' +
+                ", shelfStatus='" + shelfStatus + '\'' +
                 '}';
     }
 }
