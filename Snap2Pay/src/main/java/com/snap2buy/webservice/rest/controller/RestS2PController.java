@@ -5,8 +5,10 @@
  */
 package com.snap2buy.webservice.rest.controller;
 
+import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.mapper.ParamMapper;
+import com.snap2buy.webservice.model.ImageStore;
 import com.snap2buy.webservice.model.InputObject;
 import com.snap2buy.webservice.model.ShelfAnalysisInput;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
@@ -50,6 +52,10 @@ public class RestS2PController {
     private RestS2PAction restS2PAction;
     @Value(value = "{appProp.filePath}")
     private String filePath;
+
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_IMAGE_STORE_DAO)
+    private ProcessImageDao processImageDao;
 
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -113,7 +119,7 @@ public class RestS2PController {
                     LOGGER.info("Form field " + name + " with value "
                             + value + " detected.");
                 } else {
-                    File uploadedFile = new File("/usr/share/s2pImages/" + userId + "/" + uniqueKey.toString() + ".jpg");
+                    File uploadedFile = new File("/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".jpg");
                     //File uploadedFile = new File("/Users/sachin/s2pImages/" + userId + "/" + item.getName());
 
                     if (!uploadedFile.exists()) {
@@ -142,7 +148,7 @@ public class RestS2PController {
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("userId", userId);
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends----------------\n");
@@ -173,7 +179,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("hostId", hostId);
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getJob----------------\n");
@@ -186,14 +192,14 @@ public class RestS2PController {
     @Path("/getImage")
     public Response getImage(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
-            @QueryParam(ParamMapper.USER_ID) @DefaultValue("-9") String userId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getImage::imageUUID::="+imageUUID+"::userId::="+userId+"----------------\n");
+        LOGGER.info("---------------Controller Starts getImage::imageUUID::="+imageUUID+"----------------\n");
+       ImageStore imageStore = processImageDao.findByImageUUId(imageUUID);
         try {
 
-            File f = new File("/usr/share/s2pImages/" + userId + "/" + imageUUID + ".jpg");
+            File f = new File(imageStore.getImageFilePath());
             Response.ResponseBuilder r = Response.ok((Object) f);
             r.header("Content-Disposition", "attachment; filename=" + imageUUID + ".jpg");
             return r.build();
@@ -206,8 +212,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("imageUUID", imageUUID);
-            inputList.put("userID", userId);
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getImage----------------\n");
@@ -241,7 +246,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
@@ -275,7 +280,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
             inputList.put("imageUUID", imageUUID);
 
             rio = new Snap2PayOutput(null, inputList);
@@ -309,7 +314,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
             inputList.put("upc", upc);
 
             rio = new Snap2PayOutput(null, inputList);
@@ -344,7 +349,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("upc", upc);
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getUpcImage----------------\n");
@@ -376,7 +381,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends checkS2P----------------\n");
@@ -409,7 +414,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends checkS2P----------------\n");
@@ -494,7 +499,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
             inputList.put("imageUUID", imageUUID);
 
             rio = new Snap2PayOutput(null, inputList);
@@ -527,7 +532,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
             inputList.put("imageUUID", imageUUID);
 
             rio = new Snap2PayOutput(null, inputList);
@@ -557,7 +562,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getStoreOptions----------------\n");
@@ -591,7 +596,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getImages----------------\n");
@@ -626,7 +631,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getStores----------------\n");
@@ -652,7 +657,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getDistributionLists----------------\n");
@@ -682,7 +687,7 @@ public class RestS2PController {
 
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
             inputList.put("listName",listId);
             inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
@@ -714,11 +719,39 @@ public class RestS2PController {
 
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
-            inputList.put("poutstatus", "-5");
+            inputList.put("error in Input","-9");
             inputList.put("prevImageUUID",prevImageUUID);
             inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doBeforeAfterCheck----------------\n");
+            return rio;
+        }
+    }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getImageMetaData")
+    public Snap2PayOutput getImageMetaData(
+            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getImageMetaData::imageUUID-1::="+imageUUID+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setImageUUID(imageUUID);
+            return restS2PAction.getImageMetaData(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            inputList.put("imageUUID",imageUUID);
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getImageMetaData----------------\n");
             return rio;
         }
     }

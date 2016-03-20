@@ -28,22 +28,26 @@ public class ConverterUtil {
         return result;
     }
 
-    public static List<ImageAnalysis> convertImageAnalysisMapToObject( List<LinkedHashMap<String, String>> dataMap) {
-        List<ImageAnalysis> dataList = new ArrayList<ImageAnalysis>();
-        for (LinkedHashMap<String, String> mapEntry : dataMap) {
-            ImageAnalysis listEntry = new ImageAnalysis();
-            listEntry.setUpc(mapEntry.get("Upc"));
-            listEntry.setLeftTopX(mapEntry.get("LeftTopX"));
-            listEntry.setLeftTopY(mapEntry.get("LeftTopY"));
-            listEntry.setWidth(mapEntry.get("Width"));
-            listEntry.setHeight(mapEntry.get("Height"));
-            listEntry.setPromotion(mapEntry.get("Promotion"));
-            listEntry.setPrice(mapEntry.get("Price"));
-            listEntry.setPriceLabel(mapEntry.get("PriceLabel"));
-            dataList.add(listEntry);
+    public static List<LinkedHashMap<String, String>> convertImageStoreObjectToMap(List<ImageStore> dataList) {
+
+        List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
+        for (ImageStore listEntry : dataList) {
+            java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
+            temp.put("imageUUID", listEntry.getImageUUID());
+            temp.put("ImageFilePath", listEntry.getImageFilePath());
+            temp.put("categoryId", listEntry.getCategoryId());
+            temp.put("latitude", listEntry.getLatitude());
+            temp.put("longitude", listEntry.getLongitude());
+            temp.put("timeStamp", listEntry.getTimeStamp());
+            temp.put("hostId", listEntry.getHostId());
+            temp.put("dateId", listEntry.getDateId());
+            temp.put("imageStatus", listEntry.getImageStatus());
+            temp.put("shelfStatus", listEntry.getShelfStatus());
+            result.add(temp);
         }
-        return dataList;
+        return result;
     }
+
 //    public static List<LinkedHashMap<String, String>> convertStoreMasterObjectToMap(List<StoreMaster> dataList) {
 //
 //        List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();

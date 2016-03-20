@@ -256,6 +256,16 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
+    public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getImageMetaData----------------\n");
+        List<ImageStore> imageStoreList=new ArrayList<ImageStore>();
+        ImageStore  imageStore = processImageDao.findByImageUUId(inputObject.getImageUUID());
+        imageStoreList.add(imageStore);
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getImageMetaData ----------------\n");
+        return ConverterUtil.convertImageStoreObjectToMap(imageStoreList);
+    }
+
+    @Override
     public List<LinkedHashMap<String, String>> doDistributionCheck(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doDistributionCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();

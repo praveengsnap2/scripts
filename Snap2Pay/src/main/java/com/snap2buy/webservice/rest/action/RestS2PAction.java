@@ -349,4 +349,19 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    public Snap2PayOutput getImageMetaData(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getImageMetaData----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        resultListToPass = processImageService.getImageMetaData(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+        reportInput.put("imageUUID", inputObject.getImageUUID());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getImageMetaData----------------\n");
+
+        return reportIO;
+    }
 }
