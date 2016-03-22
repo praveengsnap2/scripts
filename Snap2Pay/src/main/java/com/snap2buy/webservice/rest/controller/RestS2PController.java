@@ -609,17 +609,17 @@ public class RestS2PController {
       @Path("/getStores")
       public Snap2PayOutput getStores(
             @QueryParam(ParamMapper.RETAILER_CHAIN_CODE) @DefaultValue("-9") String retailerChainCode,
-            @QueryParam(ParamMapper.STATE) @DefaultValue("-9") String state,
+            @QueryParam(ParamMapper.STATE_CODE) @DefaultValue("-9") String stateCode,
             @QueryParam(ParamMapper.CITY) @DefaultValue("-9") String city,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getStores::retailerChainCode="+retailerChainCode+"::state="+state+"::city="+city+"----------------\n");
+        LOGGER.info("---------------Controller Starts getStores::retailerChainCode="+retailerChainCode+"::stateCode="+stateCode+"::city="+city+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
 
             inputObject.setRetailerChainCode(retailerChainCode);
-            inputObject.setState(state);
+            inputObject.setStateCode(stateCode);
             inputObject.setCity(city);
             return restS2PAction.getStores(inputObject);
 
@@ -632,6 +632,9 @@ public class RestS2PController {
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
+            inputList.put("retailerChainCode",retailerChainCode);
+            inputList.put("stateCode",stateCode);
+            inputList.put("city",city);
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getStores----------------\n");

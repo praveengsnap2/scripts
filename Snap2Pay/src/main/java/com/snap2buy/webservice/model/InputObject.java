@@ -23,6 +23,7 @@ public class InputObject {
     private String retailerChainCode;
     private String listId;
     private String state;
+    private String stateCode;
     private String city;
     private String upc;
     private String hostId;
@@ -53,6 +54,14 @@ public class InputObject {
     private String limit;
     private String prevStartTime;
     private String prevEndTime;
+
+    public String getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
+    }
 
     public String getPrevImageUUID() {
         return prevImageUUID;
@@ -351,6 +360,7 @@ public class InputObject {
                 ", retailerChainCode='" + retailerChainCode + '\'' +
                 ", listId='" + listId + '\'' +
                 ", state='" + state + '\'' +
+                ", stateCode='" + stateCode + '\'' +
                 ", city='" + city + '\'' +
                 ", upc='" + upc + '\'' +
                 ", hostId='" + hostId + '\'' +

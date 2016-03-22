@@ -296,7 +296,7 @@ public class RestS2PAction {
         HashMap<String, String> reportInput = new HashMap<String, String>();
 
         reportInput.put("retailerChainCode",inputObject.getRetailerChainCode());
-        reportInput.put("state", inputObject.getState());
+        reportInput.put("stateCode", inputObject.getStateCode());
         reportInput.put("city", inputObject.getCity());
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);

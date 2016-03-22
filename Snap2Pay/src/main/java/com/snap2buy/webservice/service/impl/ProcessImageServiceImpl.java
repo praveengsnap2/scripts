@@ -249,7 +249,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> getStores(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getStores----------------\n");
 
-        List<LinkedHashMap<String, String>>  storeMasterList = storeMasterDao.getStores(inputObject.getRetailerChainCode(), inputObject.getState(),inputObject.getCity());
+        List<LinkedHashMap<String, String>>  storeMasterList = storeMasterDao.getStores(inputObject.getRetailerChainCode(), inputObject.getStateCode(),inputObject.getCity());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getStores ----------------\n");
         return storeMasterList;

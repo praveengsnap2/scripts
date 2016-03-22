@@ -127,7 +127,7 @@ public class StoreMasterImpl implements StoreMasterDao {
     @Override
     public List<LinkedHashMap<String,String>> getStoreOptions() {
         LOGGER.info("---------------StoreMasterImpl Starts getStoreOptions----------------\n");
-        String sql = "SELECT RetailerChainCode,State,City FROM StoreMaster group by RetailerChainCode,State,City";
+        String sql = "SELECT RetailerChainCode,Retailer,StateCode,State,City FROM StoreMaster group by RetailerChainCode,Retailer,StateCode,State,City";
 
         Connection conn = null;
         StoreMaster storeMaster = null;
@@ -139,6 +139,8 @@ public class StoreMasterImpl implements StoreMasterDao {
             while (rs.next()) {
                 LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
                 map.put("retailerChainCode", rs.getString("RetailerChainCode"));
+                map.put("retailer", rs.getString("Retailer"));
+                map.put("stateCode", rs.getString("StateCode"));
                 map.put("state", rs.getString("State"));
                 map.put("city", rs.getString("City"));
                 storeMasterList.add(map);
@@ -166,9 +168,9 @@ public class StoreMasterImpl implements StoreMasterDao {
 
 
     @Override
-    public List<LinkedHashMap<String, String>>  getStores(String retailerChainCode, String state, String city) {
-        LOGGER.info("---------------StoreMasterImpl Starts getStores::retailerChainCode="+retailerChainCode+"::state="+state+"::city="+city+"----------------\n");
-        String sql = "SELECT StoreID,Street FROM StoreMaster where RetailerChainCode = ? and State = ? and City = ?";
+    public List<LinkedHashMap<String, String>>  getStores(String retailerChainCode, String stateCode, String city) {
+        LOGGER.info("---------------StoreMasterImpl Starts getStores::retailerChainCode="+retailerChainCode+"::stateCode="+stateCode+"::city="+city+"----------------\n");
+        String sql = "SELECT StoreID,Street FROM StoreMaster where RetailerChainCode = ? and StateCode = ? and City = ?";
 
         Connection conn = null;
         StoreMaster storeMaster = null;
@@ -177,7 +179,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, retailerChainCode);
-            ps.setString(2, state);
+            ps.setString(2, stateCode);
             ps.setString(3, city);
 
             ResultSet rs = ps.executeQuery();
