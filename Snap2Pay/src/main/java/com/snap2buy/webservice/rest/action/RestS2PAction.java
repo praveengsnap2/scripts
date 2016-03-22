@@ -263,7 +263,7 @@ public class RestS2PAction {
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
 
-        reportInput.put("header", "retailer,state,city");
+        reportInput.put("header", "retailerChainCode,retailer,stateCode,state,city");
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends getStoreOptions----------------\n");
