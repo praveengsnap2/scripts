@@ -119,7 +119,9 @@ public class RestS2PController {
                     LOGGER.info("Form field " + name + " with value "
                             + value + " detected.");
                 } else {
-                    File uploadedFile = new File("/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".jpg");
+                    String filenamePath = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".jpg";
+                    String thumbnailPath  = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".thumb";
+                    File uploadedFile = new File(filenamePath);
                     //File uploadedFile = new File("/Users/sachin/s2pImages/" + userId + "/" + item.getName());
 
                     if (!uploadedFile.exists()) {
@@ -131,6 +133,24 @@ public class RestS2PController {
                     item.write(uploadedFile);
                     inputObject.setImageFilePath(uploadedFile.getAbsolutePath());
 
+                    javaxt.io.Image image = new javaxt.io.Image(filenamePath);
+                    LOGGER.info("original image::"+image.getWidth() + "x" + image.getHeight());
+                    inputObject.setOrigHeight(String.valueOf(image.getHeight()));
+                    inputObject.setOrigWidth(String.valueOf(image.getWidth()));
+
+                    if (image.getWidth() > image.getHeight()) {
+                        image.rotateClockwise();
+                        image.setWidth(600);
+                    }else {
+                        image.setWidth(600);
+                    }
+
+                    inputObject.setNewHeight(String.valueOf(image.getHeight()));
+                    inputObject.setNewWidth(String.valueOf(image.getWidth()));
+
+                    image.saveAs(thumbnailPath);
+
+                    inputObject.setThumbnailPath(thumbnailPath);
                     result = ("File field " + name + " with file name "
                             + item.getName() + " detected.");
                     LOGGER.info(result);

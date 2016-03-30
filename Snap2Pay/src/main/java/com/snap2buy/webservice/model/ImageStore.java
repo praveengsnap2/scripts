@@ -18,7 +18,13 @@ public class ImageStore {
     String imageStatus;
     String shelfStatus;
 
-    public ImageStore(String imageUUID, String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String dateId, String imageStatus, String shelfStatus) {
+     String origWidth;
+     String origHeight;
+     String newWidth;
+     String newHeight;
+     String thumbnailPath;
+
+    public ImageStore(String imageUUID, String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String dateId, String imageStatus, String shelfStatus, String origWidth, String origHeight, String newWidth, String newHeight, String thumbnailPath) {
         this.imageUUID = imageUUID;
         ImageFilePath = imageFilePath;
         this.userId = userId;
@@ -30,6 +36,51 @@ public class ImageStore {
         this.dateId = dateId;
         this.imageStatus = imageStatus;
         this.shelfStatus = shelfStatus;
+        this.origWidth = origWidth;
+        this.origHeight = origHeight;
+        this.newWidth = newWidth;
+        this.newHeight = newHeight;
+        this.thumbnailPath = thumbnailPath;
+    }
+
+    public String getOrigWidth() {
+        return origWidth;
+    }
+
+    public void setOrigWidth(String origWidth) {
+        this.origWidth = origWidth;
+    }
+
+    public String getOrigHeight() {
+        return origHeight;
+    }
+
+    public void setOrigHeight(String origHeight) {
+        this.origHeight = origHeight;
+    }
+
+    public String getNewWidth() {
+        return newWidth;
+    }
+
+    public void setNewWidth(String newWidth) {
+        this.newWidth = newWidth;
+    }
+
+    public String getNewHeight() {
+        return newHeight;
+    }
+
+    public void setNewHeight(String newHeight) {
+        this.newHeight = newHeight;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
     public String getImageStatus() {
@@ -147,6 +198,11 @@ public class ImageStore {
                 ", dateId='" + dateId + '\'' +
                 ", imageStatus='" + imageStatus + '\'' +
                 ", shelfStatus='" + shelfStatus + '\'' +
+                ", origWidth='" + origWidth + '\'' +
+                ", origHeight='" + origHeight + '\'' +
+                ", newWidth='" + newWidth + '\'' +
+                ", newHeight='" + newHeight + '\'' +
+                ", thumbnailPath='" + thumbnailPath + '\'' +
                 '}';
     }
 }

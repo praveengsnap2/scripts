@@ -54,6 +54,51 @@ public class InputObject {
     private String limit;
     private String prevStartTime;
     private String prevEndTime;
+    private String origWidth;
+    private String origHeight;
+    private String newWidth;
+    private String newHeight;
+    private String thumbnailPath;
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
+    }
+
+    public String getOrigWidth() {
+        return origWidth;
+    }
+
+    public void setOrigWidth(String origWidth) {
+        this.origWidth = origWidth;
+    }
+
+    public String getOrigHeight() {
+        return origHeight;
+    }
+
+    public void setOrigHeight(String origHeight) {
+        this.origHeight = origHeight;
+    }
+
+    public String getNewWidth() {
+        return newWidth;
+    }
+
+    public void setNewWidth(String newWidth) {
+        this.newWidth = newWidth;
+    }
+
+    public String getNewHeight() {
+        return newHeight;
+    }
+
+    public void setNewHeight(String newHeight) {
+        this.newHeight = newHeight;
+    }
 
     public String getStateCode() {
         return stateCode;
@@ -391,6 +436,10 @@ public class InputObject {
                 ", limit='" + limit + '\'' +
                 ", prevStartTime='" + prevStartTime + '\'' +
                 ", prevEndTime='" + prevEndTime + '\'' +
+                ", origWidth='" + origWidth + '\'' +
+                ", origHeight='" + origHeight + '\'' +
+                ", newWidth='" + newWidth + '\'' +
+                ", newHeight='" + newHeight + '\'' +
                 ", morefiltersMap=" + morefiltersMap +
                 '}';
     }

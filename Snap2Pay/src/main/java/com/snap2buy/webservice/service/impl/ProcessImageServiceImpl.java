@@ -62,6 +62,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         imageStore.setLongitude(inputObject.getLongitude());
         imageStore.setTimeStamp(inputObject.getTimeStamp());
         imageStore.setDateId(inputObject.getVisitDate());
+        imageStore.setOrigHeight(inputObject.getOrigHeight());
+        imageStore.setOrigWidth(inputObject.getOrigWidth());
+        imageStore.setNewHeight(inputObject.getNewHeight());
+        imageStore.setNewWidth(inputObject.getNewWidth());
+        imageStore.setThumbnailPath(inputObject.getThumbnailPath());
 
         String storeId = storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude());
 

@@ -37,7 +37,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void insert(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
-        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,dateId,imageStatus,shelfStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,dateId,imageStatus,shelfStatus,origWidth,origHeight,newWidth,newHeight,thumbnailPath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -54,6 +54,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(9, imageStore.getDateId());
             ps.setString(10, imageStore.getImageStatus());
             ps.setString(11, imageStore.getShelfStatus());
+            ps.setString(12, imageStore.getOrigWidth());
+            ps.setString(13, imageStore.getOrigHeight());
+            ps.setString(14, imageStore.getNewWidth());
+            ps.setString(15, imageStore.getNewHeight());
+            ps.setString(16, imageStore.getThumbnailPath());
             ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends insert----------------\n");
@@ -87,7 +92,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"), rs.getString("imageStatus"), rs.getString("shelfStatus"));
+                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"), rs.getString("imageStatus"), rs.getString("shelfStatus"), rs.getString("origWidth"), rs.getString("origHeight"), rs.getString("newWidth"), rs.getString("newHeight"), rs.getString("thumbnailPath"));
             }
             rs.close();
             ps.close();
@@ -125,7 +130,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, shelfStatus);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"),rs.getString("imageStatus"), rs.getString("shelfStatus"));
+                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"),rs.getString("imageStatus"), rs.getString("shelfStatus"), rs.getString("origWidth"), rs.getString("origHeight"), rs.getString("newWidth"), rs.getString("newHeight"), rs.getString("thumbnailPath"));
             }
             rs.close();
             ps.close();

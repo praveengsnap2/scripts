@@ -43,6 +43,11 @@ public class ConverterUtil {
             temp.put("dateId", listEntry.getDateId());
             temp.put("imageStatus", listEntry.getImageStatus());
             temp.put("shelfStatus", listEntry.getShelfStatus());
+            temp.put("origWidth", listEntry.getOrigWidth());
+            temp.put("origHeight", listEntry.getOrigHeight());
+            temp.put("newWidth", listEntry.getNewWidth());
+            temp.put("newHeight", listEntry.getNewHeight());
+            temp.put("thumbnailPath", listEntry.getThumbnailPath());
             result.add(temp);
         }
         return result;

@@ -23,6 +23,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.jboss.weld.osgi.examples</groupId>
             <artifactId>weld-osgi-web-fwk</artifactId>
@@ -41,6 +42,7 @@
             <version>1.9.3</version>
             <type>jar</type>
         </dependency>
+
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
@@ -251,6 +253,9 @@
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
+                    <includes>
+                        <include>lib/*.jar</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
@@ -259,7 +264,9 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
