@@ -784,7 +784,7 @@ public class RestS2PController {
             StreamingOutput so =   new StreamingOutput() {
                 @Override
                 public void write(OutputStream os) throws IOException, WebApplicationException {
-                    File f = new File(imageStore.getImageFilePath());
+                    File f = new File(imageStore.getThumbnailPath());
         //            File f = new File("/usr/share/s2pImages/keerthana1/b87de3ed-0902-47ed-b487-06aaa44d11df.jpg");
 
                     InputStream in = new FileInputStream(f);
