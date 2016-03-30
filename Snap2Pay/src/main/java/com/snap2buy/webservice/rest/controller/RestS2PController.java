@@ -12,6 +12,7 @@ import com.snap2buy.webservice.model.ImageStore;
 import com.snap2buy.webservice.model.InputObject;
 import com.snap2buy.webservice.model.ShelfAnalysisInput;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
+import com.snap2buy.webservice.util.ShellUtil;
 import com.snap2buy.webservice.util.Snap2PayOutput;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -30,8 +31,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.JAXBElement;
-import java.io.File;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -120,7 +122,7 @@ public class RestS2PController {
                             + value + " detected.");
                 } else {
                     String filenamePath = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".jpg";
-                    String thumbnailPath  = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".thumb";
+                    String thumbnailPath  = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + "-thm.jpg";
                     File uploadedFile = new File(filenamePath);
                     //File uploadedFile = new File("/Users/sachin/s2pImages/" + userId + "/" + item.getName());
 
@@ -133,23 +135,13 @@ public class RestS2PController {
                     item.write(uploadedFile);
                     inputObject.setImageFilePath(uploadedFile.getAbsolutePath());
 
-                    javaxt.io.Image image = new javaxt.io.Image(filenamePath);
-                    LOGGER.info("original image::"+image.getWidth() + "x" + image.getHeight());
-                    inputObject.setOrigHeight(String.valueOf(image.getHeight()));
-                    inputObject.setOrigWidth(String.valueOf(image.getWidth()));
+                    String csv=ShellUtil.createThumbnail(filenamePath,thumbnailPath);
+                    String values[]=csv.split(",");
 
-                    if (image.getWidth() > image.getHeight()) {
-                        image.rotateClockwise();
-                        image.setWidth(600);
-                    }else {
-                        image.setWidth(600);
-                    }
-
-                    inputObject.setNewHeight(String.valueOf(image.getHeight()));
-                    inputObject.setNewWidth(String.valueOf(image.getWidth()));
-
-                    image.saveAs(thumbnailPath);
-
+                    inputObject.setOrigWidth(String.valueOf(values[0]));
+                    inputObject.setOrigHeight(String.valueOf(values[1]));
+                    inputObject.setNewWidth(String.valueOf(values[2]));
+                    inputObject.setNewHeight(String.valueOf(values[3]));
                     inputObject.setThumbnailPath(thumbnailPath);
                     result = ("File field " + name + " with file name "
                             + item.getName() + " detected.");
@@ -778,4 +770,35 @@ public class RestS2PController {
             return rio;
         }
     }
+
+    @GET
+    @Produces({"image/jpeg", "image/png"})
+    @Path("/displayImage")
+    public StreamingOutput displayImage(
+            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts displayImage::imageUUID::="+imageUUID+"----------------\n");
+        ImageStore imageStore = processImageDao.findByImageUUId(imageUUID);
+            StreamingOutput so =   new StreamingOutput() {
+                @Override
+                public void write(OutputStream os) throws IOException, WebApplicationException {
+                    File f = new File(imageStore.getImageFilePath());
+        //            File f = new File("/usr/share/s2pImages/keerthana1/b87de3ed-0902-47ed-b487-06aaa44d11df.jpg");
+
+                    InputStream in = new FileInputStream(f);
+                    byte[] buf = new byte[8192];
+                    int c=0;
+                    while ((c = in.read(buf, 0, buf.length)) > 0) {
+                        os.write(buf, 0, c);
+                        os.flush();
+                    }
+
+                    os.close();
+                }
+            };
+
+       return so;
+        }
 }

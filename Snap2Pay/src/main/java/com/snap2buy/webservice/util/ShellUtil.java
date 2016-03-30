@@ -103,4 +103,40 @@ public class ShellUtil {
             return "null";
         }
     }
+
+    public static String createThumbnail(String filepath,String thumbnailPath) {
+        String response = "";
+        Boolean waitForResponse = true;
+        String command = "createThumbnail.sh";
+        File f = new File("/root");
+        LOGGER.info("---------------ShellUtil filepath=" + filepath+" thumbnailPath="+thumbnailPath+"----------------\n");
+
+        ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
+
+        pb.environment().put("filepath", filepath);
+        pb.environment().put("thumbnailPath", thumbnailPath);
+        pb.directory(f);
+        pb.redirectErrorStream(true);
+
+        LOGGER.info("Linux command: " + command);
+
+        try {
+            Process shell = pb.start();
+            if (waitForResponse) {
+                InputStream shellIn = shell.getInputStream();
+                int shellExitStatus = shell.waitFor();
+                LOGGER.info("Exit status" + shellExitStatus);
+                response = convertStreamToStr(shellIn);
+                shellIn.close();
+            }
+        } catch (IOException e) {
+            LOGGER.info("Error occured while executing Linux command. Error Description: "
+                    + e.getMessage());
+        } catch (InterruptedException e) {
+            LOGGER.info("Error occured while executing Linux command. Error Description: "
+                    + e.getMessage());
+        }
+        LOGGER.info("---------------ShellUtil response=" + response);
+        return response;
+    }
 }
