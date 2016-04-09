@@ -350,6 +350,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
             UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail)map1.get(unit);
             UpcFacingDetail upcFacingDetail2 = (UpcFacingDetail)map2.get(unit);
+            LOGGER.info("---------------ProcessImageServiceImpl "+upcFacingDetail1.toString()+ "----------------\n");
+            LOGGER.info("---------------ProcessImageServiceImpl "+upcFacingDetail2.toString()+" ----------------\n");
             if(intersection.contains(unit)){
                 entry.put("upc",unit);
                 entry.put("productLongName", upcFacingDetail1.getProductLongName());
