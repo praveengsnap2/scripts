@@ -487,7 +487,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                map.put(rs.getString("upc"),new UpcFacingDetail(rs.getString("count"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
+                map.put(rs.getString("upc"),new UpcFacingDetail(rs.getString("upc"),rs.getString("count"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
                 }
             rs.close();
             ps.close();

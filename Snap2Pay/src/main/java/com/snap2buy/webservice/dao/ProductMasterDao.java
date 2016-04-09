@@ -2,6 +2,7 @@ package com.snap2buy.webservice.dao;
 
 import com.snap2buy.webservice.model.DistributionList;
 import com.snap2buy.webservice.model.ProductMaster;
+import com.snap2buy.webservice.model.UpcFacingDetail;
 
 import java.io.File;
 import java.util.List;
@@ -19,6 +20,6 @@ public interface ProductMasterDao {
 
     public List<DistributionList> getDistributionLists();
 
-    public List<String> getUpcForList(String listId);
+    public List<UpcFacingDetail> getUpcForList(String listId);
 
 }

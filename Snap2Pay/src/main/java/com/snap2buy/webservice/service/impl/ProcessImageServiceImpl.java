@@ -286,24 +286,23 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
 
         Set<String> keySet =map.keySet();
-        List<String> listDistributionList= productMasterDao.getUpcForList(inputObject.getListId());
+        List<UpcFacingDetail> listDistributionList= productMasterDao.getUpcForList(inputObject.getListId());
 
         List<String> dlUpc = new ArrayList<String>();
-        for (String unit: listDistributionList){
+        for (UpcFacingDetail unit: listDistributionList){
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
-            UpcFacingDetail upcFacingDetail = (UpcFacingDetail)map.get(unit);
-            if(keySet.contains(unit)){
-                entry.put("upc",unit);
-                entry.put("productLongName", upcFacingDetail.getProductLongName());
-                entry.put("productShortName", upcFacingDetail.getProductShortName());
-                entry.put("brandName", upcFacingDetail.getBrandName());
-                entry.put("facing", upcFacingDetail.getCount());
+            if(keySet.contains(unit.getUpc())){
+                entry.put("upc",unit.getUpc());
+                entry.put("productLongName", unit.getProductLongName());
+                entry.put("productShortName", unit.getProductShortName());
+                entry.put("brandName", unit.getBrandName());
+                entry.put("facing", unit.getCount());
                 entry.put("osa","1");
             }else{
-                entry.put("upc",unit);
-                entry.put("productLongName", upcFacingDetail.getProductLongName());
-                entry.put("productShortName", upcFacingDetail.getProductShortName());
-                entry.put("brandName", upcFacingDetail.getBrandName());
+                entry.put("upc",unit.getUpc());
+                entry.put("productLongName", unit.getProductLongName());
+                entry.put("productShortName", unit.getProductShortName());
+                entry.put("brandName", unit.getBrandName());
                 entry.put("facing", "0");
                 entry.put("osa","0");
             }
@@ -374,9 +373,9 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             }
             else if (keySet2.contains(unit)){
                 entry.put("upc",unit);
-                entry.put("productLongName", upcFacingDetail1.getProductLongName());
-                entry.put("productShortName", upcFacingDetail1.getProductShortName());
-                entry.put("brandName", upcFacingDetail1.getBrandName());
+                entry.put("productLongName", upcFacingDetail2.getProductLongName());
+                entry.put("productShortName", upcFacingDetail2.getProductShortName());
+                entry.put("brandName", upcFacingDetail2.getBrandName());
                 entry.put("before_facing", "0");
                 entry.put("before_osa","0");
                 entry.put("after_facing", upcFacingDetail2.getCount());

@@ -4,16 +4,26 @@ package com.snap2buy.webservice.model;
  * Created by sachin on 4/9/16.
  */
 public class UpcFacingDetail {
+    String upc;
     String count;
     String productShortName;
     String productLongName;
     String brandName;
 
-    public UpcFacingDetail(String count, String productShortName, String productLongName, String brandName) {
+    public UpcFacingDetail(String upc, String count, String productShortName, String productLongName, String brandName) {
+        this.upc = upc;
         this.count = count;
         this.productShortName = productShortName;
         this.productLongName = productLongName;
         this.brandName = brandName;
+    }
+
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
     }
 
     public String getCount() {
@@ -51,7 +61,8 @@ public class UpcFacingDetail {
     @Override
     public String toString() {
         return "UpcFacingDetail{" +
-                "count='" + count + '\'' +
+                "upc='" + upc + '\'' +
+                ", count='" + count + '\'' +
                 ", productShortName='" + productShortName + '\'' +
                 ", productLongName='" + productLongName + '\'' +
                 ", brandName='" + brandName + '\'' +
