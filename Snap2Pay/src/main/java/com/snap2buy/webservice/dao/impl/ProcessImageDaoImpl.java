@@ -332,7 +332,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"),rs.getString("productShortName"), rs.getString("productLongName"), rs.getString("brandName"));
+                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"),rs.getString("PRODUCT_SHORT_NAME"), rs.getString("PRODUCT_LONG_NAME"), rs.getString("BRAND_NAME"));
                 ImageAnalysisList.add(imageAnalysis);
             }
             rs.close();
