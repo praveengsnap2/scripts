@@ -321,7 +321,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
      public List<ImageAnalysis> getImageAnalysis(String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysis::imageUUID="+imageUUID+"----------------\n");
-        String sql = "SELECT * FROM ImageAnalysis WHERE imageUUID = ?";
+        String sql = "select ImageAnalysis.imageUUID, ImageAnalysis.storeId, ImageAnalysis.dateId, ImageAnalysis.upc, ImageAnalysis.upcConfidence, ImageAnalysis.alternateUpc, ImageAnalysis.alternateUpcConfidence, ImageAnalysis.leftTopX, ImageAnalysis.leftTopY, ImageAnalysis.width, ImageAnalysis.height, ImageAnalysis.promotion, ImageAnalysis.price, ImageAnalysis.priceLabel, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID = ? ";
         List<ImageAnalysis> ImageAnalysisList=new ArrayList<ImageAnalysis>();
         Connection conn = null;
         ImageAnalysis imageAnalysis = null;
@@ -331,7 +331,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"));
+                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"),rs.getString("productShortName"), rs.getString("productLongName"), rs.getString("brandName"));
                 ImageAnalysisList.add(imageAnalysis);
             }
             rs.close();

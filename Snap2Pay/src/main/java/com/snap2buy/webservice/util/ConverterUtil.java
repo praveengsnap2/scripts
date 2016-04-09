@@ -23,6 +23,9 @@ public class ConverterUtil {
             temp.put("Promotion", listEntry.getPromotion());
             temp.put("Price", listEntry.getPrice());
             temp.put("PriceLabel", listEntry.getPriceLabel());
+            temp.put("productShortName", listEntry.getProductShortName());
+            temp.put("productLongName", listEntry.getProductLongName());
+            temp.put("brandName", listEntry.getBrandName());
             result.add(temp);
         }
         return result;

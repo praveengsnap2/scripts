@@ -14,13 +14,17 @@ public class Compress {
 //        javaxt.io.Image image = new javaxt.io.Image(filePath);
 //        //System.out.println("original image::" + image.getWidth() + "x" + image.getHeight());
 //
-//        String origWidth = String.valueOf(image.getWidth());
-//        String origHeight = String.valueOf(image.getHeight());
+//        String origWidth = null;
+//        String origHeight = null;
 //
 //        if (image.getWidth() > image.getHeight()) {
+//            origWidth = String.valueOf(image.getHeight());
+//            origHeight = String.valueOf(image.getWidth());
 //            image.rotateClockwise();
 //            image.setWidth(600);
 //        } else {
+//             origWidth = String.valueOf(image.getWidth());
+//             origHeight = String.valueOf(image.getHeight());
 //            image.setWidth(600);
 //        }
 //        //System.out.println("new image::" + image.getWidth() + "x" + image.getHeight());

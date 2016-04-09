@@ -18,12 +18,16 @@ public class ImageAnalysis {
     String promotion;
     String price;
     String priceLabel;
+    String productShortName;
+    String productLongName;
+    String brandName;
+
 
     public ImageAnalysis() {
         super();
     }
 
-    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String promotion, String price, String priceLabel) {
+    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String promotion, String price, String priceLabel, String productShortName, String productLongName, String brandName) {
         this.imageUUID = imageUUID;
         this.storeId = storeId;
         this.dateId = dateId;
@@ -38,6 +42,33 @@ public class ImageAnalysis {
         this.promotion = promotion;
         this.price = price;
         this.priceLabel = priceLabel;
+        this.productShortName = productShortName;
+        this.productLongName = productLongName;
+        this.brandName = brandName;
+    }
+
+    public String getProductShortName() {
+        return productShortName;
+    }
+
+    public void setProductShortName(String productShortName) {
+        this.productShortName = productShortName;
+    }
+
+    public String getProductLongName() {
+        return productLongName;
+    }
+
+    public void setProductLongName(String productLongName) {
+        this.productLongName = productLongName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public String getImageUUID() {
@@ -169,6 +200,9 @@ public class ImageAnalysis {
                 ", promotion='" + promotion + '\'' +
                 ", price='" + price + '\'' +
                 ", priceLabel='" + priceLabel + '\'' +
+                ", productShortName='" + productShortName + '\'' +
+                ", productLongName='" + productLongName + '\'' +
+                ", brandName='" + brandName + '\'' +
                 '}';
     }
 }
