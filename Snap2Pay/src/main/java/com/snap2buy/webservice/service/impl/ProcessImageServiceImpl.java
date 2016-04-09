@@ -12,6 +12,7 @@ import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.ImageAnalysis;
 import com.snap2buy.webservice.model.ImageStore;
 import com.snap2buy.webservice.model.InputObject;
+import com.snap2buy.webservice.model.UpcFacingDetail;
 import com.snap2buy.webservice.service.ProcessImageService;
 import com.snap2buy.webservice.util.ConverterUtil;
 import com.snap2buy.webservice.util.ShellUtil;
@@ -275,7 +276,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doDistributionCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
 
-        LinkedHashMap<String, String> map=new LinkedHashMap<String, String>();
+        LinkedHashMap<String, Object> map=new LinkedHashMap<String, Object>();
         String imageStatus=processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
         if (imageStatus.equalsIgnoreCase("done")) {
             map = processImageDao.getFacing(inputObject.getImageUUID());
@@ -290,12 +291,19 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         List<String> dlUpc = new ArrayList<String>();
         for (String unit: listDistributionList){
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
+            UpcFacingDetail upcFacingDetail = (UpcFacingDetail)map.get(unit);
             if(keySet.contains(unit)){
                 entry.put("upc",unit);
-                entry.put("facing", map.get(unit));
+                entry.put("productLongName", upcFacingDetail.getProductLongName());
+                entry.put("productShortName", upcFacingDetail.getProductShortName());
+                entry.put("brandName", upcFacingDetail.getBrandName());
+                entry.put("facing", upcFacingDetail.getCount());
                 entry.put("osa","1");
             }else{
                 entry.put("upc",unit);
+                entry.put("productLongName", upcFacingDetail.getProductLongName());
+                entry.put("productShortName", upcFacingDetail.getProductShortName());
+                entry.put("brandName", upcFacingDetail.getBrandName());
                 entry.put("facing", "0");
                 entry.put("osa","0");
             }
@@ -310,8 +318,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doBeforeAfterCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
-        LinkedHashMap<String, String> map1=new LinkedHashMap<String, String>();
-        LinkedHashMap<String, String> map2=new LinkedHashMap<String, String>();
+        LinkedHashMap<String, Object> map1=new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> map2=new LinkedHashMap<String, Object>();
         String prevImageStatus=processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
         if (prevImageStatus.equalsIgnoreCase("done")) {
             map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
@@ -340,25 +348,36 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         for (String unit: union){
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
+            UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail)map1.get(unit);
+            UpcFacingDetail upcFacingDetail2 = (UpcFacingDetail)map2.get(unit);
             if(intersection.contains(unit)){
                 entry.put("upc",unit);
-                entry.put("before_facing", map1.get(unit));
+                entry.put("productLongName", upcFacingDetail1.getProductLongName());
+                entry.put("productShortName", upcFacingDetail1.getProductShortName());
+                entry.put("brandName", upcFacingDetail1.getBrandName());
+                entry.put("before_facing", upcFacingDetail1.getCount());
                 entry.put("before_osa","1");
-                entry.put("after_facing", map2.get(unit));
+                entry.put("after_facing", upcFacingDetail2.getCount());
                 entry.put("after_osa","1");
             }
             else if(keySet1.contains(unit)) {
                 entry.put("upc",unit);
-                entry.put("before_facing", map1.get(unit));
+                entry.put("productLongName", upcFacingDetail1.getProductLongName());
+                entry.put("productShortName", upcFacingDetail1.getProductShortName());
+                entry.put("brandName", upcFacingDetail1.getBrandName());
+                entry.put("before_facing", upcFacingDetail1.getCount());
                 entry.put("before_osa","1");
                 entry.put("after_facing", "0");
                 entry.put("after_osa","0");
             }
             else if (keySet2.contains(unit)){
                 entry.put("upc",unit);
+                entry.put("productLongName", upcFacingDetail1.getProductLongName());
+                entry.put("productShortName", upcFacingDetail1.getProductShortName());
+                entry.put("brandName", upcFacingDetail1.getBrandName());
                 entry.put("before_facing", "0");
                 entry.put("before_osa","0");
-                entry.put("after_facing", map2.get(unit));
+                entry.put("after_facing", upcFacingDetail2.getCount());
                 entry.put("after_osa","1");
             }
             result.add(entry);

@@ -4,6 +4,7 @@ import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.ImageAnalysis;
 import com.snap2buy.webservice.model.ImageStore;
+import com.snap2buy.webservice.model.UpcFacingDetail;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -475,10 +476,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
-    public LinkedHashMap<String,String> getFacing(String imageUUID) {
+    public LinkedHashMap<String,Object> getFacing(String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::imageUUID="+imageUUID+"----------------\n");
-        String sql = "SELECT upc, count(*) as count FROM ImageAnalysis  WHERE imageUUID = ? group by upc";
-        LinkedHashMap<String,String> map=new LinkedHashMap<String,String>();
+        String sql = "select IA.UPC , PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME, IA.count from ProductMaster join (SELECT upc, count(*) as count FROM ImageAnalysis WHERE imageUUID = ? group by upc) IA on ProductMaster.UPC = IA.upc;";
+        LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
@@ -486,7 +487,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                map.put(rs.getString("upc"),rs.getString("count"));
+                map.put(rs.getString("upc"),new UpcFacingDetail(rs.getString("count"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
                 }
             rs.close();
             ps.close();

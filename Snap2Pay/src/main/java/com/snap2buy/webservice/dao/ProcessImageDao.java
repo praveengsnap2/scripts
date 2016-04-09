@@ -23,6 +23,6 @@ public interface ProcessImageDao {
     public void updateStoreId(String storeId, String imageUUID);
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId);
     public List<ImageAnalysis> getImageAnalysis(String imageUUID);
-    public LinkedHashMap<String, String> getFacing(String imageUUID);
+    public LinkedHashMap<String,Object> getFacing(String imageUUID);
 
 }
