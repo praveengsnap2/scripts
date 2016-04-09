@@ -280,7 +280,7 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
             ps.setString(1,listId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                listUpc.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("count"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
+                listUpc.add(new UpcFacingDetail(rs.getString("upc"),"1",rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
             }
             rs.close();
             ps.close();

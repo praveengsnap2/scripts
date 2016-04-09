@@ -80,15 +80,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         if (inputObject.getSync().equals("true")) {
             String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
             LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
-            List<ImageAnalysis> imageAnalysisList =  invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId);
             LOGGER.info("--------------imageAnalysisList=" + imageAnalysisList + "-----------------\n");
-            processImageDao.storeImageAnalysis(imageAnalysisList,imageStore);
-            processImageDao.updateImageAnalysisStatus("done",imageStore.getImageUUID());
+            processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
+            processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
         } else {
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
-            List<java.util.LinkedHashMap<String, String>> result=new ArrayList<java.util.LinkedHashMap<String, String>>();
+            List<java.util.LinkedHashMap<String, String>> result = new ArrayList<java.util.LinkedHashMap<String, String>>();
             return result;
         }
     }
@@ -180,19 +180,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts runImageAnalysis----------------\n");
 
-        ImageStore imageStore =processImageDao.findByImageUUId(imageUUID);
-        if (imageStore==null){
-            List<LinkedHashMap<String, String>> result =new ArrayList<LinkedHashMap<String, String>>();
+        ImageStore imageStore = processImageDao.findByImageUUId(imageUUID);
+        if (imageStore == null) {
+            List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
             map.put("message", "no image found for this imageUUId");
             result.add(map);
             return result;
-        }
-        else if (imageStore.getImageStatus().equalsIgnoreCase("done"))
-        {
+        } else if (imageStore.getImageStatus().equalsIgnoreCase("done")) {
             return getImageAnalysis(imageStore.getImageUUID());
 
-        }else {
+        } else {
             LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
 
             String retailerChainCode = storeMasterDao.getRetailerChainCode(imageStore.getStoreId());
@@ -220,12 +218,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getImageAnalysis----------------\n");
         String status = processImageDao.getImageAnalysisStatus(imageUUID);
 
-        if (status.equalsIgnoreCase("done"))
-        {
+        if (status.equalsIgnoreCase("done")) {
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
-        }else{
+        } else {
             List<LinkedHashMap<String, String>> imageAnalysisList = runImageAnalysis(imageUUID);
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return imageAnalysisList;
@@ -237,25 +234,27 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> getStoreOptions() {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getStoreOptions----------------\n");
 
-        List<LinkedHashMap<String,String>> storeMasterList = storeMasterDao.getStoreOptions();
+        List<LinkedHashMap<String, String>> storeMasterList = storeMasterDao.getStoreOptions();
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getStoreOptions ----------------\n");
         return storeMasterList;
     }
+
     @Override
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getImages----------------\n");
 
-        List<LinkedHashMap<String,String>> imageStoreList = processImageDao.getImages(inputObject.getStoreId(),inputObject.getDateId());
+        List<LinkedHashMap<String, String>> imageStoreList = processImageDao.getImages(inputObject.getStoreId(), inputObject.getDateId());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getImages ----------------\n");
         return imageStoreList;
     }
+
     @Override
     public List<LinkedHashMap<String, String>> getStores(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getStores----------------\n");
 
-        List<LinkedHashMap<String, String>>  storeMasterList = storeMasterDao.getStores(inputObject.getRetailerChainCode(), inputObject.getStateCode(),inputObject.getCity());
+        List<LinkedHashMap<String, String>> storeMasterList = storeMasterDao.getStores(inputObject.getRetailerChainCode(), inputObject.getStateCode(), inputObject.getCity());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getStores ----------------\n");
         return storeMasterList;
@@ -264,8 +263,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Override
     public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getImageMetaData----------------\n");
-        List<ImageStore> imageStoreList=new ArrayList<ImageStore>();
-        ImageStore  imageStore = processImageDao.findByImageUUId(inputObject.getImageUUID());
+        List<ImageStore> imageStoreList = new ArrayList<ImageStore>();
+        ImageStore imageStore = processImageDao.findByImageUUId(inputObject.getImageUUID());
         imageStoreList.add(imageStore);
         LOGGER.info("---------------ProcessImageServiceImpl Ends getImageMetaData ----------------\n");
         return ConverterUtil.convertImageStoreObjectToMap(imageStoreList);
@@ -276,35 +275,35 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doDistributionCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
 
-        LinkedHashMap<String, Object> map=new LinkedHashMap<String, Object>();
-        String imageStatus=processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+        String imageStatus = processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
         if (imageStatus.equalsIgnoreCase("done")) {
             map = processImageDao.getFacing(inputObject.getImageUUID());
-        }else {
+        } else {
             getImageAnalysis(inputObject.getPrevImageUUID());
             map = processImageDao.getFacing(inputObject.getImageUUID());
         }
 
-        Set<String> keySet =map.keySet();
-        List<UpcFacingDetail> listDistributionList= productMasterDao.getUpcForList(inputObject.getListId());
+        Set<String> keySet = map.keySet();
+        List<UpcFacingDetail> listDistributionList = productMasterDao.getUpcForList(inputObject.getListId());
 
         List<String> dlUpc = new ArrayList<String>();
-        for (UpcFacingDetail unit: listDistributionList){
+        for (UpcFacingDetail unit : listDistributionList) {
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
-            if(keySet.contains(unit.getUpc())){
-                entry.put("upc",unit.getUpc());
+            if (keySet.contains(unit.getUpc())) {
+                entry.put("upc", unit.getUpc());
                 entry.put("productLongName", unit.getProductLongName());
                 entry.put("productShortName", unit.getProductShortName());
                 entry.put("brandName", unit.getBrandName());
                 entry.put("facing", unit.getCount());
-                entry.put("osa","1");
-            }else{
-                entry.put("upc",unit.getUpc());
+                entry.put("osa", "1");
+            } else {
+                entry.put("upc", unit.getUpc());
                 entry.put("productLongName", unit.getProductLongName());
                 entry.put("productShortName", unit.getProductShortName());
                 entry.put("brandName", unit.getBrandName());
                 entry.put("facing", "0");
-                entry.put("osa","0");
+                entry.put("osa", "0");
             }
             result.add(entry);
         }
@@ -317,27 +316,27 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doBeforeAfterCheck----------------\n");
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
-        LinkedHashMap<String, Object> map1=new LinkedHashMap<String, Object>();
-        LinkedHashMap<String, Object> map2=new LinkedHashMap<String, Object>();
-        String prevImageStatus=processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
+        LinkedHashMap<String, Object> map1 = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> map2 = new LinkedHashMap<String, Object>();
+        String prevImageStatus = processImageDao.getImageAnalysisStatus(inputObject.getPrevImageUUID());
         if (prevImageStatus.equalsIgnoreCase("done")) {
             map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
-        }else {
+        } else {
             getImageAnalysis(inputObject.getPrevImageUUID());
             map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
         }
 
-        String imageStatus=processImageDao.getImageAnalysisStatus(inputObject.getImageUUID());
+        String imageStatus = processImageDao.getImageAnalysisStatus(inputObject.getImageUUID());
         if (imageStatus.equalsIgnoreCase("done")) {
             map2 = processImageDao.getFacing(inputObject.getImageUUID());
-        }else{
+        } else {
             getImageAnalysis(inputObject.getImageUUID());
-            map2= processImageDao.getFacing(inputObject.getImageUUID());
+            map2 = processImageDao.getFacing(inputObject.getImageUUID());
         }
 
 
-        Set<String> keySet1=map1.keySet();
-        Set<String> keySet2=map2.keySet();
+        Set<String> keySet1 = map1.keySet();
+        Set<String> keySet2 = map2.keySet();
 
         Set<String> union = new HashSet<String>(keySet1);
         union.addAll(keySet2);
@@ -345,41 +344,44 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         Set<String> intersection = new HashSet<String>(keySet1);
         intersection.retainAll(keySet2);
 
-        for (String unit: union){
+        for (String unit : union) {
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
-            UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail)map1.get(unit);
-            UpcFacingDetail upcFacingDetail2 = (UpcFacingDetail)map2.get(unit);
-            LOGGER.info("---------------ProcessImageServiceImpl "+upcFacingDetail1.toString()+ "----------------\n");
-            LOGGER.info("---------------ProcessImageServiceImpl "+upcFacingDetail2.toString()+" ----------------\n");
-            if(intersection.contains(unit)){
-                entry.put("upc",unit);
+            if (intersection.contains(unit)) {
+                UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail) map1.get(unit);
+                LOGGER.info("---------------ProcessImageServiceImpl " + upcFacingDetail1.toString() + "----------------\n");
+                UpcFacingDetail upcFacingDetail2 = (UpcFacingDetail) map2.get(unit);
+                LOGGER.info("---------------ProcessImageServiceImpl " + upcFacingDetail2.toString() + " ----------------\n");
+                entry.put("upc", unit);
                 entry.put("productLongName", upcFacingDetail1.getProductLongName());
                 entry.put("productShortName", upcFacingDetail1.getProductShortName());
                 entry.put("brandName", upcFacingDetail1.getBrandName());
                 entry.put("before_facing", upcFacingDetail1.getCount());
-                entry.put("before_osa","1");
+                entry.put("before_osa", "1");
                 entry.put("after_facing", upcFacingDetail2.getCount());
-                entry.put("after_osa","1");
-            }
-            else if(keySet1.contains(unit)) {
-                entry.put("upc",unit);
+                entry.put("after_osa", "1");
+            } else if (keySet1.contains(unit)) {
+                UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail) map1.get(unit);
+                LOGGER.info("---------------ProcessImageServiceImpl " + upcFacingDetail1.toString() + "----------------\n");
+
+                entry.put("upc", unit);
                 entry.put("productLongName", upcFacingDetail1.getProductLongName());
                 entry.put("productShortName", upcFacingDetail1.getProductShortName());
                 entry.put("brandName", upcFacingDetail1.getBrandName());
                 entry.put("before_facing", upcFacingDetail1.getCount());
-                entry.put("before_osa","1");
+                entry.put("before_osa", "1");
                 entry.put("after_facing", "0");
-                entry.put("after_osa","0");
-            }
-            else if (keySet2.contains(unit)){
-                entry.put("upc",unit);
+                entry.put("after_osa", "0");
+            } else if (keySet2.contains(unit)) {
+                UpcFacingDetail upcFacingDetail2 = (UpcFacingDetail) map2.get(unit);
+                LOGGER.info("---------------ProcessImageServiceImpl " + upcFacingDetail2.toString() + " ----------------\n");
+                entry.put("upc", unit);
                 entry.put("productLongName", upcFacingDetail2.getProductLongName());
                 entry.put("productShortName", upcFacingDetail2.getProductShortName());
                 entry.put("brandName", upcFacingDetail2.getBrandName());
                 entry.put("before_facing", "0");
-                entry.put("before_osa","0");
+                entry.put("before_osa", "0");
                 entry.put("after_facing", upcFacingDetail2.getCount());
-                entry.put("after_osa","1");
+                entry.put("after_osa", "1");
             }
             result.add(entry);
         }
@@ -418,7 +420,6 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 //            return resultList;
 //        }
 //    }
-
 
 
 }
