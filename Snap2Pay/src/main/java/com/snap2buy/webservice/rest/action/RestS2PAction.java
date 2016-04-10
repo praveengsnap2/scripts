@@ -325,8 +325,25 @@ public class RestS2PAction {
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
 
+        Long numUpcFound= 0L;
+        Long numUpcNotFound= 0L;
+        Long totalFacings= 0L;
+
+        for (LinkedHashMap<String, String> entry : resultListToPass) {
+            if (entry.get("osa").equalsIgnoreCase("1")) {
+                numUpcFound++;
+                totalFacings += Long.parseLong(entry.get("facing"));
+            } else if (entry.get("osa").equalsIgnoreCase("0")) {
+                numUpcNotFound++;
+                totalFacings += Long.parseLong(entry.get("facing"));
+            }
+        }
+
         reportInput.put("listId", inputObject.getListId());
         reportInput.put("imageUUID", inputObject.getImageUUID());
+        reportInput.put("numUpcFound", String.valueOf(numUpcFound));
+        reportInput.put("numUpcNotFound", String.valueOf(numUpcNotFound));
+        reportInput.put("totalFacings", String.valueOf(totalFacings));
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends doDistributionCheck----------------\n");
@@ -341,8 +358,33 @@ public class RestS2PAction {
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
 
+        Long newUpcAdded=0L;
+        Long numUpcRemoved =0L;
+        Long numUpcMoreFacings =0L;
+        Long numUpcLessFacings=0L;
+        Long numUpcUnChangedFacings=0L;
+
+        for (LinkedHashMap<String, String> entry : resultListToPass){
+            if ((entry.get("before_osa").equalsIgnoreCase("0"))&&(entry.get("after_osa").equalsIgnoreCase("1"))){
+                newUpcAdded++;
+            } else if ((entry.get("before_osa").equalsIgnoreCase("1"))&&(entry.get("after_osa").equalsIgnoreCase("0"))){
+                numUpcRemoved++;
+            }else if (Integer.parseInt(entry.get("after_facing")) > Integer.parseInt(entry.get("before_facing"))){
+                numUpcMoreFacings++;
+            }else if (Integer.parseInt(entry.get("before_facing")) > Integer.parseInt(entry.get("after_facing"))){
+                numUpcLessFacings++;
+            }else if (Integer.parseInt(entry.get("before_facing")) > Integer.parseInt(entry.get("after_facing"))){
+                numUpcUnChangedFacings++;
+            }
+
+        }
         reportInput.put("prevImageUUID", inputObject.getPrevImageUUID());
         reportInput.put("imageUUID", inputObject.getImageUUID());
+        reportInput.put("newUpcAdded", String.valueOf(newUpcAdded));
+        reportInput.put("numUpcRemoved", String.valueOf(numUpcRemoved));
+        reportInput.put("numUpcMoreFacings", String.valueOf(numUpcMoreFacings));
+        reportInput.put("numUpcLessFacings", String.valueOf(numUpcLessFacings));
+        reportInput.put("numUpcUnChangedFacings", String.valueOf(numUpcUnChangedFacings));
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends doBeforeAfterCheck----------------\n");
