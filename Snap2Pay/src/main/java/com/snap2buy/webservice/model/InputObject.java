@@ -59,6 +59,15 @@ public class InputObject {
     private String newWidth;
     private String newHeight;
     private String thumbnailPath;
+    private String imageUUIDCsvString;
+
+    public String getImageUUIDCsvString() {
+        return imageUUIDCsvString;
+    }
+
+    public void setImageUUIDCsvString(String imageUUIDCsvString) {
+        this.imageUUIDCsvString = imageUUIDCsvString;
+    }
 
     public String getThumbnailPath() {
         return thumbnailPath;
@@ -440,6 +449,8 @@ public class InputObject {
                 ", origHeight='" + origHeight + '\'' +
                 ", newWidth='" + newWidth + '\'' +
                 ", newHeight='" + newHeight + '\'' +
+                ", thumbnailPath='" + thumbnailPath + '\'' +
+                ", imageUUIDCsvString='" + imageUUIDCsvString + '\'' +
                 ", morefiltersMap=" + morefiltersMap +
                 '}';
     }

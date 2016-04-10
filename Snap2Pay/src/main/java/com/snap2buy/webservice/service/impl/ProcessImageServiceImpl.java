@@ -201,11 +201,14 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
             LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
+            LOGGER.info("--------------runImageAnalysis::storeImageAnalysis started-----------------\n");
+
+            processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
+            LOGGER.info("--------------runImageAnalysis::storeImageAnalysis done-----------------\n");
+
             String imageStatus = "done";
             processImageDao.updateImageAnalysisStatus(imageStatus, imageUUID);
             LOGGER.info("--------------runImageAnalysis::updateStatus=" + imageStatus + "-----------------\n");
-
-            processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
 
             LOGGER.info("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
@@ -229,6 +232,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
 
     }
+
 
     @Override
     public List<LinkedHashMap<String, String>> getStoreOptions() {
@@ -390,6 +394,26 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         return result;
     }
 
+    @Override
+    public List<LinkedHashMap<String, String>> doShareOfShelfAnalysis(InputObject inputObject) {
+
+        LOGGER.info("---------------ProcessImageServiceImpl Starts doShareOfShelfAnalysis::"+inputObject.getImageUUIDCsvString()+"----------------\n");
+
+        for (String imageUUID: inputObject.getImageUUIDCsvString().split(",")){
+            String status = processImageDao.getImageAnalysisStatus(imageUUID);
+            if (!status.equalsIgnoreCase("done")) {
+                runImageAnalysis(imageUUID);
+            }
+        }
+
+        List<LinkedHashMap<String, String>> imageAnalysisList = processImageDao.doShareOfShelfAnalysis(inputObject.getImageUUIDCsvString());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends doShareOfShelfAnalysis ----------------\n");
+
+        return imageAnalysisList;
+
+
+    }
 //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
 //        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );
@@ -420,6 +444,36 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 //            return resultList;
 //        }
 //    }
-
+//
+//    select
+//    final.UPC ,
+//    PRODUCT_SHORT_NAME,
+//    PRODUCT_LONG_NAME,
+//    BRAND_NAME,
+//    before_osa,
+//    after_osa,
+//    before_facing,
+//    after_facing
+//    from ProductMaster
+//    join (
+//            (
+//            select t1.upc, t1.osa as before_osa, t2.osa as after_osa, t1.count as before_facing, t2.count as after_facing from
+//                    (SELECT upc, "1" as osa, count(*) as count FROM ImageAnalysis  WHERE imageUUID = "0094ac77-1526-4fac-829d-690d3ee97568" group by upc) as t1,
+//    (SELECT upc, "1" as osa, count(*) as count FROM ImageAnalysis  WHERE imageUUID = "124d1e60-cd40-4185-b211-fedbcc94db95" group by upc) as t2
+//    where t1.upc = t2.upc
+//    )
+//    union all
+//            (
+//                    select t1.upc, t1.osa as before_osa, "0" as after_osa, t1.count as before_facing, "0" as after_facing from
+//                    (SELECT upc, "1" as osa, count(*) as count FROM ImageAnalysis  WHERE imageUUID = "0094ac77-1526-4fac-829d-690d3ee97568" group by upc) as t1
+//    where t1.upc not in (SELECT upc FROM ImageAnalysis  WHERE imageUUID = "124d1e60-cd40-4185-b211-fedbcc94db95" group by upc)
+//    )
+//    union all
+//            (
+//                    select t2.upc,  "0" as before_osa, t2.osa as after_osa, "0" as before_facing, t2.count  as after_facing from
+//                    (SELECT upc, "1" as osa, count(*) as count FROM ImageAnalysis  WHERE imageUUID = "124d1e60-cd40-4185-b211-fedbcc94db95" group by upc) as t2
+//    where t2.upc not in (SELECT upc FROM ImageAnalysis  WHERE imageUUID = "0094ac77-1526-4fac-829d-690d3ee97568" group by upc)
+//    )
+//            ) final on final.upc = ProductMaster.UPC
 
 }

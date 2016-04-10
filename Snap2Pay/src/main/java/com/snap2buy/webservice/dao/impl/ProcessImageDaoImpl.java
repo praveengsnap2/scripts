@@ -510,4 +510,81 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
     }
 
+    @Override
+    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::getImageUUIDCsvString="+getImageUUIDCsvString+"----------------\n");
+
+        String baseSql = "select ImageAnalysis.upc, count(*) as facing,ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(baseSql);
+
+        for( String entry: getImageUUIDCsvString.split(",")) {
+            builder.append("?,");
+        }
+
+        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc";
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
+
+       // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            int i=1;
+
+            for( String entry: getImageUUIDCsvString.split(",")) {
+                ps.setString(i++, entry);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            String curr = "initialTestString";
+            List<LinkedHashMap<String,String>> multipleImageAnalysisList=new ArrayList<LinkedHashMap<String,String>>();
+
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("upc", rs.getString("upc"));
+                map.put("facing", rs.getString("facing"));
+                map.put("productShortName", rs.getString("PRODUCT_SHORT_NAME"));
+                map.put("productLongName", rs.getString("PRODUCT_LONG_NAME"));
+                map.put("brandName", rs.getString("BRAND_NAME"));
+                multipleImageAnalysisList.add(map);
+
+//                if (curr.equals("initialTestString")){
+//                    curr=rs.getString("BRAND_NAME");
+//                }
+//
+//                if (curr.equals(rs.getString("BRAND_NAME"))){
+//                    upcFacingDetailList.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("facing"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
+//                }
+//                else{
+//                    map.put(rs.getString("BRAND_NAME"),upcFacingDetailList);
+//                    curr=rs.getString("BRAND_NAME");
+//                    upcFacingDetailList.clear();
+//                    upcFacingDetailList.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("facing"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
+//
+//                }
+            }
+           // map.put(curr,upcFacingDetailList);
+            rs.close();
+            ps.close();
+
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
+            return multipleImageAnalysisList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
 }

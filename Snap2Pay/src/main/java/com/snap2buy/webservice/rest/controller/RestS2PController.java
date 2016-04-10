@@ -772,6 +772,39 @@ public class RestS2PController {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/doShareOfShelfAnalysis")
+    public Snap2PayOutput doShareOfShelfAnalysis(
+            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUIDCsvString,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts doShareOfShelfAnalysis::imageUUID="+imageUUIDCsvString+"----------------\n");
+        try {
+
+            InputObject inputObject = new InputObject();
+            inputObject.setImageUUIDCsvString(imageUUIDCsvString);
+            return restS2PAction.doShareOfShelfAnalysis(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("imageUUIDCsvString", imageUUIDCsvString);
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends doShareOfShelfAnalysis----------------\n");
+            return rio;
+        }
+    }
+
+
+    @GET
     @Produces({"image/jpeg", "image/png"})
     @Path("/displayImage")
     public StreamingOutput displayImage(

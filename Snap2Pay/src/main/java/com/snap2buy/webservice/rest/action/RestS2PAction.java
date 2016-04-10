@@ -406,4 +406,20 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    public Snap2PayOutput doShareOfShelfAnalysis(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts doShareOfShelfAnalysis----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("imageUUID : " + inputObject.getImageUUIDCsvString());
+        resultListToPass = processImageService.doShareOfShelfAnalysis(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+        reportInput.put("imageUUID", inputObject.getImageUUIDCsvString());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends doShareOfShelfAnalysis----------------\n");
+
+        return reportIO;
+    }
 }
