@@ -85,7 +85,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
             processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
-            return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
+            return ConverterUtil.convertImageSaveObjectToMap(imageAnalysisList);
         } else {
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
             List<java.util.LinkedHashMap<String, String>> result = new ArrayList<java.util.LinkedHashMap<String, String>>();

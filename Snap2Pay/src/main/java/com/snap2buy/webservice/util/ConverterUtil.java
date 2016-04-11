@@ -10,6 +10,24 @@ import java.util.List;
  * Created by sachin on 3/15/16.
  */
 public class ConverterUtil {
+    public static List<LinkedHashMap<String, String>> convertImageSaveObjectToMap(List<ImageAnalysis> dataList) {
+
+        List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
+        for (ImageAnalysis listEntry : dataList) {
+            java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
+            temp.put("Upc", listEntry.getUpc());
+            temp.put("LeftTopX", listEntry.getLeftTopX());
+            temp.put("LeftTopY", listEntry.getLeftTopY());
+            temp.put("Width", listEntry.getWidth());
+            temp.put("Height", listEntry.getHeight());
+            temp.put("Promotion", listEntry.getPromotion());
+            temp.put("Price", listEntry.getPrice());
+            temp.put("PriceLabel", listEntry.getPriceLabel());
+            result.add(temp);
+        }
+        return result;
+    }
+
     public static List<LinkedHashMap<String, String>> convertImageAnalysisObjectToMap(List<ImageAnalysis> dataList) {
 
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();

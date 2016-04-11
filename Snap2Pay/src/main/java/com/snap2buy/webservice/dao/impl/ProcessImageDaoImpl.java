@@ -523,7 +523,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             builder.append("?,");
         }
 
-        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc order by ProductMaster.BRAND_NAME";
+        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc order by ProductMaster.BRAND_NAMEa";
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
 
        // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
