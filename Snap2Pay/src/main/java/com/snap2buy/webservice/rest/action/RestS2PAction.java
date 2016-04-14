@@ -373,7 +373,7 @@ public class RestS2PAction {
                 numUpcMoreFacings++;
             }else if (Integer.parseInt(entry.get("before_facing")) > Integer.parseInt(entry.get("after_facing"))){
                 numUpcLessFacings++;
-            }else if (Integer.parseInt(entry.get("before_facing")) > Integer.parseInt(entry.get("after_facing"))){
+            }else if (Integer.parseInt(entry.get("before_facing")) == Integer.parseInt(entry.get("after_facing"))){
                 numUpcUnChangedFacings++;
             }
 

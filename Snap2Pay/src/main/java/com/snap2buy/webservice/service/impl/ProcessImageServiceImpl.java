@@ -294,7 +294,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         Set<String> keySet = map.keySet();
         List<UpcFacingDetail> listDistributionList = productMasterDao.getUpcForList(inputObject.getListId());
-       
+
         for (UpcFacingDetail unit : listDistributionList) {
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
             if (keySet.contains(unit.getUpc())) {
