@@ -688,7 +688,7 @@ public class RestS2PController {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts doDistributionCheck::doDistributionCheck::listName=" + listId + "::imageUUID=" + imageUUID + "----------------\n");
+        LOGGER.info("---------------Controller Starts doDistributionCheck::doDistributionCheck::listId=" + listId + "::imageUUID=" + imageUUID + "----------------\n");
         try {
             InputObject inputObject = new InputObject();
             inputObject.setListId(listId);
@@ -703,7 +703,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            inputList.put("listName",listId);
+            inputList.put("listId",listId);
             inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doDistributionCheck----------------\n");

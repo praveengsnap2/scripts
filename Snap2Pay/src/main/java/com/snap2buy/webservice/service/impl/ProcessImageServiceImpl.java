@@ -294,12 +294,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         Set<String> keySet = map.keySet();
         List<UpcFacingDetail> listDistributionList = productMasterDao.getUpcForList(inputObject.getListId());
-
-        List<String> dlUpc = new ArrayList<String>();
+       
         for (UpcFacingDetail unit : listDistributionList) {
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
             if (keySet.contains(unit.getUpc())) {
-                UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail) map.get(unit);
+                UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail) map.get(unit.getUpc());
                 entry.put("upc", unit.getUpc());
                 entry.put("productLongName", unit.getProductLongName());
                 entry.put("productShortName", unit.getProductShortName());
