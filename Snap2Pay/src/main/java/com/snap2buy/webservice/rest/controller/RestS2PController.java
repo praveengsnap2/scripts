@@ -90,12 +90,12 @@ public class RestS2PController {
                 inputObject.setVisitDate("-9");
             }
 
-            inputObject.setImageUUID(uniqueKey.toString());
-            inputObject.setCategoryId(categoryId);
-            inputObject.setLatitude(latitude);
-            inputObject.setLongitude(longitude);
-            inputObject.setTimeStamp(timeStamp);
-            inputObject.setUserId(userId);
+            inputObject.setImageUUID(uniqueKey.toString().trim());
+            inputObject.setCategoryId(categoryId.trim());
+            inputObject.setLatitude(latitude.trim());
+            inputObject.setLongitude(longitude.trim());
+            inputObject.setTimeStamp(timeStamp.trim());
+            inputObject.setUserId(userId.trim());
             inputObject.setSync(sync);
 
 
@@ -138,10 +138,10 @@ public class RestS2PController {
                     String csv=ShellUtil.createThumbnail(filenamePath,thumbnailPath);
                     String values[]=csv.split(",");
 
-                    inputObject.setOrigWidth(String.valueOf(values[0]));
-                    inputObject.setOrigHeight(String.valueOf(values[1]));
-                    inputObject.setNewWidth(String.valueOf(values[2]));
-                    inputObject.setNewHeight(String.valueOf(values[3]));
+                    inputObject.setOrigWidth(values[0].replace("\r","").replace("\n","").trim());
+                    inputObject.setOrigHeight(values[1].replace("\r","").replace("\n","").trim());
+                    inputObject.setNewWidth(values[2].replace("\r","").replace("\n","").trim());
+                    inputObject.setNewHeight(values[3].replace("\r","").replace("\n","").trim());
                     inputObject.setThumbnailPath(thumbnailPath);
                     result = ("File field " + name + " with file name "
                             + item.getName() + " detected.");

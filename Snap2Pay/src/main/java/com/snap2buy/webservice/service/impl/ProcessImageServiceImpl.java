@@ -84,8 +84,12 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LOGGER.info("--------------imageAnalysisList=" + imageAnalysisList + "-----------------\n");
             processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
             processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
+
+            //waste call just to get same format for all api, otherwise have to invoke new call to do the join
+            List<ImageAnalysis> result = processImageDao.getImageAnalysis( imageStore.getImageUUID());
+
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
-            return ConverterUtil.convertImageSaveObjectToMap(imageAnalysisList);
+            return ConverterUtil.convertImageAnalysisObjectToMap(result);
         } else {
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   not sync----------------\n");
             List<java.util.LinkedHashMap<String, String>> result = new ArrayList<java.util.LinkedHashMap<String, String>>();
@@ -295,11 +299,12 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         for (UpcFacingDetail unit : listDistributionList) {
             LinkedHashMap<String, String> entry = new LinkedHashMap<String, String>();
             if (keySet.contains(unit.getUpc())) {
+                UpcFacingDetail upcFacingDetail1 = (UpcFacingDetail) map.get(unit);
                 entry.put("upc", unit.getUpc());
                 entry.put("productLongName", unit.getProductLongName());
                 entry.put("productShortName", unit.getProductShortName());
                 entry.put("brandName", unit.getBrandName());
-                entry.put("facing", unit.getCount());
+                entry.put("facing", upcFacingDetail1.getCount());
                 entry.put("osa", "1");
             } else {
                 entry.put("upc", unit.getUpc());
