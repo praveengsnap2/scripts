@@ -587,4 +587,35 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
         }
     }
+    @Override
+    public void updateLatLong(String imageUUID, String latitude, String longitude) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateLatLong::imageUUID="+imageUUID+"::latitude="+latitude+"::longitude="+longitude+"----------------\n");
+        String sql = "UPDATE ImageStore SET latitude = ? , longitude = ? WHERE imageUUID = ? ";
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, latitude);
+            ps.setString(2, longitude);
+            ps.setString(3, imageUUID);
+            ps.executeUpdate();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateLatLong----------------\n");
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
 }

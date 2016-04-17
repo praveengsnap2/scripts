@@ -418,6 +418,14 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
 
     }
+    @Override
+    public void updateLatLong(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts updateLatLong----------------\n");
+
+        processImageDao.updateLatLong(inputObject.getImageUUID(), inputObject.getLatitude(),inputObject.getLongitude());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends updateLatLong ----------------\n");
+    }
 //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
 //        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );

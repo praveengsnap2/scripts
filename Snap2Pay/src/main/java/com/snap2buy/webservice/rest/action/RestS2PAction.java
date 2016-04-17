@@ -422,4 +422,27 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    public Snap2PayOutput updateLatLong(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts updateLatLong----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("imageUUID : " + inputObject.getImageUUIDCsvString());
+        processImageService.updateLatLong(inputObject);
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result.put("responseCode", "200");
+        result.put("responseMessage", "updateLatLong Stored Successfully");
+        resultListToPass.add(result);
+
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+        reportInput.put("imageUUID", inputObject.getImageUUID());
+        reportInput.put("latitude", inputObject.getLatitude());
+        reportInput.put("longitude", inputObject.getLongitude());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends updateLatLong----------------\n");
+
+        return reportIO;
+    }
 }

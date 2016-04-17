@@ -21,4 +21,5 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> doDistributionCheck(InputObject inputObject);
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject);
+    public void updateLatLong(InputObject inputObject);
 }

@@ -802,7 +802,43 @@ public class RestS2PController {
             return rio;
         }
     }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateLatLong")
+    public Snap2PayOutput updateLatLong(
+            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+            @QueryParam(ParamMapper.LATITUDE) @DefaultValue("-9") String latitude,
+            @QueryParam(ParamMapper.LONGITUDE) @DefaultValue("-9") String longitude,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateLatLong::imageUUID="+imageUUID+"::latitude="+latitude+"::longitude="+longitude+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
 
+            inputObject.setImageUUID(imageUUID);
+            inputObject.setLatitude(latitude);
+            inputObject.setLongitude(longitude);
+            return restS2PAction.updateLatLong(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("retailerChainCode",imageUUID);
+            inputList.put("stateCode",latitude);
+            inputList.put("city",longitude);
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateLatLong----------------\n");
+            return rio;
+        }
+    }
 
     @GET
     @Produces({"image/jpeg", "image/png"})
