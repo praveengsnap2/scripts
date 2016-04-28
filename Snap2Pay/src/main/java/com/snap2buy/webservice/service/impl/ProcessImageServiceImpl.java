@@ -75,6 +75,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         imageStore.setStoreId(storeId);
         imageStore.setShelfStatus("new");
+        imageStore.setImageStatus("new");
+
         processImageDao.insert(imageStore);
 
         if (inputObject.getSync().equals("true")) {
