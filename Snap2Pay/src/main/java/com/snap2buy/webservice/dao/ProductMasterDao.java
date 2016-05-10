@@ -14,7 +14,7 @@ public interface ProductMasterDao {
 
     public ProductMaster getUpcDetails(String upc);
 
-    public void storeThumbnails();
+    public void storeThumbnails(String imageFolderPath);
 
     public File getThumbnails(String upc);
 

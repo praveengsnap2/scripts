@@ -21,11 +21,11 @@ public class Compress {
 //            origWidth = String.valueOf(image.getHeight());
 //            origHeight = String.valueOf(image.getWidth());
 //            image.rotateClockwise();
-//            image.setWidth(600);
+//            image.setWidth(900);
 //        } else {
 //             origWidth = String.valueOf(image.getWidth());
 //             origHeight = String.valueOf(image.getHeight());
-//            image.setWidth(600);
+//            image.setWidth(900);
 //        }
 //        //System.out.println("new image::" + image.getWidth() + "x" + image.getHeight());
 //        String newWidth = String.valueOf(image.getWidth());

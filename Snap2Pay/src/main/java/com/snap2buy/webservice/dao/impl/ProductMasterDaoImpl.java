@@ -174,21 +174,21 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
     }
 
     @Override
-    public void storeThumbnails() {
-        LOGGER.info("---------------ProductMasterDaoImpl Starts storeThumbnails----------------\n");
+    public void storeThumbnails(String imageFolderPath) {
+        LOGGER.info("---------------ProductMasterDaoImpl Starts storeThumbnails imageFolderPath="+imageFolderPath+"----------------\n");
 
         String sql = "insert into Thumbnails(id, name, image) values (?, ?, ?)";
-        String imageNameList[] = {
-                "016000147720.JPG", "022400393650.jpg", "030000263938.JPG", "038000391255.JPG", "071249239988.jpg", "079400256003.jpg", "080878171026.jpg", "381519031625.JPG", "381519181726.jpg", "603084297634.jpg",
-                 };
+        File folder = new File(imageFolderPath);
+        File[] listOfFiles = folder.listFiles();
 
         Connection conn = null;
         ProductMaster productMaster = null;
         FileInputStream fis = null;
 
-        for (String name : imageNameList) {
+        for (File fileObject : listOfFiles) {
+            String name=fileObject.getName();
             try {
-                File file = new File("/home/naveen/Image_Thumbnails/" + name);
+                File file = new File("imageFolderPath" +"/"+ name);
                 fis = new FileInputStream(file);
                 conn = dataSource.getConnection();
                 conn.setAutoCommit(false);

@@ -76,9 +76,9 @@ public class productMasterServiceImpl implements ProductMasterService {
     }
 
     @Override
-    public void storeThumbnails() {
+    public void storeThumbnails(String imageFolderPath) {
         LOGGER.info("---------------productMasterServiceImpl Starts storeThumbnails----------------\n");
-        productMasterDao.storeThumbnails();
+        productMasterDao.storeThumbnails(imageFolderPath);
         LOGGER.info("---------------productMasterServiceImpl Ends storeThumbnails----------------\n");
     }
     @Override

@@ -214,10 +214,10 @@ public class RestS2PAction {
         return productMasterService.getUpcImage(inputObject);
     }
 
-    public void storeThumbnails() {
+    public void storeThumbnails(String imageFolderPath) {
         LOGGER.info("---------------RestAction Starts storeThumbnails----------------\n");
 
-        productMasterService.storeThumbnails();
+        productMasterService.storeThumbnails(imageFolderPath);
 
         LOGGER.info("---------------RestAction Ends storeThumbnails----------------\n");
     }

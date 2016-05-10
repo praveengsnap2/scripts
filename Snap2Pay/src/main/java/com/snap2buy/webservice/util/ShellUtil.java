@@ -10,12 +10,12 @@ import java.io.*;
 public class ShellUtil {
     private static Logger LOGGER = Logger.getLogger("s2b");
 
-    public static String executeCommand(String imageFilePath, String category, String uuid, String retailer, String store) {
+    public static String executeCommand(String imageFilePath, String category, String uuid, String retailer, String store, String userId) {
         String response = "";
         Boolean waitForResponse = true;
         String command = "invoke_image_analysis.sh";
         File f = new File("/root");
-        LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "----------------\n");
+        LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "userId= "+userId+"----------------\n");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
 
@@ -24,6 +24,7 @@ public class ShellUtil {
         pb.environment().put("Uuid", uuid);
         pb.environment().put("Retailer_Code", retailer);
         pb.environment().put("Store_Id", store);
+        pb.environment().put("User_Id", userId);
         pb.directory(f);
         pb.redirectErrorStream(true);
 

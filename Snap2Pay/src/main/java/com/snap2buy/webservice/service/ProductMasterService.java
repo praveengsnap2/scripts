@@ -14,7 +14,7 @@ public interface ProductMasterService {
 
     public File getUpcImage(InputObject inputObject);
 
-    void storeThumbnails();
+    void storeThumbnails(String imageFolderPath);
 
     public List<LinkedHashMap<String, String>> getDistributionLists();
 }

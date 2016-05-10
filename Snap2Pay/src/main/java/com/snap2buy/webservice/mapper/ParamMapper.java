@@ -31,5 +31,6 @@ public interface ParamMapper {
     String STATE_CODE="stateCode";
     String RETAILER_CHAIN_CODE = "retailerChainCode";
     String LIST_ID = "listId";
+    String IMAGE_FOLDER_PATH = "ImageFolderPath";
 
 }

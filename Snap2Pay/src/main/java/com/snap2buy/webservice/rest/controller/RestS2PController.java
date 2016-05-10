@@ -405,6 +405,7 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/storeThumbnails")
     public Snap2PayOutput storeThumbnails(
+            @QueryParam(ParamMapper.IMAGE_FOLDER_PATH) @DefaultValue("-9") String imageFolderPath,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -413,7 +414,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            restS2PAction.storeThumbnails();
+            restS2PAction.storeThumbnails(imageFolderPath);
             inputList.put("success", "Success");
 
             rio = new Snap2PayOutput(null, inputList);
