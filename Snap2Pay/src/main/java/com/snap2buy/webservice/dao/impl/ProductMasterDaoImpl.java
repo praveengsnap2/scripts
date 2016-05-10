@@ -185,10 +185,10 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
         ProductMaster productMaster = null;
         FileInputStream fis = null;
 
-        for (File fileObject : listOfFiles) {
-            String name=fileObject.getName();
+        for (File file : listOfFiles) {
             try {
-                File file = new File("imageFolderPath" +"/"+ name);
+                String name = file.getName();
+                LOGGER.info("---------------ProductMasterDaoImpl  image name ="+name+"------------");
                 fis = new FileInputStream(file);
                 conn = dataSource.getConnection();
                 conn.setAutoCommit(false);
