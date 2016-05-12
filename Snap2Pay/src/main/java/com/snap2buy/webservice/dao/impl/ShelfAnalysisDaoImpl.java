@@ -17,6 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sachin on 10/31/15.
@@ -89,7 +91,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
     @Override
     public ShelfAnalysis getShelfAnalysis(String imageUUID) {
         LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysis::imageUUID="+imageUUID+"----------------\n");
-        String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
+        String sql = "SELECT * FROM ShelfAnalysis WHERE imageUUID = ?";
 
         Connection conn = null;
         ShelfAnalysis shelfAnalysis = null;
@@ -106,6 +108,43 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
             LOGGER.info("---------------ShelfAnalysisDaoImpl Ends getShelfAnalysis----------------\n");
 
             return shelfAnalysis;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+    @Override
+    public List<ShelfAnalysis> getSelfAnalysisCsv() {
+        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getSelfAnalysisCsv----------------\n");
+        String sql = "SELECT * FROM ShelfAnalysis";
+
+        Connection conn = null;
+        ShelfAnalysis shelfAnalysis = null;
+        List<ShelfAnalysis> shelfAnalysisList=new ArrayList<ShelfAnalysis>();
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                shelfAnalysis = new ShelfAnalysis(rs.getString("imageUUID"), rs.getString("product_code"), rs.getString("expected_facings"), rs.getString("on_shelf_availability"), rs.getString("detected_facings"), rs.getString("promotion_label_present"), rs.getString("price"), rs.getString("promo_price"), rs.getString("storeId"), rs.getString("categoryId"));
+                shelfAnalysisList.add(shelfAnalysis);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ShelfAnalysisDaoImpl Ends getSelfAnalysisCsv----------------\n");
+
+            return shelfAnalysisList;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);

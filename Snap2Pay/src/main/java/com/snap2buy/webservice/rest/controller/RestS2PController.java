@@ -871,4 +871,28 @@ public class RestS2PController {
 
        return so;
         }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getSelfAnalysisCsv")
+    public Snap2PayOutput getSelfAnalysisCsv(
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getSelfAnalysisCsv----------------\n");
+        try {
+            return restS2PAction.getSelfAnalysisCsv();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getSelfAnalysisCsv----------------\n");
+            return rio;
+        }
+    }
 }

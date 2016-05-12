@@ -422,6 +422,22 @@ public class RestS2PAction {
 
         return reportIO;
     }
+
+    public Snap2PayOutput getSelfAnalysisCsv() {
+        LOGGER.info("---------------RestAction Starts getSelfAnalysisCsv----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        resultListToPass = shelfAnalysisService.getSelfAnalysisCsv();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getSelfAnalysisCsv----------------\n");
+
+        return reportIO;
+    }
+
     public Snap2PayOutput updateLatLong(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts updateLatLong----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
