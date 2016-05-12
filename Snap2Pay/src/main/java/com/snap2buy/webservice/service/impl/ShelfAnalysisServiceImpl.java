@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -81,29 +83,36 @@ public class ShelfAnalysisServiceImpl implements ShelfAnalysisService {
     }
 
     @Override
-    public  List<LinkedHashMap<String, String>> getSelfAnalysisCsv() {
-        LOGGER.info("---------------ShelfAnalysisServiceImpl Starts getSelfAnalysisCsv----------------\n");
-        List<LinkedHashMap<String, String>> shelfAnalysisResultList=new ArrayList<LinkedHashMap<String, String>>();
+    public File getShelfAnalysisCsv(String tempFilePath) {
+        LOGGER.info("---------------ShelfAnalysisServiceImpl Starts getShelfAnalysisCsv----------------\n");
 
-        long i=0;
-        List<ShelfAnalysis> shelfAnalysisList = shelfAnalysisDao.getSelfAnalysisCsv();
-        for (ShelfAnalysis shelfAnalysis :shelfAnalysisList) {
-            StringBuilder shelfAnalysisRow = new StringBuilder();
-            shelfAnalysisRow.append(shelfAnalysis.getImageUUID() + ",");
-            shelfAnalysisRow.append(shelfAnalysis.getUpc() +",");
-            shelfAnalysisRow.append(shelfAnalysis.getExpected_facings()+",");
-            shelfAnalysisRow.append(shelfAnalysis.getOn_shelf_availability()+",");
-            shelfAnalysisRow.append(shelfAnalysis.getDetected_facings()+",");
-            shelfAnalysisRow.append(shelfAnalysis.getPrice()+",");
-            shelfAnalysisRow.append(shelfAnalysis.getStoreId()+",");
-            shelfAnalysisRow.append(shelfAnalysis.getCategoryId());
+        List<ShelfAnalysis> shelfAnalysisList = shelfAnalysisDao.getShelfAnalysisCsv();
 
-            LinkedHashMap<String, String> shelfAnalysisResult = new LinkedHashMap<String, String>();
-            shelfAnalysisResult.put(String.valueOf(i++),shelfAnalysisRow.toString());
-            shelfAnalysisResultList.add(shelfAnalysisResult);
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(tempFilePath);
+            for (ShelfAnalysis shelfAnalysis : shelfAnalysisList) {
+                StringBuilder shelfAnalysisRow = new StringBuilder();
+                shelfAnalysisRow.append(shelfAnalysis.getImageUUID() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getUpc() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getExpected_facings() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getOn_shelf_availability() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getDetected_facings() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getPrice() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getStoreId() + ",");
+                shelfAnalysisRow.append(shelfAnalysis.getCategoryId());
+
+                fileWriter.append(shelfAnalysisRow.toString() + "\n");
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        LOGGER.info("---------------ShelfAnalysisServiceImpl Ends getSelfAnalysisCsv----------------\n");
-
-        return shelfAnalysisResultList;
+        LOGGER.info("---------------ShelfAnalysisServiceImpl Ends getShelfAnalysisCsv----------------\n");
+        File f = new File(tempFilePath);
+        return f;
     }
 }

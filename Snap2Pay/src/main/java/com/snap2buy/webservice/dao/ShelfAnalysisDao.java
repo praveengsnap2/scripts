@@ -12,5 +12,5 @@ public interface ShelfAnalysisDao {
 
     public ShelfAnalysis getShelfAnalysis(String imageUUID);
 
-    public List<ShelfAnalysis> getSelfAnalysisCsv();
+    public List<ShelfAnalysis> getShelfAnalysisCsv();
 }

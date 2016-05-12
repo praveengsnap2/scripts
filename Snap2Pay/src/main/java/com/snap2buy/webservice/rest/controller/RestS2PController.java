@@ -873,14 +873,17 @@ public class RestS2PController {
         }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/getSelfAnalysisCsv")
-    public Snap2PayOutput getSelfAnalysisCsv(
+    @Path("/getShelfAnalysisCsv")
+    public Response getShelfAnalysisCsv(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getSelfAnalysisCsv----------------\n");
+        LOGGER.info("---------------Controller Starts getShelfAnalysisCsv----------------\n");
         try {
-            return restS2PAction.getSelfAnalysisCsv();
+            File f = restS2PAction.getShelfAnalysisCsv();
+            Response.ResponseBuilder r = Response.ok((Object) f);
+            r.header("Content-Disposition", "attachment; filename= ShelfAnalysis .csv");
+            return r.build();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -891,8 +894,8 @@ public class RestS2PController {
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends getSelfAnalysisCsv----------------\n");
-            return rio;
+            LOGGER.info("---------------Controller Ends getShelfAnalysisCsv----------------\n");
+            return Response.serverError().build();
         }
     }
 }

@@ -423,19 +423,16 @@ public class RestS2PAction {
         return reportIO;
     }
 
-    public Snap2PayOutput getSelfAnalysisCsv() {
-        LOGGER.info("---------------RestAction Starts getSelfAnalysisCsv----------------\n");
-        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+    public File getShelfAnalysisCsv() {
+        LOGGER.info("---------------RestAction Starts getShelfAnalysisCsv----------------\n");
 
-        resultListToPass = shelfAnalysisService.getSelfAnalysisCsv();
+        String tempFilePath = "/tmp/csvDownload" + System.currentTimeMillis();
 
-        HashMap<String, String> reportInput = new HashMap<String, String>();
+        File shelfAnalysis = shelfAnalysisService.getShelfAnalysisCsv(tempFilePath);
 
+        LOGGER.info("---------------RestAction Ends getShelfAnalysisCsv----------------\n");
 
-        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
-        LOGGER.info("---------------RestAction Ends getSelfAnalysisCsv----------------\n");
-
-        return reportIO;
+        return shelfAnalysis;
     }
 
     public Snap2PayOutput updateLatLong(InputObject inputObject) {

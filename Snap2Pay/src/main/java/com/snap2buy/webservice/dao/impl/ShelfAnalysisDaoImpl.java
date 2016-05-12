@@ -124,8 +124,8 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
         }
     }
     @Override
-    public List<ShelfAnalysis> getSelfAnalysisCsv() {
-        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getSelfAnalysisCsv----------------\n");
+    public List<ShelfAnalysis> getShelfAnalysisCsv() {
+        LOGGER.info("---------------ShelfAnalysisDaoImpl Starts getShelfAnalysisCsv----------------\n");
         String sql = "SELECT * FROM ShelfAnalysis";
 
         Connection conn = null;
@@ -142,7 +142,7 @@ public class ShelfAnalysisDaoImpl implements ShelfAnalysisDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ShelfAnalysisDaoImpl Ends getSelfAnalysisCsv----------------\n");
+            LOGGER.info("---------------ShelfAnalysisDaoImpl Ends getShelfAnalysisCsv----------------\n");
 
             return shelfAnalysisList;
         } catch (SQLException e) {
