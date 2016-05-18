@@ -904,12 +904,16 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/doShareOfShelfAnalysisCsv")
     public Response doShareOfShelfAnalysisCsv(
+            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUIDCsvString,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts doShareOfShelfAnalysisCsv----------------\n");
         try {
-            File f = restS2PAction.doShareOfShelfAnalysisCsv();
+
+            InputObject inputObject = new InputObject();
+            inputObject.setImageUUIDCsvString(imageUUIDCsvString);
+            File f = restS2PAction.doShareOfShelfAnalysisCsv(inputObject);
             Response.ResponseBuilder r = Response.ok((Object) f);
             r.header("Content-Disposition", "attachment; filename= shareOfShelfAnalysis.csv");
             return r.build();

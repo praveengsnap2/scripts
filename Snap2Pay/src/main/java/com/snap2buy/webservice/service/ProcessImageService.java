@@ -23,5 +23,5 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject);
     public void updateLatLong(InputObject inputObject);
-    public File doShareOfShelfAnalysisCsv(String tempFilePath);
+    public File doShareOfShelfAnalysisCsv(InputObject inputObject,String tempFilePath);
 }

@@ -589,11 +589,19 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
-    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv() {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::----------------\n");
+    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::getImageUUIDCsvString="+getImageUUIDCsvString+"----------------\n");
 
-        String sql = "select ImageAnalysis.imageUUID as imageUUID, ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC group by ImageAnalysis.imageUUID, ImageAnalysis.upc order by ImageAnalysis.imageUUID, ImageAnalysis.upc";
+        String baseSql = "select ImageAnalysis.imageUUID, ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
 
+        StringBuilder builder = new StringBuilder();
+        builder.append(baseSql);
+
+        for( String entry: getImageUUIDCsvString.split(",")) {
+            builder.append("?,");
+        }
+
+        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.imageUUID, ImageAnalysis.upc order by ImageAnalysis.imageUUID, ImageAnalysis.upc";
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
 
         // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
@@ -601,7 +609,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-
+            int i=1;
+            for( String entry: getImageUUIDCsvString.split(",")) {
+                ps.setString(i++, entry);
+            }
             ResultSet rs = ps.executeQuery();
             List<LinkedHashMap<String,String>> multipleImageAnalysisList=new ArrayList<LinkedHashMap<String,String>>();
 

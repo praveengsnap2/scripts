@@ -425,16 +425,16 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
-    public File doShareOfShelfAnalysisCsv(String tempFilePath) {
+    public File doShareOfShelfAnalysisCsv(InputObject inputObject, String tempFilePath) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doShareOfShelfAnalysisCsv----------------\n");
 
-        List<LinkedHashMap<String, String>> imageAnalysisList = processImageDao.doShareOfShelfAnalysisCsv();
+        List<LinkedHashMap<String, String>> imageAnalysisList = processImageDao.doShareOfShelfAnalysisCsv(inputObject.getImageUUIDCsvString());
 
 
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(tempFilePath);
-            String headers="ImageUUID,UPC,Facing,Product Short Name,Product Long Name,Brand Name";
+            String headers="ImageUUID,UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
             fileWriter.append(headers);
 
             for (LinkedHashMap<String, String> row : imageAnalysisList) {

@@ -434,12 +434,12 @@ public class RestS2PAction {
 
         return shelfAnalysis;
     }
-    public File doShareOfShelfAnalysisCsv() {
+    public File doShareOfShelfAnalysisCsv(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts doShareOfShelfAnalysisCsv----------------\n");
 
         String tempFilePath = "/tmp/csvDownload" + System.currentTimeMillis();
 
-        File shareOfShelfAnalysisCsv = processImageService.doShareOfShelfAnalysisCsv(tempFilePath);
+        File shareOfShelfAnalysisCsv = processImageService.doShareOfShelfAnalysisCsv(inputObject,tempFilePath);
 
         LOGGER.info("---------------RestAction Ends doShareOfShelfAnalysisCsv----------------\n");
 
