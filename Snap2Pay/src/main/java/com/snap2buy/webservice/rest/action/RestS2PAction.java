@@ -434,6 +434,17 @@ public class RestS2PAction {
 
         return shelfAnalysis;
     }
+    public File doShareOfShelfAnalysisCsv() {
+        LOGGER.info("---------------RestAction Starts doShareOfShelfAnalysisCsv----------------\n");
+
+        String tempFilePath = "/tmp/csvDownload" + System.currentTimeMillis();
+
+        File shareOfShelfAnalysisCsv = processImageService.doShareOfShelfAnalysisCsv(tempFilePath);
+
+        LOGGER.info("---------------RestAction Ends doShareOfShelfAnalysisCsv----------------\n");
+
+        return shareOfShelfAnalysisCsv;
+    }
 
     public Snap2PayOutput updateLatLong(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts updateLatLong----------------\n");

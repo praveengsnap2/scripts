@@ -22,6 +22,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -420,6 +423,42 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
 
     }
+
+    @Override
+    public File doShareOfShelfAnalysisCsv(String tempFilePath) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts doShareOfShelfAnalysisCsv----------------\n");
+
+        List<LinkedHashMap<String, String>> imageAnalysisList = processImageDao.doShareOfShelfAnalysisCsv();
+
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(tempFilePath);
+            String headers="ImageUUID,UPC,Facing,Product Short Name,Product Long Name,Brand Name";
+            fileWriter.append(headers);
+
+            for (LinkedHashMap<String, String> row : imageAnalysisList) {
+                StringBuilder shareOfShelfAnalysisRow = new StringBuilder();
+                shareOfShelfAnalysisRow.append(row.get("imageUUID") + ",");
+                shareOfShelfAnalysisRow.append(row.get("upc") + ",");
+                shareOfShelfAnalysisRow.append(row.get("facing") + ",");
+                shareOfShelfAnalysisRow.append(row.get("productShortName") + ",");
+                shareOfShelfAnalysisRow.append(row.get("productLongName") + ",");
+                shareOfShelfAnalysisRow.append(row.get("brandName"));
+
+                fileWriter.append(shareOfShelfAnalysisRow.toString() + "\n");
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("---------------ProcessImageServiceImpl Ends doShareOfShelfAnalysisCsv----------------\n");
+        File f = new File(tempFilePath);
+        return f;
+    }
+
     @Override
     public void updateLatLong(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts updateLatLong----------------\n");

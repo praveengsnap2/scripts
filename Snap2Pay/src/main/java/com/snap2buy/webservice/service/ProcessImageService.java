@@ -2,6 +2,7 @@ package com.snap2buy.webservice.service;
 
 import com.snap2buy.webservice.model.InputObject;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -22,4 +23,5 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject);
     public void updateLatLong(InputObject inputObject);
+    public File doShareOfShelfAnalysisCsv(String tempFilePath);
 }

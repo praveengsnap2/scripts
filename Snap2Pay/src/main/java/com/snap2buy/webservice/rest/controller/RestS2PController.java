@@ -871,6 +871,7 @@ public class RestS2PController {
 
        return so;
         }
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getShelfAnalysisCsv")
@@ -895,6 +896,34 @@ public class RestS2PController {
             inputList.put("error in Input","-9");
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getShelfAnalysisCsv----------------\n");
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/doShareOfShelfAnalysisCsv")
+    public Response doShareOfShelfAnalysisCsv(
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts doShareOfShelfAnalysisCsv----------------\n");
+        try {
+            File f = restS2PAction.doShareOfShelfAnalysisCsv();
+            Response.ResponseBuilder r = Response.ok((Object) f);
+            r.header("Content-Disposition", "attachment; filename= shareOfShelfAnalysis.csv");
+            return r.build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends doShareOfShelfAnalysisCsv----------------\n");
             return Response.serverError().build();
         }
     }
