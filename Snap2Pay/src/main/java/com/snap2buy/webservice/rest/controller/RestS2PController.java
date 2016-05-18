@@ -905,6 +905,10 @@ public class RestS2PController {
     @Path("/doShareOfShelfAnalysisCsv")
     public Response doShareOfShelfAnalysisCsv(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUIDCsvString,
+            @QueryParam(ParamMapper.RETAILER) @DefaultValue("-9") String retailer,
+            @QueryParam(ParamMapper.STATE) @DefaultValue("-9") String state,
+            @QueryParam(ParamMapper.CITY) @DefaultValue("-9") String city,
+            @QueryParam(ParamMapper.STREET) @DefaultValue("-9") String street,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -913,6 +917,11 @@ public class RestS2PController {
 
             InputObject inputObject = new InputObject();
             inputObject.setImageUUIDCsvString(imageUUIDCsvString);
+            inputObject.setState(state);
+            inputObject.setCity(city);
+            inputObject.setRetailer(retailer);
+            inputObject.setStreet(street);
+
             File f = restS2PAction.doShareOfShelfAnalysisCsv(inputObject);
             Response.ResponseBuilder r = Response.ok((Object) f);
             r.header("Content-Disposition", "attachment; filename= shareOfShelfAnalysis.csv");

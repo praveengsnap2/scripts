@@ -60,6 +60,24 @@ public class InputObject {
     private String newHeight;
     private String thumbnailPath;
     private String imageUUIDCsvString;
+    private String street;
+    private String retailer;
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getRetailer() {
+        return retailer;
+    }
+
+    public void setRetailer(String retailer) {
+        this.retailer = retailer;
+    }
 
     public String getImageUUIDCsvString() {
         return imageUUIDCsvString;
