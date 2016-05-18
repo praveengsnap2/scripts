@@ -592,7 +592,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::getImageUUIDCsvString="+getImageUUIDCsvString+"----------------\n");
 
-        String baseSql = "select ImageAnalysis.imageUUID, ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
+        String baseSql = "select ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
 
         StringBuilder builder = new StringBuilder();
         builder.append(baseSql);
@@ -601,7 +601,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             builder.append("?,");
         }
 
-        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.imageUUID, ImageAnalysis.upc order by ImageAnalysis.imageUUID, ImageAnalysis.upc";
+        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc order by ProductMaster.BRAND_NAME";
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
 
         // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
@@ -618,7 +618,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-                map.put("imageUUID", rs.getString("imageUUID"));
                 map.put("upc", rs.getString("upc"));
                 map.put("facing", rs.getString("facing"));
                 map.put("productShortName", rs.getString("PRODUCT_SHORT_NAME"));

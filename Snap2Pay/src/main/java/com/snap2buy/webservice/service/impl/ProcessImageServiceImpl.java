@@ -434,12 +434,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(tempFilePath);
-            String headers="ImageUUID,UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
+            String headers="UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
             fileWriter.append(headers);
 
             for (LinkedHashMap<String, String> row : imageAnalysisList) {
                 StringBuilder shareOfShelfAnalysisRow = new StringBuilder();
-                shareOfShelfAnalysisRow.append(row.get("imageUUID") + ",");
                 shareOfShelfAnalysisRow.append(row.get("upc") + ",");
                 shareOfShelfAnalysisRow.append(row.get("facing") + ",");
                 shareOfShelfAnalysisRow.append(row.get("productShortName") + ",");
