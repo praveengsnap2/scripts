@@ -25,6 +25,6 @@ public interface ProcessImageDao {
     public List<ImageAnalysis> getImageAnalysis(String imageUUID);
     public LinkedHashMap<String,Object> getFacing(String imageUUID);
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString);
-    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString);
+//    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString);
     public void updateLatLong(String imageUUID,String latitude,String longitude);
 }

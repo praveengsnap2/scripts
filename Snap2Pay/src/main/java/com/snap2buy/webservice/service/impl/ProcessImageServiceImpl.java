@@ -428,7 +428,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public File doShareOfShelfAnalysisCsv(InputObject inputObject, String tempFilePath) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts doShareOfShelfAnalysisCsv----------------\n");
 
-        List<LinkedHashMap<String, String>> imageAnalysisList = processImageDao.doShareOfShelfAnalysisCsv(inputObject.getImageUUIDCsvString());
+        List<LinkedHashMap<String, String>> imageAnalysisList = processImageDao.doShareOfShelfAnalysis(inputObject.getImageUUIDCsvString());
 
 
         FileWriter fileWriter = null;
