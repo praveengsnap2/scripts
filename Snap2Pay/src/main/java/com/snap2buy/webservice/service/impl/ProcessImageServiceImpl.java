@@ -440,7 +440,31 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String info3="city"+","+inputObject.getCity()+"\n";
             String info4="street"+","+inputObject.getStreet()+"\n";
 
-            String meta =info+info1+info2+info3+info4;
+            Long totalCount = 0L;
+
+            LinkedHashMap<String, Long> summeryMetric=new LinkedHashMap<String, Long>();
+            for (LinkedHashMap<String, String> row : imageAnalysisList) {
+                String brand = row.get("brandName");
+                Long updateCount = 0L;
+                if (summeryMetric.keySet().contains(brand)) {
+                    Long brandCount = summeryMetric.get(brand);
+                    updateCount = brandCount + Long.valueOf(row.get("facing"));
+                    totalCount = totalCount + Long.valueOf(row.get("facing"));
+                } else {
+                    updateCount = Long.valueOf(row.get("facing"));
+                    totalCount = totalCount + Long.valueOf(row.get("facing"));
+                }
+                summeryMetric.put(brand, updateCount);
+            }
+            String info5="Summery:"+"\n";
+            String info6="BrandName"+","+"Percentage"+"\n";
+            StringBuilder info7 = new StringBuilder();
+            for(String x:summeryMetric.keySet()){
+                Double percentage =(summeryMetric.get(x).doubleValue() / totalCount) * 100;
+                info7.append(x+ "," + percentage.toString()+"\n");
+            }
+
+            String meta =info+info1+info2+info3+info4+info5+info6+info7.toString();
             fileWriter.append(meta);
 
             String headers="UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
