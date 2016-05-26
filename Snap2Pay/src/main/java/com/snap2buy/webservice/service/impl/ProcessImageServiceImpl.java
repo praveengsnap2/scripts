@@ -439,7 +439,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String info2="state"+","+inputObject.getState()+"\n";
             String info3="city"+","+inputObject.getCity()+"\n";
             String info4="street"+","+inputObject.getStreet()+"\n";
-
+            String line = " "+","+" "+"\n";
             Long totalCount = 0L;
 
             LinkedHashMap<String, Long> summeryMetric=new LinkedHashMap<String, Long>();
@@ -456,15 +456,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 }
                 summeryMetric.put(brand, updateCount);
             }
-            String summery="Summery:"+"\n";
+            String summary="Summary:"+"\n";
             String info6="BrandName"+","+"Percentage"+"\n";
             StringBuilder info7 = new StringBuilder();
             for(String x:summeryMetric.keySet()){
                 Double percentage =(summeryMetric.get(x).doubleValue() / totalCount) * 100;
-                info7.append(x+ "," + percentage.toString()+"\n");
+                info7.append(x+ "," + String.format("%.2f", percentage)+"\n");
             }
 
-            String meta =input+info1+info2+info3+info4+"\n"+summery+info6+"\n"+info7.toString();
+            String meta =input+info1+info2+info3+info4+line+summary+info6+line+info7.toString();
             fileWriter.append(meta);
 
             String headers="UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
