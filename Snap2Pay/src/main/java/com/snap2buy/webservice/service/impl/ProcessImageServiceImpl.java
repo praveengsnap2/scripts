@@ -435,7 +435,6 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         try {
             fileWriter = new FileWriter(tempFilePath);
             String input="Input:"+"\n";
-            String info="imageUUID"+","+inputObject.getImageUUIDCsvString()+"\n";
             String info1="retailer"+","+inputObject.getRetailer()+"\n";
             String info2="state"+","+inputObject.getState()+"\n";
             String info3="city"+","+inputObject.getCity()+"\n";
@@ -465,7 +464,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 info7.append(x+ "," + percentage.toString()+"\n");
             }
 
-            String meta =input+info+info1+info2+info3+info4+"\n"+summery+info6+"\n"+info7.toString();
+            String meta =input+info1+info2+info3+info4+"\n"+summery+info6+"\n"+info7.toString();
             fileWriter.append(meta);
 
             String headers="UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
