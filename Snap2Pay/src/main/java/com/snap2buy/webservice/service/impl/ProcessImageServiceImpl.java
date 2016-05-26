@@ -434,6 +434,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(tempFilePath);
+            String input="Input:"+"\n";
             String info="imageUUID"+","+inputObject.getImageUUIDCsvString()+"\n";
             String info1="retailer"+","+inputObject.getRetailer()+"\n";
             String info2="state"+","+inputObject.getState()+"\n";
@@ -456,7 +457,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 }
                 summeryMetric.put(brand, updateCount);
             }
-            String info5="Summery:"+"\n";
+            String summery="Summery:"+"\n";
             String info6="BrandName"+","+"Percentage"+"\n";
             StringBuilder info7 = new StringBuilder();
             for(String x:summeryMetric.keySet()){
@@ -464,7 +465,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 info7.append(x+ "," + percentage.toString()+"\n");
             }
 
-            String meta =info+info1+info2+info3+info4+info5+info6+info7.toString();
+            String meta =input+info+info1+info2+info3+info4+"\n"+summery+info6+"\n"+info7.toString();
             fileWriter.append(meta);
 
             String headers="UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
