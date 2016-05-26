@@ -464,7 +464,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 info7.append(x+ "," + String.format("%.2f", percentage)+"\n");
             }
 
-            String meta =input+info1+info2+info3+info4+line+summary+info6+line+info7.toString();
+            String meta =input+info1+info2+info3+info4+line+summary+info6+info7.toString()+line;
             fileWriter.append(meta);
 
             String headers="UPC,Facing,Product Short Name,Product Long Name,Brand Name"+"\n";
