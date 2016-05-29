@@ -34,5 +34,11 @@ public interface ParamMapper {
     String IMAGE_FOLDER_PATH = "ImageFolderPath";
     String RETAILER = "retailer";
     String STREET = "street";
+    String CUSTOMER_CODE="customerCode";
+    String PROJECT_ID="projectId";
+    String TASK_ID="taskId";
+    String AGENT_ID="agentId";
+
+
 
 }

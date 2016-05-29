@@ -39,10 +39,12 @@ public class ConverterUtil {
             java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
             temp.put("imageUUID", listEntry.getImageUUID());
             temp.put("ImageFilePath", listEntry.getImageFilePath());
+            temp.put("userId", listEntry.getUserId());
             temp.put("categoryId", listEntry.getCategoryId());
             temp.put("latitude", listEntry.getLatitude());
             temp.put("longitude", listEntry.getLongitude());
             temp.put("timeStamp", listEntry.getTimeStamp());
+            temp.put("storeId", listEntry.getStoreId());
             temp.put("hostId", listEntry.getHostId());
             temp.put("dateId", listEntry.getDateId());
             temp.put("imageStatus", listEntry.getImageStatus());
@@ -52,6 +54,10 @@ public class ConverterUtil {
             temp.put("newWidth", listEntry.getNewWidth());
             temp.put("newHeight", listEntry.getNewHeight());
             temp.put("thumbnailPath", listEntry.getThumbnailPath());
+            temp.put("customerCode", listEntry.getCustomerCode());
+            temp.put("projectId", listEntry.getProjectId());
+            temp.put("taskId", listEntry.getTaskId());
+            temp.put("agentId", listEntry.getAgentId());
             result.add(temp);
         }
         return result;

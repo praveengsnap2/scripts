@@ -91,6 +91,12 @@ public class RestS2PAction {
         reportInput.put("longitude", inputObject.getLongitude());
         reportInput.put("userId", inputObject.getUserId());
         reportInput.put("TimeStamp", inputObject.getTimeStamp());
+        reportInput.put("agentId", inputObject.getAgentId());
+        reportInput.put("taskId", inputObject.getTaskId());
+        reportInput.put("projectId", inputObject.getProjectId());
+        reportInput.put("customerCode", inputObject.getCustomerCode());
+        reportInput.put("dateId", inputObject.getVisitDate());
+        reportInput.put("storeId", inputObject.getStoreId());
         reportInput.put("responseCode", "200");
         reportInput.put("responseMessage", "Image Stored Successfully");
         reportInput.put("imageFilePath", inputObject.getImageFilePath());
@@ -280,7 +286,7 @@ public class RestS2PAction {
         HashMap<String, String> reportInput = new HashMap<String, String>();
 
         reportInput.put("storeId",inputObject.getStoreId());
-        reportInput.put("dateId", inputObject.getDateId());
+        reportInput.put("dateId", inputObject.getVisitDate());
 
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends getImages----------------\n");

@@ -38,7 +38,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void insert(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
-        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,dateId,imageStatus,shelfStatus,origWidth,origHeight,newWidth,newHeight,thumbnailPath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into ImageStoreNew (imageUUID, userId, ImageFilePath, categoryId, latitude, longitude, timeStamp, storeId, hostId, dateId, imageStatus, shelfStatus, origWidth, origHeight, newWidth, newHeight, thumbnailPath, customerCode, projectId, taskId, agentId)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -52,14 +52,19 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(6, imageStore.getLongitude());
             ps.setString(7, imageStore.getTimeStamp());
             ps.setString(8, imageStore.getStoreId());
-            ps.setString(9, imageStore.getDateId());
-            ps.setString(10, imageStore.getImageStatus());
-            ps.setString(11, imageStore.getShelfStatus());
-            ps.setString(12, imageStore.getOrigWidth());
-            ps.setString(13, imageStore.getOrigHeight());
-            ps.setString(14, imageStore.getNewWidth());
-            ps.setString(15, imageStore.getNewHeight());
-            ps.setString(16, imageStore.getThumbnailPath());
+            ps.setString(9, imageStore.getHostId());
+            ps.setString(10, imageStore.getDateId());
+            ps.setString(11, imageStore.getImageStatus());
+            ps.setString(12, imageStore.getShelfStatus());
+            ps.setString(13, imageStore.getOrigWidth());
+            ps.setString(14, imageStore.getOrigHeight());
+            ps.setString(15, imageStore.getNewWidth());
+            ps.setString(16, imageStore.getNewHeight());
+            ps.setString(17, imageStore.getThumbnailPath());
+            ps.setString(18, imageStore.getCustomerCode());
+            ps.setString(19, imageStore.getProjectId());
+            ps.setString(20, imageStore.getTaskId());
+            ps.setString(21, imageStore.getAgentId());
             ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends insert----------------\n");
@@ -83,7 +88,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore findByImageUUId(String imageUUId) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId::imageUUId="+imageUUId+"----------------\n");
-        String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageUUID = ?";
 
         Connection conn = null;
         ImageStore imageStore = null;
@@ -93,7 +98,27 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"), rs.getString("imageStatus"), rs.getString("shelfStatus"), rs.getString("origWidth"), rs.getString("origHeight"), rs.getString("newWidth"), rs.getString("newHeight"), rs.getString("thumbnailPath"));
+                imageStore = new ImageStore(rs.getString("ImageUUID"),
+                        rs.getString("ImageFilePath"),
+                        rs.getString("CategoryId"),
+                        rs.getString("Latitude"),
+                        rs.getString("Longitude"),
+                        rs.getString("TimeStamp"),
+                        rs.getString("StoreId"),
+                        rs.getString("HostId"),
+                        rs.getString("dateId"),
+                        rs.getString("imageStatus"),
+                        rs.getString("shelfStatus"),
+                        rs.getString("origWidth"),
+                        rs.getString("origHeight"),
+                        rs.getString("newWidth"),
+                        rs.getString("newHeight"),
+                        rs.getString("thumbnailPath"),
+                        rs.getString("userId"),
+                        rs.getString("customerCode"),
+                        rs.getString("projectId"),
+                        rs.getString("taskId"),
+                        rs.getString("agentId"));
             }
             rs.close();
             ps.close();
@@ -121,7 +146,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore getImageByStatus(String shelfStatus) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImageByStatus::shelfStatus="+shelfStatus+"----------------\n");
-        String sql = "SELECT * FROM ImageStore WHERE shelfStatus = ?";
+        String sql = "SELECT * FROM ImageStoreNew WHERE shelfStatus = ?";
 
         Connection conn = null;
         ImageStore imageStore = null;
@@ -131,7 +156,27 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, shelfStatus);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"),rs.getString("imageStatus"), rs.getString("shelfStatus"), rs.getString("origWidth"), rs.getString("origHeight"), rs.getString("newWidth"), rs.getString("newHeight"), rs.getString("thumbnailPath"));
+                imageStore = new ImageStore(rs.getString("ImageUUID"),
+                        rs.getString("ImageFilePath"),
+                        rs.getString("CategoryId"),
+                        rs.getString("Latitude"),
+                        rs.getString("Longitude"),
+                        rs.getString("TimeStamp"),
+                        rs.getString("StoreId"),
+                        rs.getString("HostId"),
+                        rs.getString("dateId"),
+                        rs.getString("imageStatus"),
+                        rs.getString("shelfStatus"),
+                        rs.getString("origWidth"),
+                        rs.getString("origHeight"),
+                        rs.getString("newWidth"),
+                        rs.getString("newHeight"),
+                        rs.getString("thumbnailPath"),
+                        rs.getString("userId"),
+                        rs.getString("customerCode"),
+                        rs.getString("projectId"),
+                        rs.getString("taskId"),
+                        rs.getString("agentId"));
             }
             rs.close();
             ps.close();
@@ -157,7 +202,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public Integer getJobCount(String shelfStatus) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getJobCount::shelfStatus="+shelfStatus+"----------------\n");
-        String sql = "SELECT count(*) FROM ImageStore WHERE shelfStatus = ?";
+        String sql = "SELECT count(*) FROM ImageStoreNew WHERE shelfStatus = ?";
 
         Connection conn = null;
         ImageStore imageStore = null;
@@ -194,7 +239,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateStatusAndHost(String hostId, String shelfStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatusAndHost::hostId="+hostId+"::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET shelfStatus = ? , hostId = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET shelfStatus = ? , hostId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -226,7 +271,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateShelfAnalysisStatus(String shelfStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateShelfAnalysisStatus::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET shelfStatus = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET shelfStatus = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -258,7 +303,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateImageAnalysisStatus(String imageStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus::imageStatus="+imageStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET imageStatus = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET imageStatus = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -290,7 +335,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateStoreId(String storeId, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus::storeId="+storeId+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET storeId = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET storeId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -359,7 +404,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public String getImageAnalysisStatus(String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysisStatus::imageUUID="+imageUUID+"----------------\n");
-        String sql = "SELECT imageStatus FROM ImageStore WHERE imageUUID = ?";
+        String sql = "SELECT imageStatus FROM ImageStoreNew WHERE imageUUID = ?";
         Connection conn = null;
         String imageStatus="queryFailed";
         try {
@@ -440,7 +485,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImages::storeId="+storeId+"::dateId="+dateId+"----------------\n");
-        String sql = "SELECT imageUUID FROM ImageStore WHERE storeId = ? and dateId = ?";
+        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE storeId = ? and dateId = ?";
         List<LinkedHashMap<String,String>> imageStoreList=new ArrayList<LinkedHashMap<String,String>>();
         Connection conn = null;
         try {
@@ -650,7 +695,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateLatLong(String imageUUID, String latitude, String longitude) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateLatLong::imageUUID="+imageUUID+"::latitude="+latitude+"::longitude="+longitude+"----------------\n");
-        String sql = "UPDATE ImageStore SET latitude = ? , longitude = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET latitude = ? , longitude = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {

@@ -68,8 +68,15 @@ public class RestS2PController {
             @QueryParam(ParamMapper.LATITUDE) @DefaultValue("-9") String latitude,
             @QueryParam(ParamMapper.LONGITUDE) @DefaultValue("-9") String longitude,
             @QueryParam(ParamMapper.TIMESTAMP) @DefaultValue("-9") String timeStamp,
-            @QueryParam(ParamMapper.USER_ID) @DefaultValue("N/A") String userId,
+            @QueryParam(ParamMapper.USER_ID) @DefaultValue("app") String userId,
             @QueryParam(ParamMapper.SYNC) @DefaultValue("false") String sync,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.PROJECT_ID) @DefaultValue("-9") String projectId,
+            @QueryParam(ParamMapper.TASK_ID) @DefaultValue("-9") String taskId,
+            @QueryParam(ParamMapper.AGENT_ID) @DefaultValue("-9") String agentId,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @QueryParam(ParamMapper.DATE_ID) @DefaultValue("-9") String dateId,
+
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -78,16 +85,25 @@ public class RestS2PController {
             UUID uniqueKey = UUID.randomUUID();
             InputObject inputObject = new InputObject();
 
-            if((!timeStamp.isEmpty())||(timeStamp!=null)||(timeStamp!="-9")) {
-                LOGGER.info("---------------Controller----" + timeStamp + "---------------");
+            if (!dateId.equalsIgnoreCase("-9"))
+            {
+                LOGGER.info("---------------Controller----dateId = " + dateId + "---------------");
+                inputObject.setVisitDate(dateId);
+
+            } else if((!timeStamp.isEmpty())||(timeStamp!=null)||(!timeStamp.equalsIgnoreCase("-9"))) {
+                LOGGER.info("---------------Controller----timeStamp = " + timeStamp + "---------------");
                 Date date = new Date(Long.parseLong(timeStamp));
                 DateFormat format = new SimpleDateFormat("yyyyMMdd");
                 format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
                 String formattedDate = format.format(date);
                 inputObject.setVisitDate(formattedDate);
-            }else
-            {
-                inputObject.setVisitDate("-9");
+            } else {
+                LOGGER.info("---------------Controller----dateId and timeStamp are empty---------------");
+                inputObject.setVisitDate(dateId);
+            }
+
+            if (!storeId.equalsIgnoreCase("-9")){
+                inputObject.setStoreId(storeId);
             }
 
             inputObject.setImageUUID(uniqueKey.toString().trim());
@@ -97,7 +113,10 @@ public class RestS2PController {
             inputObject.setTimeStamp(timeStamp.trim());
             inputObject.setUserId(userId.trim());
             inputObject.setSync(sync);
-
+            inputObject.setAgentId(agentId);
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setProjectId(projectId);
+            inputObject.setTaskId(taskId);
 
             //Create a factory for disk-based file items
             DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -458,7 +477,7 @@ public class RestS2PController {
             inputObject.setBrandId(brandId);
             inputObject.setCategoryId(categoryId);
             inputObject.setChainId(chainId);
-            inputObject.setDateId(dateId);
+            inputObject.setVisitDate(dateId);
             inputObject.setFrequency(frequency);
             inputObject.setMarketId(marketId);
             inputObject.setBrandId(brandId);
@@ -598,7 +617,7 @@ public class RestS2PController {
             InputObject inputObject = new InputObject();
 
             inputObject.setStoreId(storeId);
-            inputObject.setDateId(dateId);
+            inputObject.setVisitDate(dateId);
             return restS2PAction.getImages(inputObject);
 
         } catch (Exception e) {

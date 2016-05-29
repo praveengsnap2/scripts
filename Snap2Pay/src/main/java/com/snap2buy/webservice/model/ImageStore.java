@@ -1,13 +1,11 @@
 package com.snap2buy.webservice.model;
 
 /**
- * Created by sachin on 10/17/15.
+ * Created by sachin on 5/29/16.
  */
 public class ImageStore {
-
     String imageUUID;
     String ImageFilePath;
-    String userId;
     String categoryId;
     String latitude;
     String longitude;
@@ -15,24 +13,34 @@ public class ImageStore {
     String storeId;
     String hostId;
     String dateId;
+
     String imageStatus;
     String shelfStatus;
+    String origWidth;
+    String origHeight;
+    String newWidth;
+    String newHeight;
+    String thumbnailPath;
+    String userId;
 
-     String origWidth;
-     String origHeight;
-     String newWidth;
-     String newHeight;
-     String thumbnailPath;
+    String customerCode;
+    String projectId;
+    String taskId;
+    String agentId;
 
-    public ImageStore(String imageUUID, String imageFilePath, String userId, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String dateId, String imageStatus, String shelfStatus, String origWidth, String origHeight, String newWidth, String newHeight, String thumbnailPath) {
+    public ImageStore() {
+        super();
+    }
+
+    public ImageStore(String imageUUID, String imageFilePath, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String hostId, String dateId, String imageStatus, String shelfStatus, String origWidth, String origHeight, String newWidth, String newHeight, String thumbnailPath, String userId, String customerCode, String projectId, String taskId, String agentId) {
         this.imageUUID = imageUUID;
         ImageFilePath = imageFilePath;
-        this.userId = userId;
         this.categoryId = categoryId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.timeStamp = timeStamp;
         this.storeId = storeId;
+        this.hostId = hostId;
         this.dateId = dateId;
         this.imageStatus = imageStatus;
         this.shelfStatus = shelfStatus;
@@ -41,6 +49,99 @@ public class ImageStore {
         this.newWidth = newWidth;
         this.newHeight = newHeight;
         this.thumbnailPath = thumbnailPath;
+        this.userId = userId;
+        this.customerCode = customerCode;
+        this.projectId = projectId;
+        this.taskId = taskId;
+        this.agentId = agentId;
+    }
+
+    public String getImageUUID() {
+        return imageUUID;
+    }
+
+    public void setImageUUID(String imageUUID) {
+        this.imageUUID = imageUUID;
+    }
+
+    public String getImageFilePath() {
+        return ImageFilePath;
+    }
+
+    public void setImageFilePath(String imageFilePath) {
+        ImageFilePath = imageFilePath;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
+    }
+
+    public String getDateId() {
+        return dateId;
+    }
+
+    public void setDateId(String dateId) {
+        this.dateId = dateId;
+    }
+
+    public String getImageStatus() {
+        return imageStatus;
+    }
+
+    public void setImageStatus(String imageStatus) {
+        this.imageStatus = imageStatus;
+    }
+
+    public String getShelfStatus() {
+        return shelfStatus;
+    }
+
+    public void setShelfStatus(String shelfStatus) {
+        this.shelfStatus = shelfStatus;
     }
 
     public String getOrigWidth() {
@@ -83,66 +184,6 @@ public class ImageStore {
         this.thumbnailPath = thumbnailPath;
     }
 
-    public String getImageStatus() {
-        return imageStatus;
-    }
-
-    public void setImageStatus(String imageStatus) {
-        this.imageStatus = imageStatus;
-    }
-
-    public String getShelfStatus() {
-        return shelfStatus;
-    }
-
-    public void setShelfStatus(String shelfStatus) {
-        this.shelfStatus = shelfStatus;
-    }
-
-    public ImageStore() {
-        super();
-    }
-
-    public String getDateId() {
-        return dateId;
-    }
-
-    public void setDateId(String dateId) {
-        this.dateId = dateId;
-    }
-
-    public String getHostId() {
-        return hostId;
-    }
-
-    public void setHostId(String hostId) {
-        this.hostId = hostId;
-    }
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getImageFilePath() {
-        return ImageFilePath;
-    }
-
-    public void setImageFilePath(String imageFilePath) {
-        ImageFilePath = imageFilePath;
-    }
-
-    public String getImageUUID() {
-        return imageUUID;
-    }
-
-    public void setImageUUID(String imageUUID) {
-        this.imageUUID = imageUUID;
-    }
-
     public String getUserId() {
         return userId;
     }
@@ -151,36 +192,36 @@ public class ImageStore {
         this.userId = userId;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getCustomerCode() {
+        return customerCode;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getAgentId() {
+        return agentId;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
 
     @Override
@@ -188,7 +229,6 @@ public class ImageStore {
         return "ImageStore{" +
                 "imageUUID='" + imageUUID + '\'' +
                 ", ImageFilePath='" + ImageFilePath + '\'' +
-                ", userId='" + userId + '\'' +
                 ", categoryId='" + categoryId + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
@@ -203,7 +243,11 @@ public class ImageStore {
                 ", newWidth='" + newWidth + '\'' +
                 ", newHeight='" + newHeight + '\'' +
                 ", thumbnailPath='" + thumbnailPath + '\'' +
+                ", userId='" + userId + '\'' +
+                ", customerCode='" + customerCode + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", taskId='" + taskId + '\'' +
+                ", agentId='" + agentId + '\'' +
                 '}';
     }
 }
-

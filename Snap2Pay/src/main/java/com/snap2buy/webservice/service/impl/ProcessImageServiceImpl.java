@@ -57,37 +57,46 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
 
-        ImageStore imageStore = new ImageStore();
-        imageStore.setImageUUID(inputObject.getImageUUID());
-        imageStore.setImageFilePath(inputObject.getImageFilePath());
-        imageStore.setUserId(inputObject.getUserId());
-        imageStore.setCategoryId(inputObject.getCategoryId());
-        imageStore.setLatitude(inputObject.getLatitude());
-        imageStore.setLongitude(inputObject.getLongitude());
-        imageStore.setTimeStamp(inputObject.getTimeStamp());
-        imageStore.setDateId(inputObject.getVisitDate());
-        imageStore.setOrigHeight(inputObject.getOrigHeight());
-        imageStore.setOrigWidth(inputObject.getOrigWidth());
-        imageStore.setNewHeight(inputObject.getNewHeight());
-        imageStore.setNewWidth(inputObject.getNewWidth());
-        imageStore.setThumbnailPath(inputObject.getThumbnailPath());
+        if (!inputObject.getStoreId().equalsIgnoreCase("-9")){
+            inputObject.setStoreId(storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude()));
+        }
+        LOGGER.info("--------------storeId=" + inputObject.getStoreId() + "-----------------\n");
 
-        String storeId = storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude());
 
-        LOGGER.info("--------------storeId=" + storeId + "-----------------\n");
+        ImageStore imageStore =  new ImageStore(inputObject.getImageUUID(),
+                inputObject.getImageFilePath(),
+                inputObject.getCategoryId(),
+                inputObject.getLatitude(),
+                inputObject.getLongitude(),
+                inputObject.getTimeStamp(),
+                inputObject.getStoreId(),
+                inputObject.getHostId(),
+                inputObject.getVisitDate(),
+                "new",
+                "new",
+                inputObject.getOrigWidth(),
+                inputObject.getOrigHeight(),
+                inputObject.getNewWidth(),
+                inputObject.getNewHeight(),
+                inputObject.getThumbnailPath(),
+                inputObject.getUserId(),
+                inputObject.getCustomerCode(),
+                inputObject.getProjectId(),
+                inputObject.getTaskId(),
+                inputObject.getAgentId());
 
-        imageStore.setStoreId(storeId);
-        imageStore.setShelfStatus("new");
-        imageStore.setImageStatus("new");
-
-        processImageDao.insert(imageStore);
+            processImageDao.insert(imageStore);
 
         if (inputObject.getSync().equals("true")) {
-            String retailerChainCode = storeMasterDao.getRetailerChainCode(storeId);
+
+            String retailerChainCode = storeMasterDao.getRetailerChainCode(inputObject.getStoreId());
             LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, storeId, inputObject.getUserId());
+
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, inputObject.getStoreId(), inputObject.getUserId());
             LOGGER.info("--------------imageAnalysisList=" + imageAnalysisList + "-----------------\n");
+
             processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
+
             processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
 
             //waste call just to get same format for all api, otherwise have to invoke new call to do the join
@@ -257,7 +266,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getImages----------------\n");
 
-        List<LinkedHashMap<String, String>> imageStoreList = processImageDao.getImages(inputObject.getStoreId(), inputObject.getDateId());
+        List<LinkedHashMap<String, String>> imageStoreList = processImageDao.getImages(inputObject.getStoreId(), inputObject.getVisitDate());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getImages ----------------\n");
         return imageStoreList;
