@@ -66,6 +66,15 @@ public class InputObject {
     private String projectId;
     private String taskId;
     private String agentId;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCustomerCode() {
         return customerCode;

@@ -6,15 +6,15 @@ package com.snap2buy.webservice.model;
 public class ProjectUpc {
     String id;
     String upc;
-    String facingCount;
+    String expectedFacingCount;
     String imageUrl1;
     String imageUrl2;
     String imageUrl3;
 
-    public ProjectUpc(String id, String upc, String facingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
+    public ProjectUpc(String id, String upc, String ExpectedFacingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
         this.id = id;
         this.upc = upc;
-        this.facingCount = facingCount;
+        this.expectedFacingCount = ExpectedFacingCount;
         this.imageUrl1 = imageUrl1;
         this.imageUrl2 = imageUrl2;
         this.imageUrl3 = imageUrl3;
@@ -36,12 +36,12 @@ public class ProjectUpc {
         this.upc = upc;
     }
 
-    public String getFacingCount() {
-        return facingCount;
+    public String getExpectedFacingCount() {
+        return expectedFacingCount;
     }
 
-    public void setFacingCount(String facingCount) {
-        this.facingCount = facingCount;
+    public void setExpectedFacingCount(String expectedFacingCount) {
+        this.expectedFacingCount = expectedFacingCount;
     }
 
     public String getImageUrl1() {
@@ -73,7 +73,7 @@ public class ProjectUpc {
         return "ProjectUpc{" +
                 "id='" + id + '\'' +
                 ", upc='" + upc + '\'' +
-                ", facingCount='" + facingCount + '\'' +
+                ", expectedFacingCount='" + expectedFacingCount + '\'' +
                 ", imageUrl1='" + imageUrl1 + '\'' +
                 ", imageUrl2='" + imageUrl2 + '\'' +
                 ", imageUrl3='" + imageUrl3 + '\'' +

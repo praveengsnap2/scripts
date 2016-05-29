@@ -57,7 +57,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
 
-        if (!inputObject.getStoreId().equalsIgnoreCase("-9")){
+        if (inputObject.getStoreId().equalsIgnoreCase("-9")){
             inputObject.setStoreId(storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude()));
         }
         LOGGER.info("--------------storeId=" + inputObject.getStoreId() + "-----------------\n");
@@ -508,7 +508,127 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends updateLatLong ----------------\n");
     }
-//    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
+
+    @Override
+    public List<LinkedHashMap<String, String>> listCategory() {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts listCategory----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.listCategory();
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends listCategory ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listCustomer() {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts listCustomer----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.listCustomer();
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends listCustomer ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProject() {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts listProject----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.listProject();
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends listProject ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProjectType() {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts listProjectType----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.listProjectType();
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends listProjectType ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProjectUpc() {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts listProjectUpc----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.listProjectUpc();
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends listProjectUpc ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listRetailer() {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts listRetailer----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.listRetailer();
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends listRetailer ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getRetailerDetail(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getRetailerDetail id = "+inputObject.getId()+"----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getRetailerDetail(inputObject.getId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getRetailerDetail ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectUpcDetail(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectUpcDetail id = "+inputObject.getId()+"----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getProjectUpcDetail(inputObject.getId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectUpcDetail ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectTypeDetail(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectTypeDetail id = "+inputObject.getId()+"----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getProjectTypeDetail(inputObject.getId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectTypeDetail ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectDetail id = "+inputObject.getId()+"----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getProjectDetail(inputObject.getId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectDetail ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getCustomerDetail(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getCustomerDetail id = "+inputObject.getId()+"----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getCustomerDetail(inputObject.getId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getCustomerDetail ----------------\n");
+        return resultList;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getCategoryDetail(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getCategoryDetail id = "+inputObject.getId()+"----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getCategoryDetail(inputObject.getId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getCategoryDetail ----------------\n");
+        return resultList;
+    }
+    //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
 //        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );
 //        List<java.util.LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();

@@ -475,4 +475,125 @@ public class RestS2PAction {
 
         return reportIO;
     }
+
+    public Snap2PayOutput listCategory() {
+        LOGGER.info("---------------RestAction Starts listCategory-----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.listCategory();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listCategory----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput listCustomer() {
+        LOGGER.info("---------------RestAction Starts listCustomer-----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.listCustomer();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listCustomer----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput listProject() {
+        LOGGER.info("---------------RestAction Starts listProject------------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.listProject();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listProject----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput listProjectType() {
+        LOGGER.info("---------------RestAction Starts listProjectType-----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.listProjectType();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listProjectType----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput listRetailer( ) {
+        LOGGER.info("---------------RestAction Starts listRetailer------------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.listRetailer();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listRetailer----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput listProjectUpc( ) {
+        LOGGER.info("---------------RestAction Starts listProjectUpc------------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.listProjectUpc();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listProjectUpc----------------\n");
+        return reportIO;
+    }
+
+    public Snap2PayOutput getCategoryDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getCategoryDetail--id : " + inputObject.getId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getCategoryDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", inputObject.getId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getCategoryDetail----------------\n");
+        return reportIO;
+    }
+
+    public Snap2PayOutput getCustomerDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getCustomerDetail--id : " + inputObject.getId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getCustomerDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", inputObject.getId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getCustomerDetail----------------\n");
+        return reportIO;
+    }
+
+    public Snap2PayOutput getProjectDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectDetail--id : " + inputObject.getId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getProjectDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", inputObject.getId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectDetail----------------\n");
+        return reportIO;
+    }
+
+    public Snap2PayOutput getProjectTypeDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectTypeDetail--id : " + inputObject.getId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getProjectTypeDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", inputObject.getId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectTypeDetail----------------\n");
+        return reportIO;
+    }
+
+    public Snap2PayOutput getProjectUpcDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectUpcDetail--id : " + inputObject.getId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getProjectUpcDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", inputObject.getId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectUpcDetail----------------\n");
+        return reportIO;
+    }
+
+    public Snap2PayOutput getRetailerDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getRetailerDetail--id : " + inputObject.getId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getRetailerDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", inputObject.getId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getRetailerDetail----------------\n");
+        return reportIO;
+    }
 }

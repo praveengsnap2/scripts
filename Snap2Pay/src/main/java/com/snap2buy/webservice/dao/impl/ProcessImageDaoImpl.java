@@ -595,23 +595,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 map.put("productLongName", rs.getString("PRODUCT_LONG_NAME"));
                 map.put("brandName", rs.getString("BRAND_NAME"));
                 multipleImageAnalysisList.add(map);
-
-//                if (curr.equals("initialTestString")){
-//                    curr=rs.getString("BRAND_NAME");
-//                }
-//
-//                if (curr.equals(rs.getString("BRAND_NAME"))){
-//                    upcFacingDetailList.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("facing"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
-//                }
-//                else{
-//                    map.put(rs.getString("BRAND_NAME"),upcFacingDetailList);
-//                    curr=rs.getString("BRAND_NAME");
-//                    upcFacingDetailList.clear();
-//                    upcFacingDetailList.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("facing"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
-//
-//                }
             }
-           // map.put(curr,upcFacingDetailList);
             rs.close();
             ps.close();
 
@@ -633,65 +617,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
     }
 
-//    @Override
-//    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString) {
-//        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::getImageUUIDCsvString="+getImageUUIDCsvString+"----------------\n");
-//
-//        String baseSql = "select upc, max(facing), PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME from  (select ImageAnalysis.imageUUID as imageUUID, ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
-//
-//        StringBuilder builder = new StringBuilder();
-//        builder.append(baseSql);
-//
-//        for( String entry: getImageUUIDCsvString.split(",")) {
-//            builder.append("?,");
-//        }
-//
-//        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc, ImageAnalysis.imageUUID order by ProductMaster.BRAND_NAME) a group by upc";
-//        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
-//
-//        // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
-//        Connection conn = null;
-//        try {
-//            conn = dataSource.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            int i=1;
-//            for( String entry: getImageUUIDCsvString.split(",")) {
-//                ps.setString(i++, entry);
-//            }
-//            ResultSet rs = ps.executeQuery();
-//            List<LinkedHashMap<String,String>> multipleImageAnalysisList=new ArrayList<LinkedHashMap<String,String>>();
-//
-//            while (rs.next()) {
-//                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-//                map.put("upc", rs.getString("upc"));
-//                map.put("facing", rs.getString("facing"));
-//                map.put("productShortName", rs.getString("PRODUCT_SHORT_NAME"));
-//                map.put("productLongName", rs.getString("PRODUCT_LONG_NAME"));
-//                map.put("brandName", rs.getString("BRAND_NAME"));
-//                multipleImageAnalysisList.add(map);
-//            }
-//            // map.put(curr,upcFacingDetailList);
-//            rs.close();
-//            ps.close();
-//
-//            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
-//            return multipleImageAnalysisList;
-//        } catch (SQLException e) {
-//            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-//            LOGGER.error("exception", e);
-//            throw new RuntimeException(e);
-//        } finally {
-//            if (conn != null) {
-//                try {
-//                    conn.close();
-//                } catch (SQLException e) {
-//                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-//                    LOGGER.error("exception", e);
-//                }
-//            }
-//        }
-//    }
-
     @Override
     public void updateLatLong(String imageUUID, String latitude, String longitude) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateLatLong::imageUUID="+imageUUID+"::latitude="+latitude+"::longitude="+longitude+"----------------\n");
@@ -712,6 +637,524 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listCategory() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts listCategory----------------\n");
+        String sql = "SELECT * FROM Category";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("name", rs.getString("name"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends listCategory----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listCustomer() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts listCustomer----------------\n");
+        String sql = "SELECT * FROM Customer";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("code", rs.getString("code"));
+                map.put("name", rs.getString("name"));
+                map.put("type", rs.getString("type"));
+                map.put("logo", rs.getString("logo"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends listCustomer----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProject() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts listProject----------------\n");
+        String sql = "SELECT * FROM Project";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
+                map.put("customerId", rs.getString("customerId"));
+                map.put("projectTypeId", rs.getString("projectTypeId"));
+                map.put("categoryId", rs.getString("categoryId"));
+                map.put("retailerId", rs.getString("retailerId"));
+                map.put("storeCount", rs.getString("storeCount"));
+                map.put("startDate", rs.getString("startDate"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("createdBy", rs.getString("createdBy"));
+                map.put("updatedDate", rs.getString("updatedDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends listProject----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProjectType() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts listProjectType----------------\n");
+        String sql = "SELECT * FROM ProjectType";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("name", rs.getString("name"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends listProjectType----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProjectUpc() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts listProjectUpc----------------\n");
+        String sql = "SELECT * FROM ProjectUpc";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("upc", rs.getString("upc"));
+                map.put("expectedFacingCount", rs.getString("expectedFacingCount"));
+                map.put("imageUrl1", rs.getString("imageUrl1"));
+                map.put("imageUrl2", rs.getString("imageUrl2"));
+                map.put("imageUrl3", rs.getString("imageUrl3"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends listProjectUpc----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listRetailer() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts listRetailer----------------\n");
+        String sql = "SELECT * FROM Retailer";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("code", rs.getString("code"));
+                map.put("name", rs.getString("name"));
+                map.put("type", rs.getString("type"));
+                map.put("logo", rs.getString("logo"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends listRetailer----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getRetailerDetail(String id) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getRetailerDetail id = "+id+"----------------\n");
+        String sql = "SELECT * FROM Retailer where id = ?";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("code", rs.getString("code"));
+                map.put("name", rs.getString("name"));
+                map.put("type", rs.getString("type"));
+                map.put("logo", rs.getString("logo"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getRetailerDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectUpcDetail(String id) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectUpcDetail----------------\n");
+        String sql = "SELECT * FROM ProjectUpc  where id = ?";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("upc", rs.getString("upc"));
+                map.put("expectedFacingCount", rs.getString("expectedFacingCount"));
+                map.put("imageUrl1", rs.getString("imageUrl1"));
+                map.put("imageUrl2", rs.getString("imageUrl2"));
+                map.put("imageUrl3", rs.getString("imageUrl3"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectUpcDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectTypeDetail(String id) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectTypeDetail----------------\n");
+        String sql = "SELECT * FROM ProjectType where id = ?";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("name", rs.getString("name"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectTypeDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectDetail(String id) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectDetail----------------\n");
+        String sql = "SELECT * FROM Project where id = ?";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
+                map.put("customerId", rs.getString("customerId"));
+                map.put("projectTypeId", rs.getString("projectTypeId"));
+                map.put("categoryId", rs.getString("categoryId"));
+                map.put("retailerId", rs.getString("retailerId"));
+                map.put("storeCount", rs.getString("storeCount"));
+                map.put("startDate", rs.getString("startDate"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("createdBy", rs.getString("createdBy"));
+                map.put("updatedDate", rs.getString("updatedDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getCustomerDetail(String id) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getCustomerDetail----------------\n");
+        String sql = "SELECT * FROM Customer where id = ?";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("code", rs.getString("code"));
+                map.put("name", rs.getString("name"));
+                map.put("type", rs.getString("type"));
+                map.put("logo", rs.getString("logo"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getCustomerDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getCategoryDetail(String id) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getCategoryDetail----------------\n");
+        String sql = "SELECT * FROM Category where id = ?";
+        List<LinkedHashMap<String,String>> resultList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("id", rs.getString("id"));
+                map.put("name", rs.getString("name"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getCategoryDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
         } finally {
             if (conn != null) {
                 try {

@@ -140,7 +140,7 @@ public class StoreImageAnalysis {
                 ", projectId='" + projectId + '\'' +
                 ", taskId='" + taskId + '\'' +
                 ", upc='" + upc + '\'' +
-                ", facingCount='" + facingCount + '\'' +
+                ", expectedFacingCount='" + facingCount + '\'' +
                 ", score='" + score + '\'' +
                 ", brand='" + brand + '\'' +
                 ", visitDate='" + visitDate + '\'' +

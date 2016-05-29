@@ -4,7 +4,7 @@ package com.snap2buy.webservice.model;
  * Created by sachin on 5/29/16.
  */
 public class Category {
-    String id;
+        String id;
     String name;
     String createdDate;
     String status;

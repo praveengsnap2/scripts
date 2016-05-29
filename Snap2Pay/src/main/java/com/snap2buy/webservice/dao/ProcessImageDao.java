@@ -27,4 +27,17 @@ public interface ProcessImageDao {
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString);
 //    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString);
     public void updateLatLong(String imageUUID,String latitude,String longitude);
+    public List<LinkedHashMap<String, String>> listCategory();
+    public List<LinkedHashMap<String, String>> listCustomer();
+    public List<LinkedHashMap<String, String>> listProject();
+    public List<LinkedHashMap<String, String>> listProjectType();
+    public List<LinkedHashMap<String, String>> listProjectUpc();
+    public List<LinkedHashMap<String, String>> listRetailer();
+
+    public List<LinkedHashMap<String, String>> getCategoryDetail(String id);
+    public List<LinkedHashMap<String, String>> getCustomerDetail(String id);
+    public List<LinkedHashMap<String, String>> getProjectDetail(String id);
+    public List<LinkedHashMap<String, String>> getProjectTypeDetail(String id);
+    public List<LinkedHashMap<String, String>> getProjectUpcDetail(String id);
+    public List<LinkedHashMap<String, String>> getRetailerDetail(String id);
 }
