@@ -611,7 +611,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
             ps.setString(1, categoryInput.getName());
             ps.setString(2, categoryInput.getCreatedDate());
             ps.setString(3, categoryInput.getStatus());
@@ -660,7 +660,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
             ps.setString(1, retailerInput.getCode());
             ps.setString(2, retailerInput.getName());
             ps.setString(3, retailerInput.getType());
@@ -711,7 +711,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
             ps.setString(1, projectTypeInput.getName());
             ps.setString(2, projectTypeInput.getCreatedDate());
             ps.setString(3, projectTypeInput.getStatus());
@@ -759,7 +759,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
             ps.setString(1, projectInput.getProjectName());
             ps.setString(2, projectInput.getCustomerProjectId());
             ps.setString(3, projectInput.getCustomerCode());
