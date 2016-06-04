@@ -150,19 +150,19 @@ public class MetaServiceImpl implements MetaService {
     public void createCustomer(Customer customerInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createCustomer customer code = " + customerInput.getCode()+ "----------------\n");
 
-        Integer id= metaServiceDao.createCustomer(customerInput);
-        customerInput.setId(id.toString());
+        metaServiceDao.createCustomer(customerInput);
 
-        LOGGER.info("---------------MetaServiceImpl Ends createCustomer id generate = "+id+"----------------\n");
+
+        LOGGER.info("---------------MetaServiceImpl Ends createCustomer id generate = "+customerInput.getId()+"----------------\n");
     }
 
     @Override
     public void createCategory(Category categoryInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createCategory category name = " + categoryInput.getName()+ "----------------\n");
 
-        Integer id= metaServiceDao.createCategory(categoryInput);
-        categoryInput.setId(id.toString());
-        LOGGER.info("---------------MetaServiceImpl Ends createCategory id generate = "+id+"----------------\n");
+        metaServiceDao.createCategory(categoryInput);
+
+        LOGGER.info("---------------MetaServiceImpl Ends createCategory id generate = "+categoryInput.getId()+"----------------\n");
 
     }
 
@@ -170,9 +170,9 @@ public class MetaServiceImpl implements MetaService {
     public void createRetailer(Retailer retailerInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createRetailer retailer code = " + retailerInput.getName()+ "----------------\n");
 
-        Integer id= metaServiceDao.createRetailer(retailerInput);
-        retailerInput.setId(id.toString());
-        LOGGER.info("---------------MetaServiceImpl Ends createRetailer id generate = "+id+"----------------\n");
+        metaServiceDao.createRetailer(retailerInput);
+
+        LOGGER.info("---------------MetaServiceImpl Ends createRetailer id generate = "+retailerInput.getId()+"----------------\n");
 
     }
 
@@ -180,21 +180,21 @@ public class MetaServiceImpl implements MetaService {
     public void createProjectType(ProjectType projectTypeInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createProjectType projectType code = " + projectTypeInput.getName()+ "----------------\n");
 
-        Integer id= metaServiceDao.createProjectType(projectTypeInput);
-        projectTypeInput.setId(id.toString());
-        LOGGER.info("---------------MetaServiceImpl Ends createProjectType id generate = "+id+"----------------\n");
+        metaServiceDao.createProjectType(projectTypeInput);
+
+        LOGGER.info("---------------MetaServiceImpl Ends createProjectType id generate = "+projectTypeInput.getId()+"----------------\n");
 
     }
 
     @Override
     public void createProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createProject Project code = " + projectInput.getProjectName()+ "----------------\n");
-        Integer id= metaServiceDao.createProject(projectInput);
-        projectInput.setId(id.toString());
-        LOGGER.info("---------------MetaServiceImpl project created with id ="+id+"now adding upc list -------------");
+        metaServiceDao.createProject(projectInput);
+
+        LOGGER.info("---------------MetaServiceImpl project created with id ="+projectInput.getId()+"now adding upc list -------------");
         metaServiceDao.addUpcListToProjectId(projectInput.getProjectUpcList());
         LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
-        LOGGER.info("---------------MetaServiceImpl Ends createProject id generate = "+id+"----------------\n");
+        LOGGER.info("---------------MetaServiceImpl Ends createProject id generate = "+projectInput.getId()+"----------------\n");
     }
 
     @Override
