@@ -1,5 +1,6 @@
 package com.snap2buy.webservice.dao.impl;
 
+import com.mysql.jdbc.Statement;
 import com.snap2buy.webservice.dao.MetaServiceDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
@@ -552,14 +553,14 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
-    public Integer createCustomer(Customer customerInput) {
+    public void createCustomer(Customer customerInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createCustomer::customerInput=" + customerInput + "----------------\n");
         String sql = "INSERT INTO Customer ( code, name, type, logo, createdDate, status) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, customerInput.getCode());
             ps.setString(2, customerInput.getName());
             ps.setString(3, customerInput.getType());
@@ -567,14 +568,26 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(5, customerInput.getCreatedDate());
             ps.setString(6, customerInput.getStatus());
             id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    customerInput.setId(generatedKeys.getString(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends createCustomer----------------\n");
-            return id;
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
-            return id;
+
 
         } finally {
             if (conn != null) {
@@ -583,7 +596,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 } catch (SQLException e) {
                     LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
                     LOGGER.error("exception", e);
-                    return id;
+
                 }
             }
         }
@@ -591,7 +604,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 
 
     @Override
-    public Integer createCategory(Category categoryInput) {
+    public void createCategory(Category categoryInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createCategory::categoryInput=" + categoryInput + "----------------\n");
         String sql = "INSERT INTO Category ( name, createdDate, status) VALUES (?, ?, ?)";
         Connection conn = null;
@@ -603,14 +616,27 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(2, categoryInput.getCreatedDate());
             ps.setString(3, categoryInput.getStatus());
             id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    categoryInput.setId(generatedKeys.getString(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends createCategory----------------\n");
-            return id;
+
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
-            return id;
+
 
         } finally {
             if (conn != null) {
@@ -619,14 +645,14 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 } catch (SQLException e) {
                     LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
                     LOGGER.error("exception", e);
-                    return id;
+
                 }
             }
         }
     }
 
     @Override
-    public Integer createRetailer(Retailer retailerInput) {
+    public void createRetailer(Retailer retailerInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createRetailer::retailerInput=" + retailerInput + "----------------\n");
         String sql = "INSERT INTO Retailer ( code, name, type, logo, createdDate, status) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -642,14 +668,27 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(5, retailerInput.getCreatedDate());
             ps.setString(6, retailerInput.getStatus());
             id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    retailerInput.setId(generatedKeys.getString(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends createRetailer----------------\n");
-            return id;
+
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
-            return id;
+
 
         } finally {
             if (conn != null) {
@@ -658,14 +697,14 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 } catch (SQLException e) {
                     LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
                     LOGGER.error("exception", e);
-                    return id;
+
                 }
             }
         }
     }
 
     @Override
-    public Integer createProjectType(ProjectType projectTypeInput) {
+    public void createProjectType(ProjectType projectTypeInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createProjectType::projectTypeInput=" + projectTypeInput + "----------------\n");
         String sql = "INSERT INTO ProjectType ( name, createdDate, status) VALUES (?, ?, ?)";
         Connection conn = null;
@@ -677,14 +716,27 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(2, projectTypeInput.getCreatedDate());
             ps.setString(3, projectTypeInput.getStatus());
             id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    projectTypeInput.setId(generatedKeys.getString(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends createProjectType----------------\n");
-            return id;
+
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
-            return id;
+
 
         } finally {
             if (conn != null) {
@@ -693,14 +745,14 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 } catch (SQLException e) {
                     LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
                     LOGGER.error("exception", e);
-                    return id;
+
                 }
             }
         }
     }
 
     @Override
-    public Integer createProject(Project projectInput) {
+    public void createProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createProject::customerInput=" + projectInput + "----------------\n");
         String sql = "INSERT INTO Project ( projectName, customerProjectId, customerCode, projectTypeId, categoryId, retailerId, storeCount, startDate, createdDate, createdBy, updatedDate, updatedBy, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -722,14 +774,27 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(12, projectInput.getUpdatedBy());
             ps.setString(13, projectInput.getStatus());
             id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    projectInput.setId(generatedKeys.getString(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends createProject----------------\n");
-            return id;
+
 
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
-            return id;
+
 
         } finally {
             if (conn != null) {
@@ -738,7 +803,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 } catch (SQLException e) {
                     LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
                     LOGGER.error("exception", e);
-                    return id;
+
                 }
             }
         }

@@ -24,11 +24,11 @@ public interface MetaServiceDao {
     public List<LinkedHashMap<String, String>> getProjectUpcDetail(String id);
     public List<LinkedHashMap<String, String>> getRetailerDetail(String id);
 
-    public Integer createCustomer(Customer customerInput);
-    public Integer createCategory(Category categoryInput);
-    public Integer createRetailer(Retailer retailerInput);
-    public Integer createProjectType(ProjectType projectTypeInput);
-    public Integer createProject(Project projectInput);
+    public void createCustomer(Customer customerInput);
+    public void createCategory(Category categoryInput);
+    public void createRetailer(Retailer retailerInput);
+    public void createProjectType(ProjectType projectTypeInput);
+    public void createProject(Project projectInput);
     public void addUpcListToProjectId(List<ProjectUpc> projectUpcList);
     public void addUpcToProjectId(ProjectUpc projectUpcList);
 }
