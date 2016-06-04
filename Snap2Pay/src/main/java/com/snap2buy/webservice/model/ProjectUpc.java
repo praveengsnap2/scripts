@@ -5,16 +5,20 @@ package com.snap2buy.webservice.model;
  */
 public class ProjectUpc {
     String id;
+    String customerProjectId;
     String upc;
+    String skuType;
     String expectedFacingCount;
     String imageUrl1;
     String imageUrl2;
     String imageUrl3;
 
-    public ProjectUpc(String id, String upc, String ExpectedFacingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
+    public ProjectUpc(String id, String customerProjectId, String upc, String skuType, String expectedFacingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
         this.id = id;
+        this.customerProjectId = customerProjectId;
         this.upc = upc;
-        this.expectedFacingCount = ExpectedFacingCount;
+        this.skuType = skuType;
+        this.expectedFacingCount = expectedFacingCount;
         this.imageUrl1 = imageUrl1;
         this.imageUrl2 = imageUrl2;
         this.imageUrl3 = imageUrl3;
@@ -26,6 +30,22 @@ public class ProjectUpc {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCustomerProjectId() {
+        return customerProjectId;
+    }
+
+    public void setCustomerProjectId(String customerProjectId) {
+        this.customerProjectId = customerProjectId;
+    }
+
+    public String getSkuType() {
+        return skuType;
+    }
+
+    public void setSkuType(String skuType) {
+        this.skuType = skuType;
     }
 
     public String getUpc() {
@@ -72,7 +92,9 @@ public class ProjectUpc {
     public String toString() {
         return "ProjectUpc{" +
                 "id='" + id + '\'' +
+                ", customerProjectId='" + customerProjectId + '\'' +
                 ", upc='" + upc + '\'' +
+                ", skuType='" + skuType + '\'' +
                 ", expectedFacingCount='" + expectedFacingCount + '\'' +
                 ", imageUrl1='" + imageUrl1 + '\'' +
                 ", imageUrl2='" + imageUrl2 + '\'' +

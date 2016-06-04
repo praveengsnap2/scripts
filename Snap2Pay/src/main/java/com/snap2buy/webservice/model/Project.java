@@ -1,12 +1,15 @@
 package com.snap2buy.webservice.model;
 
+import java.util.List;
+
 /**
  * Created by sachin on 5/29/16.
  */
 public class Project {
     String id;
+    String projectName;
     String customerProjectId;
-    String customerId;
+    String customerCode;
     String projectTypeId;
     String categoryId;
     String retailerId;
@@ -17,11 +20,31 @@ public class Project {
     String updatedDate;
     String updatedBy;
     String status;
+    List<ProjectUpc> projectUpcList;
 
-    public Project(String id, String customerProjectId, String customerId, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, List<ProjectUpc> projectUpcList) {
         this.id = id;
+        this.projectName = projectName;
         this.customerProjectId = customerProjectId;
-        this.customerId = customerId;
+        this.customerCode = customerCode;
+        this.projectTypeId = projectTypeId;
+        this.categoryId = categoryId;
+        this.retailerId = retailerId;
+        this.storeCount = storeCount;
+        this.startDate = startDate;
+        this.createdDate = createdDate;
+        this.createdBy = createdBy;
+        this.updatedDate = updatedDate;
+        this.updatedBy = updatedBy;
+        this.status = status;
+        this.projectUpcList = projectUpcList;
+    }
+
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status) {
+        this.id = id;
+        this.projectName = projectName;
+        this.customerProjectId = customerProjectId;
+        this.customerCode = customerCode;
         this.projectTypeId = projectTypeId;
         this.categoryId = categoryId;
         this.retailerId = retailerId;
@@ -34,12 +57,28 @@ public class Project {
         this.status = status;
     }
 
+    public List<ProjectUpc> getProjectUpcList() {
+        return projectUpcList;
+    }
+
+    public void setProjectUpcList(List<ProjectUpc> projectUpcList) {
+        this.projectUpcList = projectUpcList;
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public String getCustomerProjectId() {
@@ -50,12 +89,12 @@ public class Project {
         this.customerProjectId = customerProjectId;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getCustomerCode() {
+        return customerCode;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
     public String getProjectTypeId() {
@@ -142,8 +181,9 @@ public class Project {
     public String toString() {
         return "Project{" +
                 "id='" + id + '\'' +
+                ", projectName='" + projectName + '\'' +
                 ", customerProjectId='" + customerProjectId + '\'' +
-                ", customerId='" + customerId + '\'' +
+                ", customerCode='" + customerCode + '\'' +
                 ", projectTypeId='" + projectTypeId + '\'' +
                 ", categoryId='" + categoryId + '\'' +
                 ", retailerId='" + retailerId + '\'' +

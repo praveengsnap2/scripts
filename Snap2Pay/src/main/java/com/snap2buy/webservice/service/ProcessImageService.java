@@ -1,6 +1,6 @@
 package com.snap2buy.webservice.service;
 
-import com.snap2buy.webservice.model.InputObject;
+import com.snap2buy.webservice.model.*;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -24,18 +24,4 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject);
     public void updateLatLong(InputObject inputObject);
     public File doShareOfShelfAnalysisCsv(InputObject inputObject,String tempFilePath);
-    public List<LinkedHashMap<String, String>> listCategory();
-    public List<LinkedHashMap<String, String>> listCustomer();
-    public List<LinkedHashMap<String, String>> listProject();
-    public List<LinkedHashMap<String, String>> listProjectType();
-    public List<LinkedHashMap<String, String>> listProjectUpc();
-    public List<LinkedHashMap<String, String>> listRetailer();
-
-    public List<LinkedHashMap<String, String>> getCategoryDetail(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getCustomerDetail(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getProjectTypeDetail(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getProjectUpcDetail(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getRetailerDetail(InputObject inputObject);
-
 }

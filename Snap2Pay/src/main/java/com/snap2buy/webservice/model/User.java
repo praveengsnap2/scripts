@@ -8,7 +8,7 @@ public class User {
     String user;
     String firstName;
     String lastName;
-    String customerId;
+    String customerCode;
     String role;
     String createdDate;
     String createdBy;
@@ -17,12 +17,12 @@ public class User {
     String lastLoginDate;
     String status;
 
-    public User(String id, String user, String firstName, String lastName, String customerId, String role, String createdDate, String createdBy, String updatedDate, String updatedBy, String lastLoginDate, String status) {
+    public User(String id, String user, String firstName, String lastName, String customerCode, String role, String createdDate, String createdBy, String updatedDate, String updatedBy, String lastLoginDate, String status) {
         this.id = id;
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.customerId = customerId;
+        this.customerCode = customerCode;
         this.role = role;
         this.createdDate = createdDate;
         this.createdBy = createdBy;
@@ -64,12 +64,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getCustomerCode() {
+        return customerCode;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
     public String getRole() {
@@ -135,7 +135,7 @@ public class User {
                 ", user='" + user + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", customerId='" + customerId + '\'' +
+                ", customerCode='" + customerCode + '\'' +
                 ", role='" + role + '\'' +
                 ", createdDate='" + createdDate + '\'' +
                 ", createdBy='" + createdBy + '\'' +
