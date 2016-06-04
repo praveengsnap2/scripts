@@ -20,6 +20,10 @@ public class ProjectType {
     @XmlElement
     String status;
 
+    public ProjectType() {
+        super();
+    }
+
     public ProjectType(String id, String name, String createdDate, String status) {
         this.id = id;
         this.name = name;

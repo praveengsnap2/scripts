@@ -26,6 +26,10 @@ public class Retailer {
     @XmlElement
     String status;
 
+    public Retailer() {
+        super();
+    }
+
     public Retailer(String id, String code, String name, String type, String logo, String createdDate, String status) {
         this.id = id;
         this.code = code;

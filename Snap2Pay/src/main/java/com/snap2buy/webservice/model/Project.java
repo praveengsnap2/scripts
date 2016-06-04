@@ -40,8 +40,12 @@ public class Project {
     String updatedBy;
     @XmlElement
     String status;
-    
+
     List<ProjectUpc> projectUpcList;
+
+    public Project() {
+        super();
+    }
 
     public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, List<ProjectUpc> projectUpcList) {
         this.id = id;

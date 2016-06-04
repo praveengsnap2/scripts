@@ -28,6 +28,10 @@ public class ProjectUpc {
     @XmlElement
     String imageUrl3;
 
+    public ProjectUpc() {
+        super();
+    }
+
     public ProjectUpc(String id, String customerProjectId, String upc, String skuType, String expectedFacingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
         this.id = id;
         this.customerProjectId = customerProjectId;
