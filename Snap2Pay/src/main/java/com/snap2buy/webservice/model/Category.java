@@ -20,6 +20,10 @@ public class Category {
     @XmlElement
     String status;
 
+    public Category(){
+        super();
+    }
+
     public Category(String id, String name, String createdDate, String status) {
         this.id = id;
         this.name = name;

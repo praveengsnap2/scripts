@@ -1,15 +1,29 @@
 package com.snap2buy.webservice.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by sachin on 5/29/16.
  */
+@XmlRootElement(name = "Retailer")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Retailer {
+    @XmlElement
     String id;
+    @XmlElement
     String code;
+    @XmlElement
     String name;
+    @XmlElement
     String type;
+    @XmlElement
     String logo;
+    @XmlElement
     String createdDate;
+    @XmlElement
     String status;
 
     public Retailer(String id, String code, String name, String type, String logo, String createdDate, String status) {

@@ -1,25 +1,46 @@
 package com.snap2buy.webservice.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
  * Created by sachin on 5/29/16.
  */
+@XmlRootElement(name = "Project")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Project {
+    @XmlElement
     String id;
+    @XmlElement
     String projectName;
+    @XmlElement
     String customerProjectId;
+    @XmlElement
     String customerCode;
+    @XmlElement
     String projectTypeId;
+    @XmlElement
     String categoryId;
+    @XmlElement
     String retailerId;
+    @XmlElement
     String storeCount;
+    @XmlElement
     String startDate;
+    @XmlElement
     String createdDate;
+    @XmlElement
     String createdBy;
+    @XmlElement
     String updatedDate;
+    @XmlElement
     String updatedBy;
+    @XmlElement
     String status;
+    
     List<ProjectUpc> projectUpcList;
 
     public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, List<ProjectUpc> projectUpcList) {

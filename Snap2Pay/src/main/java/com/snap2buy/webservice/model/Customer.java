@@ -26,6 +26,10 @@ public class Customer {
     @XmlElement
     String status;
 
+    public Customer() {
+        super();
+    }
+
     public Customer(String id, String code, String name, String type, String logo, String createdDate, String status) {
         this.id = id;
         this.code = code;

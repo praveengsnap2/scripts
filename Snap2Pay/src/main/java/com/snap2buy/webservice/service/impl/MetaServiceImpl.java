@@ -151,6 +151,7 @@ public class MetaServiceImpl implements MetaService {
         LOGGER.info("---------------MetaServiceImpl Starts createCustomer customer code = " + customerInput.getCode()+ "----------------\n");
 
         Integer id= metaServiceDao.createCustomer(customerInput);
+        customerInput.setId(id.toString());
 
         LOGGER.info("---------------MetaServiceImpl Ends createCustomer id generate = "+id+"----------------\n");
     }
@@ -160,7 +161,7 @@ public class MetaServiceImpl implements MetaService {
         LOGGER.info("---------------MetaServiceImpl Starts createCategory category name = " + categoryInput.getName()+ "----------------\n");
 
         Integer id= metaServiceDao.createCategory(categoryInput);
-
+        categoryInput.setId(id.toString());
         LOGGER.info("---------------MetaServiceImpl Ends createCategory id generate = "+id+"----------------\n");
 
     }
@@ -170,7 +171,7 @@ public class MetaServiceImpl implements MetaService {
         LOGGER.info("---------------MetaServiceImpl Starts createRetailer retailer code = " + retailerInput.getName()+ "----------------\n");
 
         Integer id= metaServiceDao.createRetailer(retailerInput);
-
+        retailerInput.setId(id.toString());
         LOGGER.info("---------------MetaServiceImpl Ends createRetailer id generate = "+id+"----------------\n");
 
     }
@@ -180,7 +181,7 @@ public class MetaServiceImpl implements MetaService {
         LOGGER.info("---------------MetaServiceImpl Starts createProjectType projectType code = " + projectTypeInput.getName()+ "----------------\n");
 
         Integer id= metaServiceDao.createProjectType(projectTypeInput);
-
+        projectTypeInput.setId(id.toString());
         LOGGER.info("---------------MetaServiceImpl Ends createProjectType id generate = "+id+"----------------\n");
 
     }
@@ -189,6 +190,7 @@ public class MetaServiceImpl implements MetaService {
     public void createProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createProject Project code = " + projectInput.getProjectName()+ "----------------\n");
         Integer id= metaServiceDao.createProject(projectInput);
+        projectInput.setId(id.toString());
         LOGGER.info("---------------MetaServiceImpl project created with id ="+id+"now adding upc list -------------");
         metaServiceDao.addUpcListToProjectId(projectInput.getProjectUpcList());
         LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
