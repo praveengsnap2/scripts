@@ -67,10 +67,10 @@ public class MetaServiceImpl implements MetaService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> listProjectUpc() {
+    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId) {
         LOGGER.info("---------------MetaServiceImpl Starts listProjectUpc----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProjectUpc();
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProjectUpc(projectId);
 
         LOGGER.info("---------------MetaServiceImpl Ends listProjectUpc ----------------\n");
         return resultList;

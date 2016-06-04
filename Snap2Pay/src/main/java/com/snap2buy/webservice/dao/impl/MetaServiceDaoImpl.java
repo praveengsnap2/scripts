@@ -37,7 +37,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listCategory() {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listCategory----------------\n");
-        String sql = "SELECT * FROM Category";
+        String sql = "SELECT * FROM Category where status = 1";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -77,7 +77,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listCustomer() {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listCustomer----------------\n");
-        String sql = "SELECT * FROM Customer";
+        String sql = "SELECT * FROM Customer  where status = 1";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -120,7 +120,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listProject() {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listProject----------------\n");
-        String sql = "SELECT * FROM Project";
+        String sql = "SELECT * FROM Project where status = 1";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -168,7 +168,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listProjectType() {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listProjectType----------------\n");
-        String sql = "SELECT * FROM ProjectType";
+        String sql = "SELECT * FROM ProjectType where status = 1";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -206,14 +206,15 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> listProjectUpc() {
+    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listProjectUpc----------------\n");
-        String sql = "SELECT * FROM ProjectUpc";
+        String sql = "SELECT * FROM ProjectUpc where status = 1 and projectId = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,projectId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -250,7 +251,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listRetailer() {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listRetailer----------------\n");
-        String sql = "SELECT * FROM Retailer";
+        String sql = "SELECT * FROM Retailer where status = 1";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {

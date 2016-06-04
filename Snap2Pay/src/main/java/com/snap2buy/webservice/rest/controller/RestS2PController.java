@@ -1087,13 +1087,14 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listProjectUpc")
     public Snap2PayOutput listProjectUpc(
+            @QueryParam(ParamMapper.PROJECT_ID) @DefaultValue("-9") String projectId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts listProjectUpc----------------\n");
+        LOGGER.info("---------------Controller Starts listProjectUpc projectId= "+projectId+"----------------\n");
         try {
 
-            return restS2PAction.listProjectUpc();
+            return restS2PAction.listProjectUpc(projectId);
 
         } catch (Exception e) {
             e.printStackTrace();

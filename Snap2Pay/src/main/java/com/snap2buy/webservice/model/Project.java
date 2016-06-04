@@ -1,9 +1,6 @@
 package com.snap2buy.webservice.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
@@ -40,7 +37,7 @@ public class Project {
     String updatedBy;
     @XmlElement
     String status;
-
+    @XmlElementWrapper(name="projectUpcList")
     List<ProjectUpc> projectUpcList;
 
     public Project() {

@@ -14,7 +14,7 @@ public interface MetaService {
     public List<LinkedHashMap<String, String>> listCustomer();
     public List<LinkedHashMap<String, String>> listProject();
     public List<LinkedHashMap<String, String>> listProjectType();
-    public List<LinkedHashMap<String, String>> listProjectUpc();
+    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId);
     public List<LinkedHashMap<String, String>> listRetailer();
 
     public List<LinkedHashMap<String, String>> getCategoryDetail(InputObject inputObject);
