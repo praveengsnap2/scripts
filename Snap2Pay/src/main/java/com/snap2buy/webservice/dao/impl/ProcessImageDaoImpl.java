@@ -437,23 +437,23 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
-    public List<String> getImageUuidListByStatus() {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageUuidByStatus----------------\n");
-        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE status = new order by dateId";
+    public String getNextImageUuid() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageUuid----------------\n");
+        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE status = new order by dateId limit 1";
         Connection conn = null;
-        List<String> imageStatus=new ArrayList<>();
+        String imageUUID="queryFailed";
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                imageStatus.add(rs.getString("imageUUID"));
+            if (rs.next()) {
+                imageUUID = rs.getString("imageUUID");
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageUuidByStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageUuid----------------\n");
 
-            return imageStatus;
+            return imageUUID;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);

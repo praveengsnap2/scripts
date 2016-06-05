@@ -1470,15 +1470,15 @@ public class RestS2PController {
     }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/getImageUuidListByStatus")
-    public Snap2PayOutput getImageUuidListByStatus(
+    @Path("/processNextImage")
+    public Snap2PayOutput processNextImage(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getImageUuidListByStatus----------------\n");
+        LOGGER.info("---------------Controller Starts processNextImage----------------\n");
         try {
 
-            return restS2PAction.getImageUuidListByStatus();
+            return restS2PAction.processNextImage();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1491,7 +1491,7 @@ public class RestS2PController {
             inputList.put("error in Input","-9");
 
             rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends getImageUuidListByStatus----------------\n");
+            LOGGER.info("---------------Controller Ends processNextImage----------------\n");
             return rio;
         }
     }

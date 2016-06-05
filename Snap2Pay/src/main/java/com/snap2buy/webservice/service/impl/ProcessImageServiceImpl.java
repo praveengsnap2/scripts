@@ -234,17 +234,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getImageUuidListByStatus() {
+    public List<LinkedHashMap<String, String>> processNextImage() {
 
-        LOGGER.info("---------------ProcessImageServiceImpl Starts runNextImageAnalysis----------------\n");
-        List<String> imageUUIDList = processImageDao.getImageUuidListByStatus();
-        List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
-        for (String imageUUID : imageUUIDList) {
-            java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
-            temp.put("imageUUID", imageUUID);
-            result.add(temp);
-        }
-        return result;
+        LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage----------------\n");
+        String imageUUID = processImageDao.getNextImageUuid();
+        LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage imageUUID = "+imageUUID+"----------------\n");
+        List<LinkedHashMap<String, String>> imageAnalysisList = getImageAnalysis(imageUUID);
+        return imageAnalysisList;
     }
 
     @Override

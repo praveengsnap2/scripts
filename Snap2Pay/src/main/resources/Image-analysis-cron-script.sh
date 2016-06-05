@@ -41,91 +41,14 @@ else {
      }
 fi
 
-echo "Making call to get jobs api curl http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/getImageUuidListByStatus?"
-RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Pay-2.0/service/S2P/getImageUuidListByStatus?`
+echo "Making call to process next Image api  curl http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/processNextImage?"
+RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Pay-1.0/service/S2P/processNextImage?`
 if [ $? -ne 0 ]; then
    echo "RESULT=${RESULT}"
-   echo "Failed: http://${WS_MACHINE}:8080/Snap2Pay-2.0/service/S2P/getImageUuidListByStatus"
-   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Pay-2.0/service/S2P/getImageUuidListByStatus"
+   echo "Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/processNextImage?"
+   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/processNextImage?"
    #send_mail "$MSG"
    exit 1
 fi
 
-#
-#echo "${RESULT} | jq -r '.ResultSet.row.imageUUID'"
-
-imageUUID=` echo "${RESULT}" | jq -r '.ResultSet.row.imageUUID'`
-
-echo "imageUUID=${imageUUID}"
-
-if [ "${remainingJob}" == "null" ]; then
-    loop="1"
-    echo "no more jobs to run processing last job "
-fi
-
-#rm $imageUUID
-#if [ $? -ne 0 ]; then
-#   echo "Failed: remove of image file failed "
-#   exit 1
-#fi
-
-echo "Making call to get Image api   http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/getImage?userId=$userId&imageUUID=$imageUUID"
-curl -O -J "http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/getImage?userId=$userId&imageUUID=$imageUUID"
-if [ $? -ne 0 ]; then
-   echo "Failed: http://${WS_MACHINE}:8080/Snap2Pay-2.0/service/S2P/getImage?userId=${userId}&imageUUID=${imageUUID}"
-   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Pay-2.0/service/S2P/getImage?userId=${userId}&imageUUID=${imageUUID}"
-   #send_mail  "$MSG"
-   exit 1
-fi
-
-imageFileCount=`ls $imageUUID | wc -l`
-echo "imageFileCount=$imageFileCount"
-
-if [ "${imageFileCount}" == "1" ]; then
-       echo "unable to find downloaded image "
-       #MSG="unable to find downloaded image "
-       #send_mail  "$MSG"
-       exit 1
-fi
-
-
-#run image processing code
-#
-#
-#
-#
-#
-#store the result json in a file name Result/${imageUUID}
-#
-#
-#
-#
-#{ "status": 200, "storeId": "sh01", "categoryId":"test", "date": "20150807", "imageUUID": "2a7ba3fd-d666-4b43-aa7e-3efa6aa746af", "skus": [ { "upc": "LO.TRRE.C", "pog": "3", "osa": "1", "facings": "3", "priceLabel": "1" },{ "upc": "LO.VF.S", "pog": "2", "osa": "1", "facings": "2", "priceLabel": "0" },{ "upc": "LO.TOREE.S", "pog": "2", "osa": "1", "facings": "2", "priceLabel": "0" },{ "upc": "LO.CV.C", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "0" },{ "upc": "LO.TOREE.C", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "0" },{ "upc": "LO.TRRE.S", "pog": "4", "osa": "1", "facings": "4", "priceLabel": "1" },{ "upc": "LO.TORE5.S", "pog": "2", "osa": "1", "facings": "2", "priceLabel": "1" },{ "upc": "LO.TORE5.C", "pog": "2", "osa": "1", "facings": "2", "priceLabel": "1" },{ "upc": "LO.SI.C", "pog": "2", "osa": "1", "facings": "2", "priceLabel": "1" },{ "upc": "LO.SIU.S", "pog": "2", "osa": "1", "facings": "2", "priceLabel": "1" },{ "upc": "LO.CV.S", "pog": "3", "osa": "-2", "facings": "0", "priceLabel": "0" },{ "upc": "TR.CR.S", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "0" },{ "upc": "TR.MR.S", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "1" },{ "upc": "TR.MR.C", "pog": "2", "osa": "1", "facings": "1", "priceLabel": "1" },{ "upc": "TR.AB.C", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "1" },{ "upc": "PN.CC.S", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "0" },{ "upc": "PN.MR.S", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "0" },{ "upc": "PN.SV.S", "pog": "1", "osa": "0", "facings": "0", "priceLabel": "0" },{ "upc": "TR.CR.C", "pog": "1", "osa": "1", "facings": "1", "priceLabel": "0" } ] }
-
-dataFile=Result/${imageUUID}
-
-echo "Making call to store result api   curl -d @$dataFile  -H 'Content-Type: Application/Json' -X POST 'http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/storeShelfAnalysis?'"
-StoreResult=`curl -d @$dataFile  -H 'Content-Type: Application/Json' -X POST "http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/storeShelfAnalysis?"`
-if [ $? -ne 0 ]; then
-   echo "Failed: curl   -d @$dataFile  -H "Content-Type: Application/Json" -X POST 'http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/storeShelfAnalysis?"
-   #MSG="Failed: curl   -d @$dataFile  -H "Content-Type: Application/Json" -X POST 'http://$WS_MACHINE:8080/Snap2Pay-2.0/service/S2P/storeShelfAnalysis?"
-   #send_mail "$MSG"
-   exit 1
-fi
-
-echo "StoreResult=$StoreResult"
-
-status=` echo "${StoreResult}" | jq -r '.ResultSet.row.responseCode'`
-
-if [ "${status}" == "200" ]; then
-    echo "store api call success "
-    continue
-else {
-    echo "store api call failed  "
-       #MSG="store api call failed "
-       #send_mail  "$MSG"
-       exit 1
-}
-fi
-loop="1"
-done
+echo "RESULT=${RESULT}"
