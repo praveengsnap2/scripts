@@ -439,7 +439,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public String getNextImageUuid() {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageUuid----------------\n");
-        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE status = new order by dateId limit 1";
+        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE imageStatus = \"new\" order by dateId limit 1";
         Connection conn = null;
         String imageUUID="queryFailed";
         try {
