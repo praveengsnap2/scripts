@@ -15,6 +15,7 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> getImageAnalysis (String imageUUID);
     public List<LinkedHashMap<String, String>> doShareOfShelfAnalysis (InputObject inputObject);
     public List<LinkedHashMap<String, String>> runImageAnalysis (String imageUUID);
+    public List<LinkedHashMap<String, String>> getImageUuidListByStatus ();
     public LinkedHashMap<String, String> getJob(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getStoreOptions();
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject);

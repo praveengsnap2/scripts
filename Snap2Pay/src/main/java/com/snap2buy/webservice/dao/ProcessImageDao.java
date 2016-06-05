@@ -15,6 +15,7 @@ public interface ProcessImageDao {
     public ImageStore getImageByStatus(String status);
     public Integer getJobCount(String status);
     public String getImageAnalysisStatus(String imageUUID);
+    public List<String> getImageUuidListByStatus();
     public void insert(ImageStore imageStore);
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore);
     public void updateStatusAndHost(String hostId, String status, String imageUUID);

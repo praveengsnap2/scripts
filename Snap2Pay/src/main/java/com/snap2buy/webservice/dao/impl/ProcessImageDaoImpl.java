@@ -436,6 +436,39 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
     }
 
+    @Override
+    public List<String> getImageUuidListByStatus() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getImageUuidByStatus----------------\n");
+        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE status = new order by dateId";
+        Connection conn = null;
+        List<String> imageStatus=new ArrayList<>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                imageStatus.add(rs.getString("imageUUID"));
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageUuidByStatus----------------\n");
+
+            return imageStatus;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
     //change to insert multiple statement at one go
     @Override
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore) {

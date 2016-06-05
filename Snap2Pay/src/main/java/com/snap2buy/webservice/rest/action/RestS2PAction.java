@@ -265,6 +265,19 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    public Snap2PayOutput getImageUuidListByStatus() {
+        LOGGER.info("---------------RestAction Starts getImageUuidListByStatus----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        resultListToPass = processImageService.getImageUuidListByStatus();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getImageUuidListByStatus----------------\n");
+
+        return reportIO;
+    }
     public Snap2PayOutput getStoreOptions() {
         LOGGER.info("---------------RestAction Starts getStoreOptions----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();

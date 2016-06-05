@@ -1468,4 +1468,31 @@ public class RestS2PController {
             return rio;
         }
     }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getImageUuidListByStatus")
+    public Snap2PayOutput getImageUuidListByStatus(
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getImageUuidListByStatus----------------\n");
+        try {
+
+            return restS2PAction.getImageUuidListByStatus();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getImageUuidListByStatus----------------\n");
+            return rio;
+        }
+    }
 }
