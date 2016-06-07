@@ -177,7 +177,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.gson</groupId>
+            <groupId>com.google.customerCode.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.5</version>
         </dependency>

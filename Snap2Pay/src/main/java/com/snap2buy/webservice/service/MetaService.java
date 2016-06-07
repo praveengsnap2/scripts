@@ -12,15 +12,17 @@ public interface MetaService {
 
     public List<LinkedHashMap<String, String>> listCategory();
     public List<LinkedHashMap<String, String>> listCustomer();
-    public List<LinkedHashMap<String, String>> listProject();
+    public List<LinkedHashMap<String, String>> listProject(InputObject inputObject);
     public List<LinkedHashMap<String, String>> listProjectType();
-    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId);
+    public List<LinkedHashMap<String, String>> listSkuType();
+    public List<LinkedHashMap<String, String>> listProjectUpc(String customerProjectId);
     public List<LinkedHashMap<String, String>> listRetailer();
 
     public List<LinkedHashMap<String, String>> getCategoryDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getCustomerDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getProjectTypeDetail(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> getSkuTypeDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getProjectUpcDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getRetailerDetail(InputObject inputObject);
 
@@ -28,6 +30,7 @@ public interface MetaService {
     public void createCategory(Category categoryInput);
     public void createRetailer(Retailer retailerInput);
     public void createProjectType(ProjectType projectTypeInput);
+    public void createSkuType(SkuType skuTypeInput);
     public void createProject(Project projectInput);
     public void addUpcToProjectId(ProjectUpc projectUpc);
 

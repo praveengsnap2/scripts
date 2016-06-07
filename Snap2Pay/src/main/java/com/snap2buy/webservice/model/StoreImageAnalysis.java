@@ -10,7 +10,7 @@ public class StoreImageAnalysis {
     String retailerStoreId;
     String state;
     String city;
-    String projectId;
+    String customerProjectId;
     String taskId;
     String upc;
     String facingCount;
@@ -18,13 +18,13 @@ public class StoreImageAnalysis {
     String brand;
     String visitDate;
 
-    public StoreImageAnalysis(String storeId, String retailerCode, String retailerStoreId, String state, String city, String projectId, String taskId, String upc, String facingCount, String score, String brand, String visitDate) {
+    public StoreImageAnalysis(String storeId, String retailerCode, String retailerStoreId, String state, String city, String customerProjectId, String taskId, String upc, String facingCount, String score, String brand, String visitDate) {
         this.storeId = storeId;
         this.retailerCode = retailerCode;
         this.retailerStoreId = retailerStoreId;
         this.state = state;
         this.city = city;
-        this.projectId = projectId;
+        this.customerProjectId = customerProjectId;
         this.taskId = taskId;
         this.upc = upc;
         this.facingCount = facingCount;
@@ -73,12 +73,12 @@ public class StoreImageAnalysis {
         this.city = city;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getCustomerProjectId() {
+        return customerProjectId;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setCustomerProjectId(String customerProjectId) {
+        this.customerProjectId = customerProjectId;
     }
 
     public String getTaskId() {
@@ -137,7 +137,7 @@ public class StoreImageAnalysis {
                 ", retailerStoreId='" + retailerStoreId + '\'' +
                 ", state='" + state + '\'' +
                 ", city='" + city + '\'' +
-                ", projectId='" + projectId + '\'' +
+                ", customerProjectId='" + customerProjectId + '\'' +
                 ", taskId='" + taskId + '\'' +
                 ", upc='" + upc + '\'' +
                 ", expectedFacingCount='" + facingCount + '\'' +

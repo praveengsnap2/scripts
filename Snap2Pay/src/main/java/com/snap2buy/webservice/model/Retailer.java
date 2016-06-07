@@ -14,7 +14,7 @@ public class Retailer {
     @XmlElement
     String id;
     @XmlElement
-    String code;
+    String retailerCode;
     @XmlElement
     String name;
     @XmlElement
@@ -30,9 +30,9 @@ public class Retailer {
         super();
     }
 
-    public Retailer(String id, String code, String name, String type, String logo, String createdDate, String status) {
+    public Retailer(String id, String retailerCode, String name, String type, String logo, String createdDate, String status) {
         this.id = id;
-        this.code = code;
+        this.retailerCode = retailerCode;
         this.name = name;
         this.type = type;
         this.logo = logo;
@@ -48,12 +48,12 @@ public class Retailer {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getRetailerCode() {
+        return retailerCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setRetailerCode(String retailerCode) {
+        this.retailerCode = retailerCode;
     }
 
     public String getName() {
@@ -100,7 +100,7 @@ public class Retailer {
     public String toString() {
         return "Retailer{" +
                 "id='" + id + '\'' +
-                ", code='" + code + '\'' +
+                ", customerCode='" + retailerCode + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", logo='" + logo + '\'' +

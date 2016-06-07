@@ -30,11 +30,13 @@ public interface ParamMapper {
     String STATE="state";
     String STATE_CODE="stateCode";
     String RETAILER_CHAIN_CODE = "retailerChainCode";
+    String RETAILER_CODE = "retailerCode";
     String LIST_ID = "listId";
     String IMAGE_FOLDER_PATH = "ImageFolderPath";
     String RETAILER = "retailer";
     String STREET = "street";
     String CUSTOMER_CODE="customerCode";
+    String CUSTOMER_PROJECT_ID="customerProjectId";
     String PROJECT_ID="projectId";
     String TASK_ID="taskId";
     String AGENT_ID="agentId";

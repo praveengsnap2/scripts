@@ -55,7 +55,7 @@ public class ConverterUtil {
             temp.put("newHeight", listEntry.getNewHeight());
             temp.put("thumbnailPath", listEntry.getThumbnailPath());
             temp.put("customerCode", listEntry.getCustomerCode());
-            temp.put("projectId", listEntry.getProjectId());
+            temp.put("projectId", listEntry.getCustomerProjectId());
             temp.put("taskId", listEntry.getTaskId());
             temp.put("agentId", listEntry.getAgentId());
             result.add(temp);

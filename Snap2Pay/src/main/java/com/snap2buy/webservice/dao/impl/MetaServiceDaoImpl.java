@@ -88,7 +88,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
-                map.put("code", rs.getString("code"));
+                map.put("customerCode", rs.getString("customerCode"));
                 map.put("name", rs.getString("name"));
                 map.put("type", rs.getString("type"));
                 map.put("logo", rs.getString("logo"));
@@ -118,19 +118,21 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> listProject() {
+    public List<LinkedHashMap<String, String>> listProject(String customerCode) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listProject----------------\n");
-        String sql = "SELECT * FROM Project where status = 1";
+        String sql = "SELECT * FROM Project where status = 1 and customerCode = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,customerCode);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
+                map.put("projectName", rs.getString("projectName"));
                 map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("customerCode", rs.getString("customerCode"));
                 map.put("projectTypeId", rs.getString("projectTypeId"));
@@ -205,22 +207,66 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         }
     }
 
+
     @Override
-    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId) {
-        LOGGER.info("---------------MetaServiceDaoImpl Starts listProjectUpc----------------\n");
-        String sql = "SELECT * FROM ProjectUpc where status = 1 and projectId = ?";
+    public List<LinkedHashMap<String, String>> listSkuType() {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts listSkuType----------------\n");
+        String sql = "SELECT * FROM SkuType where status = 1";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,projectId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
+                map.put("name", rs.getString("name"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends listSkuType----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public List<LinkedHashMap<String, String>> listProjectUpc(String customerProjectId) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts listProjectUpc----------------\n");
+        String sql = "SELECT * FROM ProjectUpc where status = 1 and customerProjectId = ?";
+        List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,customerProjectId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("id", rs.getString("id"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("upc", rs.getString("upc"));
+                map.put("skuTypeId", rs.getString("skuTypeId"));
                 map.put("expectedFacingCount", rs.getString("expectedFacingCount"));
                 map.put("imageUrl1", rs.getString("imageUrl1"));
                 map.put("imageUrl2", rs.getString("imageUrl2"));
@@ -262,7 +308,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
-                map.put("code", rs.getString("code"));
+                map.put("retailerCode", rs.getString("retailerCode"));
                 map.put("name", rs.getString("name"));
                 map.put("type", rs.getString("type"));
                 map.put("logo", rs.getString("logo"));
@@ -292,21 +338,21 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getRetailerDetail(String id) {
-        LOGGER.info("---------------MetaServiceDaoImpl Starts getRetailerDetail id = " + id + "----------------\n");
-        String sql = "SELECT * FROM Retailer where id = ?";
+    public List<LinkedHashMap<String, String>> getRetailerDetail(String retailerCode) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts getRetailerDetail retailerCode = " + retailerCode + "----------------\n");
+        String sql = "SELECT * FROM Retailer where retailerCode = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setString(1, retailerCode);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
-                map.put("code", rs.getString("code"));
+                map.put("retailerCode", rs.getString("retailerCode"));
                 map.put("name", rs.getString("name"));
                 map.put("type", rs.getString("type"));
                 map.put("logo", rs.getString("logo"));
@@ -336,21 +382,23 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getProjectUpcDetail(String id) {
+    public List<LinkedHashMap<String, String>> getProjectUpcDetail(String customerProjectId) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectUpcDetail----------------\n");
-        String sql = "SELECT * FROM ProjectUpc  where id = ?";
+        String sql = "SELECT * FROM ProjectUpc  where customerProjectId = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setString(1, customerProjectId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("upc", rs.getString("upc"));
+                map.put("skuTypeId", rs.getString("skuTypeId"));
                 map.put("expectedFacingCount", rs.getString("expectedFacingCount"));
                 map.put("imageUrl1", rs.getString("imageUrl1"));
                 map.put("imageUrl2", rs.getString("imageUrl2"));
@@ -420,9 +468,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getProjectDetail(String id) {
-        LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectDetail----------------\n");
-        String sql = "SELECT * FROM Project where id = ?";
+    public List<LinkedHashMap<String, String>> getSkuTypeDetail(String id) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts getSkuTypeDetail----------------\n");
+        String sql = "SELECT * FROM SkuType where id = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -434,6 +482,48 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
+                map.put("name", rs.getString("name"));
+                map.put("createdDate", rs.getString("createdDate"));
+                map.put("status", rs.getString("status"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends getSkuTypeDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectDetail(String customerProjectId) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectDetail----------------\n");
+        String sql = "SELECT * FROM Project where customerProjectId = ?";
+        List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerProjectId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("id", rs.getString("id"));
+                map.put("projectName", rs.getString("projectName"));
                 map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("customerCode", rs.getString("customerCode"));
                 map.put("projectTypeId", rs.getString("projectTypeId"));
@@ -471,7 +561,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> getCustomerDetail(String id) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts getCustomerDetail----------------\n");
-        String sql = "SELECT * FROM Customer where id = ?";
+        String sql = "SELECT * FROM Customer where customerCode = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -483,7 +573,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 map.put("id", rs.getString("id"));
-                map.put("code", rs.getString("code"));
+                map.put("customerCode", rs.getString("customerCode"));
                 map.put("name", rs.getString("name"));
                 map.put("type", rs.getString("type"));
                 map.put("logo", rs.getString("logo"));
@@ -556,13 +646,13 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void createCustomer(Customer customerInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createCustomer::customerInput=" + customerInput + "----------------\n");
-        String sql = "INSERT INTO Customer ( code, name, type, logo, createdDate, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Customer ( customerCode, name, type, logo, createdDate, status) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, customerInput.getCode());
+            ps.setString(1, customerInput.getCustomerCode());
             ps.setString(2, customerInput.getName());
             ps.setString(3, customerInput.getType());
             ps.setString(4, customerInput.getLogo());
@@ -655,14 +745,14 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void createRetailer(Retailer retailerInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createRetailer::retailerInput=" + retailerInput + "----------------\n");
-        String sql = "INSERT INTO Retailer ( code, name, type, logo, createdDate, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Retailer ( retailerCode, name, type, logo, createdDate, status) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         Integer id = -1;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
-            ps.setString(1, retailerInput.getCode());
+            ps.setString(1, retailerInput.getRetailerCode());
             ps.setString(2, retailerInput.getName());
             ps.setString(3, retailerInput.getType());
             ps.setString(4, retailerInput.getLogo());
@@ -753,6 +843,54 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     }
 
     @Override
+    public void createSkuType(SkuType skuTypeInput) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts createSkuType::skuTypeInput=" + skuTypeInput + "----------------\n");
+        String sql = "INSERT INTO SkuType ( name, createdDate, status) VALUES (?, ?, ?)";
+        Connection conn = null;
+        Integer id = -1;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+            ps.setString(1, skuTypeInput.getName());
+            ps.setString(2, skuTypeInput.getCreatedDate());
+            ps.setString(3, skuTypeInput.getStatus());
+            id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    skuTypeInput.setId(generatedKeys.getString(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends createSkuType----------------\n");
+
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+
+                }
+            }
+        }
+    }
+
+    @Override
     public void createProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createProject::customerInput=" + projectInput + "----------------\n");
         String sql = "INSERT INTO Project ( projectName, customerProjectId, customerCode, projectTypeId, categoryId, retailerId, storeCount, startDate, createdDate, createdBy, updatedDate, updatedBy, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -813,7 +951,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void addUpcListToProjectId(List<ProjectUpc> projectUpcList) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts addUpcToProjectId::projectUpcList=" + projectUpcList + "----------------\n");
-        String sql = "INSERT INTO ProjectUpc ( customerProjectId, upc, skuType, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ProjectUpc ( customerProjectId, upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         for (ProjectUpc projectUpc : projectUpcList) {
@@ -822,7 +960,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, projectUpc.getCustomerProjectId());
                 ps.setString(2, projectUpc.getUpc());
-                ps.setString(3, projectUpc.getSkuType());
+                ps.setString(3, projectUpc.getSkuTypeId());
                 ps.setString(4, projectUpc.getExpectedFacingCount());
                 ps.setString(5, projectUpc.getImageUrl1());
                 ps.setString(6, projectUpc.getImageUrl2());
@@ -852,14 +990,14 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void addUpcToProjectId(ProjectUpc projectUpc) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts addUpcToProjectId::projectUpc=" + projectUpc + "----------------\n");
-        String sql = "INSERT INTO ProjectUpc ( customerProjectId, upc, skuType, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ProjectUpc ( customerProjectId, upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, projectUpc.getCustomerProjectId());
             ps.setString(2, projectUpc.getUpc());
-            ps.setString(3, projectUpc.getSkuType());
+            ps.setString(3, projectUpc.getSkuTypeId());
             ps.setString(4, projectUpc.getExpectedFacingCount());
             ps.setString(5, projectUpc.getImageUrl1());
             ps.setString(6, projectUpc.getImageUrl2());

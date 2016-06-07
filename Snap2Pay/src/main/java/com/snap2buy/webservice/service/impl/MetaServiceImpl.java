@@ -47,10 +47,10 @@ public class MetaServiceImpl implements MetaService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> listProject() {
+    public List<LinkedHashMap<String, String>> listProject(InputObject inputObject) {
         LOGGER.info("---------------MetaServiceImpl Starts listProject----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProject();
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProject(inputObject.getCustomerCode());
 
         LOGGER.info("---------------MetaServiceImpl Ends listProject ----------------\n");
         return resultList;
@@ -67,10 +67,19 @@ public class MetaServiceImpl implements MetaService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId) {
+    public List<LinkedHashMap<String, String>> listSkuType() {
+        LOGGER.info("---------------MetaServiceImpl Starts listSkuType----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listSkuType();
+
+        LOGGER.info("---------------MetaServiceImpl Ends listSkuType ----------------\n");
+        return resultList;
+    }
+    @Override
+    public List<LinkedHashMap<String, String>> listProjectUpc(String customerProjectId) {
         LOGGER.info("---------------MetaServiceImpl Starts listProjectUpc----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProjectUpc(projectId);
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProjectUpc(customerProjectId);
 
         LOGGER.info("---------------MetaServiceImpl Ends listProjectUpc ----------------\n");
         return resultList;
@@ -88,9 +97,9 @@ public class MetaServiceImpl implements MetaService {
 
     @Override
     public List<LinkedHashMap<String, String>> getRetailerDetail(InputObject inputObject) {
-        LOGGER.info("---------------MetaServiceImpl Starts getRetailerDetail id = " + inputObject.getId() + "----------------\n");
+        LOGGER.info("---------------MetaServiceImpl Starts getRetailerDetail retailerCode = " + inputObject.getRetailerCode() + "----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getRetailerDetail(inputObject.getId());
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getRetailerDetail(inputObject.getRetailerCode());
 
         LOGGER.info("---------------MetaServiceImpl Ends getRetailerDetail ----------------\n");
         return resultList;
@@ -98,9 +107,9 @@ public class MetaServiceImpl implements MetaService {
 
     @Override
     public List<LinkedHashMap<String, String>> getProjectUpcDetail(InputObject inputObject) {
-        LOGGER.info("---------------MetaServiceImpl Starts getProjectUpcDetail id = " + inputObject.getId() + "----------------\n");
+        LOGGER.info("---------------MetaServiceImpl Starts getProjectUpcDetail customerProjectId = " + inputObject.getCustomerProjectId() + "----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectUpcDetail(inputObject.getId());
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectUpcDetail(inputObject.getCustomerProjectId());
 
         LOGGER.info("---------------MetaServiceImpl Ends getProjectUpcDetail ----------------\n");
         return resultList;
@@ -117,10 +126,21 @@ public class MetaServiceImpl implements MetaService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject) {
-        LOGGER.info("---------------MetaServiceImpl Starts getProjectDetail id = " + inputObject.getId() + "----------------\n");
+    public List<LinkedHashMap<String, String>> getSkuTypeDetail(InputObject inputObject) {
+        LOGGER.info("---------------MetaServiceImpl Starts getSkuTypeDetail id = " + inputObject.getId() + "----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectDetail(inputObject.getId());
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getSkuTypeDetail(inputObject.getId());
+
+        LOGGER.info("---------------MetaServiceImpl Ends getSkuTypeDetail ----------------\n");
+        return resultList;
+
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject) {
+        LOGGER.info("---------------MetaServiceImpl Starts getProjectDetail customerProjectId = " + inputObject.getCustomerProjectId() + "----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectDetail(inputObject.getCustomerProjectId());
 
         LOGGER.info("---------------MetaServiceImpl Ends getProjectDetail ----------------\n");
         return resultList;
@@ -128,9 +148,9 @@ public class MetaServiceImpl implements MetaService {
 
     @Override
     public List<LinkedHashMap<String, String>> getCustomerDetail(InputObject inputObject) {
-        LOGGER.info("---------------MetaServiceImpl Starts getCustomerDetail id = " + inputObject.getId() + "----------------\n");
+        LOGGER.info("---------------MetaServiceImpl Starts getCustomerDetail customerCode = " + inputObject.getCustomerCode() + "----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getCustomerDetail(inputObject.getId());
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getCustomerDetail(inputObject.getCustomerCode());
 
         LOGGER.info("---------------MetaServiceImpl Ends getCustomerDetail ----------------\n");
         return resultList;
@@ -148,7 +168,7 @@ public class MetaServiceImpl implements MetaService {
 
     @Override
     public void createCustomer(Customer customerInput) {
-        LOGGER.info("---------------MetaServiceImpl Starts createCustomer customer code = " + customerInput.getCode()+ "----------------\n");
+        LOGGER.info("---------------MetaServiceImpl Starts createCustomer customer code = " + customerInput.getCustomerCode()+ "----------------\n");
 
         metaServiceDao.createCustomer(customerInput);
 
@@ -183,6 +203,16 @@ public class MetaServiceImpl implements MetaService {
         metaServiceDao.createProjectType(projectTypeInput);
 
         LOGGER.info("---------------MetaServiceImpl Ends createProjectType id generate = "+projectTypeInput.getId()+"----------------\n");
+
+    }
+
+    @Override
+    public void createSkuType(SkuType skuTypeInput) {
+        LOGGER.info("---------------MetaServiceImpl Starts createSkuType skuType code = " + skuTypeInput.getName()+ "----------------\n");
+
+        metaServiceDao.createSkuType(skuTypeInput);
+
+        LOGGER.info("---------------MetaServiceImpl Ends createSkuType id generate = "+skuTypeInput.getId()+"----------------\n");
 
     }
 

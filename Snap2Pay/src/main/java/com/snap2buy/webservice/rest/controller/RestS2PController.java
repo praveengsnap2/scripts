@@ -113,7 +113,7 @@ public class RestS2PController {
             inputObject.setSync(sync);
             inputObject.setAgentId(agentId);
             inputObject.setCustomerCode(customerCode);
-            inputObject.setProjectId(projectId);
+            inputObject.setCustomerProjectId(projectId);
             inputObject.setTaskId(taskId);
 
             //Create a factory for disk-based file items
@@ -982,17 +982,43 @@ public class RestS2PController {
             return rio;
         }
     }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/listSkuType")
+    public Snap2PayOutput listSkuType(
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts listSkuType----------------\n");
+        try {
+            return restS2PAction.listSkuType();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends listSkuType----------------\n");
+            return rio;
+        }
+    }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listProject")
     public Snap2PayOutput listProject(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts listProject----------------\n");
         try {
-            return restS2PAction.listProject();
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            return restS2PAction.listProject(inputObject);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1087,14 +1113,14 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listProjectUpc")
     public Snap2PayOutput listProjectUpc(
-            @QueryParam(ParamMapper.PROJECT_ID) @DefaultValue("-9") String projectId,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts listProjectUpc projectId= "+projectId+"----------------\n");
+        LOGGER.info("---------------Controller Starts listProjectUpc customerProjectId= "+customerProjectId+"----------------\n");
         try {
 
-            return restS2PAction.listProjectUpc(projectId);
+            return restS2PAction.listProjectUpc(customerProjectId);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1142,14 +1168,14 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getCustomerDetail")
     public Snap2PayOutput getCustomerDetail(
-            @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getCustomerDetail::id::="+id+"----------------\n");
+        LOGGER.info("---------------Controller Starts getCustomerDetail::code::="+customerCode+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            inputObject.setId(id);
+            inputObject.setCustomerCode(customerCode);
             return restS2PAction.getCustomerDetail(inputObject);
 
         } catch (Exception e) {
@@ -1160,7 +1186,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            inputList.put("id",id);
+            inputList.put("customerCode",customerCode);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getCustomerDetail----------------\n");
             return rio;
@@ -1170,14 +1196,14 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectDetail")
     public Snap2PayOutput getProjectDetail(
-            @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getProjectDetail::id::="+id+"----------------\n");
+        LOGGER.info("---------------Controller Starts getProjectDetail::id::="+customerProjectId+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            inputObject.setId(id);
+            inputObject.setCustomerProjectId(customerProjectId);
             return restS2PAction.getProjectDetail(inputObject);
 
         } catch (Exception e) {
@@ -1188,7 +1214,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            inputList.put("id",id);
+            inputList.put("customerProjectId",customerProjectId);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectDetail----------------\n");
             return rio;
@@ -1224,17 +1250,17 @@ public class RestS2PController {
     }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/getProjectUpcDetail")
-    public Snap2PayOutput getProjectUpcDetail(
+    @Path("/getSkuTypeDetail")
+    public Snap2PayOutput getSkuTypeDetail(
             @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getProjectUpcDetail::id::="+id+"----------------\n");
+        LOGGER.info("---------------Controller Starts getSkuTypeDetail::id::="+id+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
             inputObject.setId(id);
-            return restS2PAction.getProjectUpcDetail(inputObject);
+            return restS2PAction.getSkuTypeDetail(inputObject);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1246,6 +1272,34 @@ public class RestS2PController {
             inputList.put("error in Input","-9");
             inputList.put("id",id);
             rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getSkuTypeDetail----------------\n");
+            return rio;
+        }
+    }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectUpcDetail")
+    public Snap2PayOutput getProjectUpcDetail(
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectUpcDetail::customerProjectId::="+customerProjectId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerProjectId(customerProjectId);
+            return restS2PAction.getProjectUpcDetail(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            inputList.put("customerProjectId",customerProjectId);
+            rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectUpcDetail----------------\n");
             return rio;
         }
@@ -1254,14 +1308,14 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getRetailerDetail")
     public Snap2PayOutput getRetailerDetail(
-            @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
+            @QueryParam(ParamMapper.RETAILER_CODE) @DefaultValue("-9") String retailerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
-        LOGGER.info("---------------Controller Starts getRetailerDetail::id::="+id+"----------------\n");
+        LOGGER.info("---------------Controller Starts getRetailerDetail::retailerCode::="+retailerCode+"----------------\n");
         try {
             InputObject inputObject = new InputObject();
-            inputObject.setId(id);
+            inputObject.setRetailerCode(retailerCode);
             return restS2PAction.getRetailerDetail(inputObject);
 
         } catch (Exception e) {
@@ -1272,7 +1326,7 @@ public class RestS2PController {
             Snap2PayOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            inputList.put("id",id);
+            inputList.put("retailerCode",retailerCode);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getRetailerDetail----------------\n");
             return rio;
@@ -1404,6 +1458,38 @@ public class RestS2PController {
 
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createProjectType----------------\n");
+            return rio;
+        }
+    }
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/createSkuType")
+    public Snap2PayOutput createSkuType(
+            JAXBElement<SkuType> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts createSkuType----------------\n");
+        try {
+
+            SkuType skuTypeInput = p.getValue();
+
+            LOGGER.info("---------------Controller  projectTypeInput::="+skuTypeInput.toString()+"----------------\n");
+
+            return restS2PAction.createSkuType(skuTypeInput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends createSkuType----------------\n");
             return rio;
         }
     }

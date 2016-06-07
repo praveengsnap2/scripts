@@ -81,7 +81,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                 inputObject.getThumbnailPath(),
                 inputObject.getUserId(),
                 inputObject.getCustomerCode(),
-                inputObject.getProjectId(),
+                inputObject.getCustomerProjectId(),
                 inputObject.getTaskId(),
                 inputObject.getAgentId());
 
@@ -92,7 +92,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String retailerChainCode = storeMasterDao.getRetailerChainCode(inputObject.getStoreId());
             LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
 
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, inputObject.getStoreId(), inputObject.getUserId());
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, inputObject.getStoreId(), inputObject.getUserId(), inputObject.getCustomerProjectId());
             LOGGER.info("--------------imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
             processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
@@ -152,12 +152,12 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
 
-    public List<ImageAnalysis> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store, String userId) {
+    public List<ImageAnalysis> invokeImageAnalysis(String imageFilePath, String category, String uuid, String retailer, String store, String userId, String projectTypeId) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts invokeImageAnalysis----------------\n");
-        LOGGER.info("---------------ProcessImageDaoImpl imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "userId= "+userId+"----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "userId= "+userId+"projectTypeId"+projectTypeId+"----------------\n");
         List<ImageAnalysis> imageAnalysisList = new ArrayList<ImageAnalysis>();
         ShellUtil shellUtil = new ShellUtil();
-        String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store, userId);
+        String result = shellUtil.executeCommand(imageFilePath, category, uuid, retailer, store, userId, projectTypeId);
         if (result.contains("{")) {
             LOGGER.info("---------------ProcessImageDaoImpl  result=" + result + "----------------");
             result = result.replaceAll("\n", "").replaceAll("\n", "");
@@ -215,7 +215,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
             LOGGER.info("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
 
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId(),imageStore.getUserId());
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId(),imageStore.getUserId(),imageStore.getCustomerProjectId());
 
             LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 

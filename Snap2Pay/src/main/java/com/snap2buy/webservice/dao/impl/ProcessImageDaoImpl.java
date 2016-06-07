@@ -62,7 +62,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(16, imageStore.getNewHeight());
             ps.setString(17, imageStore.getThumbnailPath());
             ps.setString(18, imageStore.getCustomerCode());
-            ps.setString(19, imageStore.getProjectId());
+            ps.setString(19, imageStore.getCustomerProjectId());
             ps.setString(20, imageStore.getTaskId());
             ps.setString(21, imageStore.getAgentId());
             ps.executeUpdate();

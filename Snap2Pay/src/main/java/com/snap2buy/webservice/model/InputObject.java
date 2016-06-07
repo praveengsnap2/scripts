@@ -63,10 +63,19 @@ public class InputObject {
     private String street;
     private String retailer;
     private String customerCode;
-    private String projectId;
+    private String retailerCode;
+    private String customerProjectId;
     private String taskId;
     private String agentId;
     private String id;
+
+    public String getRetailerCode() {
+        return retailerCode;
+    }
+
+    public void setRetailerCode(String retailerCode) {
+        this.retailerCode = retailerCode;
+    }
 
     public String getId() {
         return id;
@@ -84,12 +93,12 @@ public class InputObject {
         this.customerCode = customerCode;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getCustomerProjectId() {
+        return customerProjectId;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setCustomerProjectId(String customerProjectId) {
+        this.customerProjectId = customerProjectId;
     }
 
     public String getTaskId() {
@@ -499,7 +508,6 @@ public class InputObject {
                 ", endDate='" + endDate + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", frequency='" + frequency + '\'' +
-//                ", dateId='" + dateId + '\'' +
                 ", storeId='" + storeId + '\'' +
                 ", brandId='" + brandId + '\'' +
                 ", marketId='" + marketId + '\'' +
@@ -517,9 +525,11 @@ public class InputObject {
                 ", street='" + street + '\'' +
                 ", retailer='" + retailer + '\'' +
                 ", customerCode='" + customerCode + '\'' +
-                ", projectId='" + projectId + '\'' +
+                ", retailerCode='" + retailerCode + '\'' +
+                ", customerProjectId='" + customerProjectId + '\'' +
                 ", taskId='" + taskId + '\'' +
                 ", agentId='" + agentId + '\'' +
+                ", id='" + id + '\'' +
                 ", morefiltersMap=" + morefiltersMap +
                 '}';
     }

@@ -18,7 +18,7 @@ public class ProjectUpc {
     @XmlElement
     String upc;
     @XmlElement
-    String skuType;
+    String skuTypeId;
     @XmlElement
     String expectedFacingCount;
     @XmlElement
@@ -32,11 +32,11 @@ public class ProjectUpc {
         super();
     }
 
-    public ProjectUpc(String id, String customerProjectId, String upc, String skuType, String expectedFacingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
+    public ProjectUpc(String id, String customerProjectId, String upc, String skuTypeId, String expectedFacingCount, String imageUrl1, String imageUrl2, String imageUrl3) {
         this.id = id;
         this.customerProjectId = customerProjectId;
         this.upc = upc;
-        this.skuType = skuType;
+        this.skuTypeId = skuTypeId;
         this.expectedFacingCount = expectedFacingCount;
         this.imageUrl1 = imageUrl1;
         this.imageUrl2 = imageUrl2;
@@ -59,12 +59,12 @@ public class ProjectUpc {
         this.customerProjectId = customerProjectId;
     }
 
-    public String getSkuType() {
-        return skuType;
+    public String getSkuTypeId() {
+        return skuTypeId;
     }
 
-    public void setSkuType(String skuType) {
-        this.skuType = skuType;
+    public void setSkuTypeId(String skuTypeId) {
+        this.skuTypeId = skuTypeId;
     }
 
     public String getUpc() {
@@ -113,7 +113,7 @@ public class ProjectUpc {
                 "id='" + id + '\'' +
                 ", customerProjectId='" + customerProjectId + '\'' +
                 ", upc='" + upc + '\'' +
-                ", skuType='" + skuType + '\'' +
+                ", skuTypeId='" + skuTypeId + '\'' +
                 ", expectedFacingCount='" + expectedFacingCount + '\'' +
                 ", imageUrl1='" + imageUrl1 + '\'' +
                 ", imageUrl2='" + imageUrl2 + '\'' +
