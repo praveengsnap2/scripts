@@ -45,8 +45,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, imageStore.getImageUUID());
-            ps.setString(2, imageStore.getImageFilePath());
-            ps.setString(3, imageStore.getUserId());
+            ps.setString(2, imageStore.getUserId());
+            ps.setString(3, imageStore.getImageFilePath());
             ps.setString(4, imageStore.getCategoryId());
             ps.setString(5, imageStore.getLatitude());
             ps.setString(6, imageStore.getLongitude());
@@ -156,6 +156,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, shelfStatus);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+
                 imageStore = new ImageStore(rs.getString("ImageUUID"),
                         rs.getString("ImageFilePath"),
                         rs.getString("CategoryId"),

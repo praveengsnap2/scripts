@@ -25,7 +25,7 @@ public class ShellUtil {
         pb.environment().put("Retailer_Code", retailer);
         pb.environment().put("Store_Id", store);
         pb.environment().put("User_Id", userId);
-        pb.environment().put("project_type_id", projectTypeId);
+        pb.environment().put("Project_type_id", projectTypeId);
         pb.directory(f);
         pb.redirectErrorStream(true);
 

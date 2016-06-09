@@ -34,7 +34,7 @@ public class ImageStore {
 
     public ImageStore(String imageUUID, String imageFilePath, String categoryId, String latitude, String longitude, String timeStamp, String storeId, String hostId, String dateId, String imageStatus, String shelfStatus, String origWidth, String origHeight, String newWidth, String newHeight, String thumbnailPath, String userId, String customerCode, String customerProjectId, String taskId, String agentId) {
         this.imageUUID = imageUUID;
-        ImageFilePath = imageFilePath;
+        this.ImageFilePath = imageFilePath;
         this.categoryId = categoryId;
         this.latitude = latitude;
         this.longitude = longitude;
