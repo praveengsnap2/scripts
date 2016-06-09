@@ -126,7 +126,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,customerCode);
+            ps.setString(1, customerCode);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -258,8 +258,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,customerProjectId);
-            ps.setString(2,customerCode);
+            ps.setString(1, customerProjectId);
+            ps.setString(2, customerCode);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -671,8 +671,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     customerInput.setId(generatedKeys.getString(1));
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
@@ -706,7 +705,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ;
             ps.setString(1, categoryInput.getName());
             ps.setString(2, categoryInput.getCreatedDate());
             ps.setString(3, categoryInput.getStatus());
@@ -719,8 +719,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     categoryInput.setId(generatedKeys.getString(1));
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
@@ -755,7 +754,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ;
             ps.setString(1, retailerInput.getRetailerCode());
             ps.setString(2, retailerInput.getName());
             ps.setString(3, retailerInput.getType());
@@ -771,8 +771,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     retailerInput.setId(generatedKeys.getString(1));
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
@@ -806,7 +805,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ;
             ps.setString(1, projectTypeInput.getName());
             ps.setString(2, projectTypeInput.getCreatedDate());
             ps.setString(3, projectTypeInput.getStatus());
@@ -819,8 +819,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     projectTypeInput.setId(generatedKeys.getString(1));
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
@@ -854,7 +853,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ;
             ps.setString(1, skuTypeInput.getName());
             ps.setString(2, skuTypeInput.getCreatedDate());
             ps.setString(3, skuTypeInput.getStatus());
@@ -867,8 +867,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     skuTypeInput.setId(generatedKeys.getString(1));
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
@@ -902,7 +901,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ;
             ps.setString(1, projectInput.getProjectName());
             ps.setString(2, projectInput.getCustomerProjectId());
             ps.setString(3, projectInput.getCustomerCode());
@@ -925,8 +925,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     projectInput.setId(generatedKeys.getString(1));
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
@@ -958,40 +957,42 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         String sql = "INSERT INTO ProjectUpc ( customerProjectId, customerCode upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
-        for (ProjectUpc projectUpc : projectUpcList) {
-            try {
-                conn = dataSource.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, projectUpc.getCustomerProjectId());
-                ps.setString(1, projectUpc.getCustomerCode());
-                ps.setString(2, projectUpc.getUpc());
-                ps.setString(3, projectUpc.getSkuTypeId());
-                ps.setString(4, projectUpc.getExpectedFacingCount());
-                ps.setString(5, projectUpc.getImageUrl1());
-                ps.setString(6, projectUpc.getImageUrl2());
-                ps.setString(7, projectUpc.getImageUrl3());
-                ps.executeUpdate();
-                ps.close();
+        if (!projectUpcList.isEmpty()) {
+            for (ProjectUpc projectUpc : projectUpcList) {
+                try {
+                    conn = dataSource.getConnection();
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setString(1, projectUpc.getCustomerProjectId());
+                    ps.setString(1, projectUpc.getCustomerCode());
+                    ps.setString(2, projectUpc.getUpc());
+                    ps.setString(3, projectUpc.getSkuTypeId());
+                    ps.setString(4, projectUpc.getExpectedFacingCount());
+                    ps.setString(5, projectUpc.getImageUrl1());
+                    ps.setString(6, projectUpc.getImageUrl2());
+                    ps.setString(7, projectUpc.getImageUrl3());
+                    ps.executeUpdate();
+                    ps.close();
 
-                LOGGER.info("---------------MetaServiceDaoImpl Ends addUpcToProjectId----------------\n");
+                    LOGGER.info("---------------MetaServiceDaoImpl Ends addUpcToProjectId----------------\n");
 
-            } catch (SQLException e) {
-                LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-                LOGGER.error("exception", e);
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
 
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                        LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-                        LOGGER.error("exception", e);
+                } finally {
+                    if (conn != null) {
+                        try {
+                            conn.close();
+                        } catch (SQLException e) {
+                            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                            LOGGER.error("exception", e);
+                        }
                     }
                 }
             }
-
         }
     }
+
     @Override
     public void addUpcToProjectId(ProjectUpc projectUpc) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts addUpcToProjectId::projectUpc=" + projectUpc + "----------------\n");
