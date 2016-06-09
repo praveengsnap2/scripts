@@ -477,26 +477,42 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         String sql = "INSERT INTO ImageAnalysis (imageUUID, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height, promotion, price, priceLabel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
+        String checkSql = "select count(*) as count from ImageAnalysis where imageUUID = ?";
+
+
         for (ImageAnalysis imageAnalysis : ImageAnalysisList) {
             try {
                 conn = dataSource.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, imageStore.getImageUUID());
-                ps.setString(2, imageStore.getStoreId());
-                ps.setString(3, imageStore.getDateId());
-                ps.setString(4, imageAnalysis.getUpc());
-                ps.setString(5, imageAnalysis.getUpcConfidence());
-                ps.setString(6, imageAnalysis.getAlternateUpc());
-                ps.setString(7, imageAnalysis.getAlternateUpcConfidence());
-                ps.setString(8, imageAnalysis.getLeftTopX());
-                ps.setString(9, imageAnalysis.getLeftTopY());
-                ps.setString(10, imageAnalysis.getWidth());
-                ps.setString(11, imageAnalysis.getHeight());
-                ps.setString(12, imageAnalysis.getPromotion());
-                ps.setString(13, imageAnalysis.getPrice());
-                ps.setString(14, imageAnalysis.getPriceLabel());
-                ps.executeUpdate();
-                ps.close();
+                Boolean insert=false;
+                PreparedStatement checkPs = conn.prepareStatement(checkSql);
+                checkPs.setString(1,imageStore.getImageUUID());
+                ResultSet rs = checkPs.executeQuery();
+                while (rs.next()) {
+                   if (rs.getInt("count") == 0 ){
+                       insert=true;
+                   }
+                }
+                rs.close();
+                checkPs.close();
+                if (insert=true) {
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setString(1, imageStore.getImageUUID());
+                    ps.setString(2, imageStore.getStoreId());
+                    ps.setString(3, imageStore.getDateId());
+                    ps.setString(4, imageAnalysis.getUpc());
+                    ps.setString(5, imageAnalysis.getUpcConfidence());
+                    ps.setString(6, imageAnalysis.getAlternateUpc());
+                    ps.setString(7, imageAnalysis.getAlternateUpcConfidence());
+                    ps.setString(8, imageAnalysis.getLeftTopX());
+                    ps.setString(9, imageAnalysis.getLeftTopY());
+                    ps.setString(10, imageAnalysis.getWidth());
+                    ps.setString(11, imageAnalysis.getHeight());
+                    ps.setString(12, imageAnalysis.getPromotion());
+                    ps.setString(13, imageAnalysis.getPrice());
+                    ps.setString(14, imageAnalysis.getPriceLabel());
+                    ps.executeUpdate();
+                    ps.close();
+                }
                 LOGGER.info("---------------ProcessImageDaoImpl Ends storeImageAnalysis----------------\n");
 
             } catch (SQLException e) {
