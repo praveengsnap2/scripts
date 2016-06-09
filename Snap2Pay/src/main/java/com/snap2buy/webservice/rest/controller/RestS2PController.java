@@ -69,7 +69,7 @@ public class RestS2PController {
             @QueryParam(ParamMapper.USER_ID) @DefaultValue("app") String userId,
             @QueryParam(ParamMapper.SYNC) @DefaultValue("false") String sync,
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
-            @QueryParam(ParamMapper.PROJECT_ID) @DefaultValue("-9") String projectId,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.TASK_ID) @DefaultValue("-9") String taskId,
             @QueryParam(ParamMapper.AGENT_ID) @DefaultValue("-9") String agentId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
@@ -113,7 +113,7 @@ public class RestS2PController {
             inputObject.setSync(sync);
             inputObject.setAgentId(agentId);
             inputObject.setCustomerCode(customerCode);
-            inputObject.setCustomerProjectId(projectId);
+            inputObject.setCustomerProjectId(customerProjectId);
             inputObject.setTaskId(taskId);
 
             //Create a factory for disk-based file items
@@ -1114,13 +1114,16 @@ public class RestS2PController {
     @Path("/listProjectUpc")
     public Snap2PayOutput listProjectUpc(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts listProjectUpc customerProjectId= "+customerProjectId+"----------------\n");
         try {
-
-            return restS2PAction.listProjectUpc(customerProjectId);
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setCustomerCode(customerCode);
+            return restS2PAction.listProjectUpc(inputObject);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1197,6 +1200,7 @@ public class RestS2PController {
     @Path("/getProjectDetail")
     public Snap2PayOutput getProjectDetail(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1204,6 +1208,7 @@ public class RestS2PController {
         try {
             InputObject inputObject = new InputObject();
             inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setCustomerCode(customerCode);
             return restS2PAction.getProjectDetail(inputObject);
 
         } catch (Exception e) {

@@ -15,12 +15,12 @@ public interface MetaServiceDao {
     public List<LinkedHashMap<String, String>> listProject(String customerCode);
     public List<LinkedHashMap<String, String>> listProjectType();
     public List<LinkedHashMap<String, String>> listSkuType();
-    public List<LinkedHashMap<String, String>> listProjectUpc(String projectId);
+    public List<LinkedHashMap<String, String>> listProjectUpc(String customerProjectId, String customerCode);
     public List<LinkedHashMap<String, String>> listRetailer();
 
     public List<LinkedHashMap<String, String>> getCategoryDetail(String id);
     public List<LinkedHashMap<String, String>> getCustomerDetail(String customerCode);
-    public List<LinkedHashMap<String, String>> getProjectDetail(String customerProjectId);
+    public List<LinkedHashMap<String, String>> getProjectDetail(String customerProjectId, String customerCode);
     public List<LinkedHashMap<String, String>> getProjectTypeDetail(String id);
     public List<LinkedHashMap<String, String>> getSkuTypeDetail(String id);
     public List<LinkedHashMap<String, String>> getProjectUpcDetail(String customerProjectId);

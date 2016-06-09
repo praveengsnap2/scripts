@@ -22,7 +22,7 @@ public class Project {
     @XmlElement
     String categoryId;
     @XmlElement
-    String retailerId;
+    String retailerCode;
     @XmlElement
     String storeCount;
     @XmlElement
@@ -44,14 +44,14 @@ public class Project {
         super();
     }
 
-    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, List<ProjectUpc> projectUpcList) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, List<ProjectUpc> projectUpcList) {
         this.id = id;
         this.projectName = projectName;
         this.customerProjectId = customerProjectId;
         this.customerCode = customerCode;
         this.projectTypeId = projectTypeId;
         this.categoryId = categoryId;
-        this.retailerId = retailerId;
+        this.retailerCode = retailerCode;
         this.storeCount = storeCount;
         this.startDate = startDate;
         this.createdDate = createdDate;
@@ -62,14 +62,14 @@ public class Project {
         this.projectUpcList = projectUpcList;
     }
 
-    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerId, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status) {
         this.id = id;
         this.projectName = projectName;
         this.customerProjectId = customerProjectId;
         this.customerCode = customerCode;
         this.projectTypeId = projectTypeId;
         this.categoryId = categoryId;
-        this.retailerId = retailerId;
+        this.retailerCode = retailerCode;
         this.storeCount = storeCount;
         this.startDate = startDate;
         this.createdDate = createdDate;
@@ -135,12 +135,12 @@ public class Project {
         this.categoryId = categoryId;
     }
 
-    public String getRetailerId() {
-        return retailerId;
+    public String getRetailerCode() {
+        return retailerCode;
     }
 
-    public void setRetailerId(String retailerId) {
-        this.retailerId = retailerId;
+    public void setRetailerCode(String retailerCode) {
+        this.retailerCode = retailerCode;
     }
 
     public String getStoreCount() {
@@ -208,7 +208,7 @@ public class Project {
                 ", customerCode='" + customerCode + '\'' +
                 ", projectTypeId='" + projectTypeId + '\'' +
                 ", categoryId='" + categoryId + '\'' +
-                ", retailerId='" + retailerId + '\'' +
+                ", retailerCode='" + retailerCode + '\'' +
                 ", storeCount='" + storeCount + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", createdDate='" + createdDate + '\'' +

@@ -76,10 +76,10 @@ public class MetaServiceImpl implements MetaService {
         return resultList;
     }
     @Override
-    public List<LinkedHashMap<String, String>> listProjectUpc(String customerProjectId) {
+    public List<LinkedHashMap<String, String>> listProjectUpc(InputObject inputObject) {
         LOGGER.info("---------------MetaServiceImpl Starts listProjectUpc----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProjectUpc(customerProjectId);
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.listProjectUpc(inputObject.getCustomerProjectId(), inputObject.getCustomerCode());
 
         LOGGER.info("---------------MetaServiceImpl Ends listProjectUpc ----------------\n");
         return resultList;
@@ -140,7 +140,7 @@ public class MetaServiceImpl implements MetaService {
     public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject) {
         LOGGER.info("---------------MetaServiceImpl Starts getProjectDetail customerProjectId = " + inputObject.getCustomerProjectId() + "----------------\n");
 
-        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectDetail(inputObject.getCustomerProjectId());
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectDetail(inputObject.getCustomerProjectId(),inputObject.getCustomerCode());
 
         LOGGER.info("---------------MetaServiceImpl Ends getProjectDetail ----------------\n");
         return resultList;

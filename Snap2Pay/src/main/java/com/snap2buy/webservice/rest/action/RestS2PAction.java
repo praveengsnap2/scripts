@@ -547,11 +547,14 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends listRetailer----------------\n");
         return reportIO;
     }
-    public Snap2PayOutput listProjectUpc(String customerProjectId) {
+    public Snap2PayOutput listProjectUpc(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts listProjectUpc------------------\n");
-        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.listProjectUpc(customerProjectId);
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.listProjectUpc(inputObject);
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerProjectId", inputObject.getCustomerProjectId());
+        reportInput.put("customerCode", inputObject.getCustomerCode());
+
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends listProjectUpc----------------\n");
         return reportIO;
@@ -585,6 +588,7 @@ public class RestS2PAction {
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
         reportInput.put("customerProjectId", inputObject.getCustomerProjectId());
+        reportInput.put("customerCode", inputObject.getCustomerCode());
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends getProjectDetail----------------\n");
         return reportIO;
