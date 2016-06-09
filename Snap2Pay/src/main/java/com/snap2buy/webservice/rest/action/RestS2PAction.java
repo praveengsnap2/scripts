@@ -97,7 +97,7 @@ public class RestS2PAction {
         reportInput.put("TimeStamp", inputObject.getTimeStamp());
         reportInput.put("agentId", inputObject.getAgentId());
         reportInput.put("taskId", inputObject.getTaskId());
-        reportInput.put("projectId", inputObject.getCustomerProjectId());
+        reportInput.put("customerProjectId", inputObject.getCustomerProjectId());
         reportInput.put("customerCode", inputObject.getCustomerCode());
         reportInput.put("dateId", inputObject.getVisitDate());
         reportInput.put("storeId", inputObject.getStoreId());
@@ -791,7 +791,7 @@ public class RestS2PAction {
 
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
 
-        LOGGER.info("projectId : " + projectUpc.getCustomerProjectId());
+        LOGGER.info("customerProjectId : " + projectUpc.getCustomerProjectId());
         metaService.addUpcToProjectId(projectUpc);
         LOGGER.info("createProject done");
 
@@ -803,7 +803,7 @@ public class RestS2PAction {
 
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
-        reportInput.put("projectId", projectUpc.getCustomerProjectId());
+        reportInput.put("customerProjectId", projectUpc.getCustomerProjectId());
         reportInput.put("facingCount", projectUpc.getExpectedFacingCount());
         reportInput.put("upc", projectUpc.getUpc());
         reportInput.put("skuType", projectUpc.getSkuTypeId());

@@ -37,7 +37,6 @@ public interface ParamMapper {
     String STREET = "street";
     String CUSTOMER_CODE="customerCode";
     String CUSTOMER_PROJECT_ID="customerProjectId";
-    String PROJECT_ID="projectId";
     String TASK_ID="taskId";
     String AGENT_ID="agentId";
     String ID="id";

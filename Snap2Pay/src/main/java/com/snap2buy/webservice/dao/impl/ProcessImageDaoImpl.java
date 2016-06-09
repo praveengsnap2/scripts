@@ -38,7 +38,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void insert(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
-        String sql = "insert into ImageStoreNew (imageUUID, userId, ImageFilePath, categoryId, latitude, longitude, timeStamp, storeId, hostId, dateId, imageStatus, shelfStatus, origWidth, origHeight, newWidth, newHeight, thumbnailPath, customerCode, projectId, taskId, agentId)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into ImageStoreNew (imageUUID, userId, ImageFilePath, categoryId, latitude, longitude, timeStamp, storeId, hostId, dateId, imageStatus, shelfStatus, origWidth, origHeight, newWidth, newHeight, thumbnailPath, customerCode, customerProjectId, taskId, agentId)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -116,7 +116,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                         rs.getString("thumbnailPath"),
                         rs.getString("userId"),
                         rs.getString("customerCode"),
-                        rs.getString("projectId"),
+                        rs.getString("customerProjectId"),
                         rs.getString("taskId"),
                         rs.getString("agentId"));
             }
@@ -174,7 +174,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                         rs.getString("thumbnailPath"),
                         rs.getString("userId"),
                         rs.getString("customerCode"),
-                        rs.getString("projectId"),
+                        rs.getString("customerProjectId"),
                         rs.getString("taskId"),
                         rs.getString("agentId"));
             }
