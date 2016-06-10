@@ -122,7 +122,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId result= "+imageStore.getImageUUID()+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -181,7 +181,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageByStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageByStatus result= "+imageStore.getImageUUID()+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -218,7 +218,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getJobCount----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getJobCount numberOfRows = "+numberOfRows+"----------------\n");
 
             return numberOfRows;
         } catch (SQLException e) {
@@ -383,7 +383,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysis----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysis numberOfRows = "+ImageAnalysisList+"----------------\n");
 
             return ImageAnalysisList;
         } catch (SQLException e) {
@@ -418,7 +418,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysisStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysisStatus imageStatus = "+imageStatus+"----------------\n");
 
             return imageStatus;
         } catch (SQLException e) {
@@ -452,7 +452,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageUuid----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageUuid imageUUID = "+imageUUID+"----------------\n");
 
             return imageUUID;
         } catch (SQLException e) {
@@ -551,7 +551,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImages----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImages numberOfRows = "+imageStoreList+"----------------\n");
 
             return imageStoreList;
         } catch (SQLException e) {
@@ -586,7 +586,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing numberOfRows" + map.keySet().size()+"----------------\n");
 
             return map;
         } catch (SQLException e) {
@@ -649,7 +649,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             rs.close();
             ps.close();
 
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing numberOfRows = "+multipleImageAnalysisList.size()+"----------------\n");
             return multipleImageAnalysisList;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);

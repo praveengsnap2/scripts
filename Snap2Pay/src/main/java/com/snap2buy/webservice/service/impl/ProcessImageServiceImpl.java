@@ -62,6 +62,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
         LOGGER.info("--------------storeId=" + inputObject.getStoreId() + "-----------------\n");
 
+        if ((inputObject.getUserId().isEmpty())
+                || (inputObject.getUserId().equalsIgnoreCase("") )
+                || (inputObject.getUserId().equalsIgnoreCase("-9"))){
+            inputObject.setUserId("app-web");
+        }
 
         ImageStore imageStore =  new ImageStore(inputObject.getImageUUID(),
                 inputObject.getImageFilePath(),
