@@ -7,7 +7,7 @@ HOST_ID="AWS1"
 
 echo "checking for already running job"
 
-jobRunning=`ps aux |grep "Image-analysis-cron-script" |grep -v "grep" |wc -l`
+jobRunning=`ps aux |grep "sh Image-analysis-cron-script.sh >> Image-analysis-cron-script.log" |grep -v "grep" |grep -v "tail" | wc -l`
 if [ "${jobRunning}" -gt "2" ]; then
        echo "One instance of job is already running "
        exit 1

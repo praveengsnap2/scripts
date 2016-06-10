@@ -4,15 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.snap2buy.webservice.dao.ProcessImageDao;
-import com.snap2buy.webservice.dao.ProductMasterDao;
-import com.snap2buy.webservice.dao.ShelfAnalysisDao;
-import com.snap2buy.webservice.dao.StoreMasterDao;
+import com.snap2buy.webservice.dao.*;
 import com.snap2buy.webservice.mapper.BeanMapper;
-import com.snap2buy.webservice.model.ImageAnalysis;
-import com.snap2buy.webservice.model.ImageStore;
-import com.snap2buy.webservice.model.InputObject;
-import com.snap2buy.webservice.model.UpcFacingDetail;
+import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.ProcessImageService;
 import com.snap2buy.webservice.util.ConverterUtil;
 import com.snap2buy.webservice.util.ShellUtil;
@@ -52,6 +46,9 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Qualifier(BeanMapper.BEAN_PRODUCT_MASTER_DAO)
     private ProductMasterDao productMasterDao;
 
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_META_SERVICE_DAO)
+    private MetaServiceDao metaServiceDao;
     @Override
     public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {
 
@@ -97,7 +94,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String retailerChainCode = storeMasterDao.getRetailerChainCode(inputObject.getStoreId());
             LOGGER.info("--------------retailerChainCode=" + retailerChainCode + "-----------------\n");
 
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, inputObject.getStoreId(), inputObject.getUserId(), inputObject.getCustomerProjectId());
+            List<LinkedHashMap<String, String>> project = metaServiceDao.getProjectDetail(imageStore.getCustomerProjectId(), imageStore.getCustomerCode());
+            String projectTypeId = project.get(0).get("projectTypeId");
+            LOGGER.info("--------------runImageAnalysis::projectTypeId=" + projectTypeId + "-----------------\n");
+            //String imageFilePath, String category, String uuid, String retailer, String store, String userId, String projectTypeId
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(inputObject.getImageFilePath(), inputObject.getCategoryId(), inputObject.getImageUUID(), retailerChainCode, inputObject.getStoreId(), inputObject.getUserId(), projectTypeId);
             LOGGER.info("--------------imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
             processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
@@ -220,7 +221,10 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
             LOGGER.info("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
 
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId(),imageStore.getUserId(),imageStore.getCustomerProjectId());
+            List<LinkedHashMap<String, String>> project = metaServiceDao.getProjectDetail(imageStore.getCustomerProjectId(), imageStore.getCustomerCode());
+            String projectTypeId = project.get(0).get("projectTypeId");
+            LOGGER.info("--------------runImageAnalysis::projectTypeId=" + projectTypeId + "-----------------\n");
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailerChainCode, imageStore.getStoreId(),imageStore.getUserId(),projectTypeId);
 
             LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
 
