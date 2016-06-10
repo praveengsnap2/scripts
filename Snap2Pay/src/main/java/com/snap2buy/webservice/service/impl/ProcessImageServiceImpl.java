@@ -247,8 +247,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage----------------\n");
         String imageUUID = processImageDao.getNextImageUuid();
-        LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage imageUUID = "+imageUUID+"----------------\n");
-        List<LinkedHashMap<String, String>> imageAnalysisList = getImageAnalysis(imageUUID);
+        List<LinkedHashMap<String, String>> imageAnalysisList=new ArrayList<LinkedHashMap<String, String>>();
+        if (!imageUUID.equalsIgnoreCase("queryFailed")) {
+            LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage imageUUID = " + imageUUID + "----------------\n");
+            imageAnalysisList = getImageAnalysis(imageUUID);
+        }else{
+            LinkedHashMap<String, String> temp = new LinkedHashMap<String, String>();
+            temp.put("message", "no more job left to process");
+            imageAnalysisList.add(temp);
+        }
         return imageAnalysisList;
     }
 
