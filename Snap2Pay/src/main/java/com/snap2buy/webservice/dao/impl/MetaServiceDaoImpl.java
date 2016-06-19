@@ -963,13 +963,13 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                     conn = dataSource.getConnection();
                     PreparedStatement ps = conn.prepareStatement(sql);
                     ps.setString(1, projectUpc.getCustomerProjectId());
-                    ps.setString(1, projectUpc.getCustomerCode());
-                    ps.setString(2, projectUpc.getUpc());
-                    ps.setString(3, projectUpc.getSkuTypeId());
-                    ps.setString(4, projectUpc.getExpectedFacingCount());
-                    ps.setString(5, projectUpc.getImageUrl1());
-                    ps.setString(6, projectUpc.getImageUrl2());
-                    ps.setString(7, projectUpc.getImageUrl3());
+                    ps.setString(2, projectUpc.getCustomerCode());
+                    ps.setString(3, projectUpc.getUpc());
+                    ps.setString(4, projectUpc.getSkuTypeId());
+                    ps.setString(5, projectUpc.getExpectedFacingCount());
+                    ps.setString(6, projectUpc.getImageUrl1());
+                    ps.setString(7, projectUpc.getImageUrl2());
+                    ps.setString(8, projectUpc.getImageUrl3());
                     ps.executeUpdate();
                     ps.close();
 
@@ -996,18 +996,19 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void addUpcToProjectId(ProjectUpc projectUpc) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts addUpcToProjectId::projectUpc=" + projectUpc + "----------------\n");
-        String sql = "INSERT INTO ProjectUpc ( customerProjectId, upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ProjectUpc ( customerProjectId, customerCode, upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, projectUpc.getCustomerProjectId());
-            ps.setString(2, projectUpc.getUpc());
-            ps.setString(3, projectUpc.getSkuTypeId());
-            ps.setString(4, projectUpc.getExpectedFacingCount());
-            ps.setString(5, projectUpc.getImageUrl1());
-            ps.setString(6, projectUpc.getImageUrl2());
-            ps.setString(7, projectUpc.getImageUrl3());
+            ps.setString(2, projectUpc.getCustomerCode());
+            ps.setString(3, projectUpc.getUpc());
+            ps.setString(4, projectUpc.getSkuTypeId());
+            ps.setString(5, projectUpc.getExpectedFacingCount());
+            ps.setString(6, projectUpc.getImageUrl1());
+            ps.setString(7, projectUpc.getImageUrl2());
+            ps.setString(8, projectUpc.getImageUrl3());
             ps.executeUpdate();
             ps.close();
 
