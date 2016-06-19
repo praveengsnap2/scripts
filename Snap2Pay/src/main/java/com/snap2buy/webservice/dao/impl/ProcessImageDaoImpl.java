@@ -737,6 +737,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "        AND customerProjectId = \""+customerProjectId +"\" "+
                 "        AND storeId = \""+storeId +"\" "+
                 "        AND imageUUID = \""+imageUUID +"\" "+
+                "       ) c "+
                 "   GROUP BY c.customerCode, " +
                 "            c.customerProjectId, " +
                 "            c.storeId, " +
