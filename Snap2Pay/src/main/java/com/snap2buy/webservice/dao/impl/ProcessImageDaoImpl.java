@@ -781,8 +781,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 ps3.addBatch();
             }
             ps2.setString(1,customerCode);
-            ps2.setString(1,customerProjectId);
-            ps2.setString(1,storeId);
+            ps2.setString(2,customerProjectId);
+            ps2.setString(3,storeId);
             Boolean rs2 = ps2.execute();
             int[] rs3 = ps3.executeBatch();
             conn.commit();
