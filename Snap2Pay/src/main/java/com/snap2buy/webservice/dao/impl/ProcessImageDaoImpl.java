@@ -719,7 +719,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "          c.storeId, " +
                 "          c.newUpc, " +
                 "          count(c.newUpc) AS facing, " +
-                "                             avg(c.upcConfidence) AS upcConfidence " +
+                "          avg(c.upcConfidence) AS upcConfidence " +
                 "   FROM " +
                 "     (SELECT imageUUID, " +
                 "             customerCode, " +
@@ -742,7 +742,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "            c.storeId, " +
                 "            c.newUpc, " +
                 "            c.imageUUID " +
-                "order by c.upcConfidence) d " +
+                "   order by c.upcConfidence) d " +
                 "GROUP BY d.customerCode, " +
                 "         d.customerProjectId, " +
                 "         d.storeId, " +
@@ -866,7 +866,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, customerCode);
             ps.setString(2, customerProjectId);
-            ps.setString(3, limit);
+            ps.setInt(3, Integer.valueOf(limit));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
