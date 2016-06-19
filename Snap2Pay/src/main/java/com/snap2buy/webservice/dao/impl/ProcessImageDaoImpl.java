@@ -705,7 +705,47 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     public List<LinkedHashMap<String, String>> generateAggs(String customerCode, String customerProjectId, String storeId, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts generateAggs::::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"imageUUID= "+imageUUID+"----------------\n");
         //String sql = "select imageUUID, customerCode, customerProjectId, storeId, upc, max(facing) as facing, upcConfidence from (select customerCode, customerProjectId, storeId, imageUUID, upc, count(upc) as facing, avg(upcConfidence) as upcConfidence from ImageAnalysisNew where customerCode = ? and customerProjectId = ? and storeId = ? and imageUUID = ? group by customerCode, customerProjectId, storeId, imageUUID, upc ) a group by customerCode, customerProjectId, storeId, upc order by upc";
-        String sql ="select imageUUID, customerCode, customerProjectId, storeId, upc, max(facing) as facing, upcConfidence from (select customerCode, customerProjectId, storeId, imageUUID, upc, count(upc) as facing, avg(upcConfidence) as upcConfidence from ImageAnalysisNew where customerCode = "+customerCode+" and customerProjectId = "+customerProjectId+" and  storeId = "+storeId+" and imageUUID = \"?\" group by customerCode, customerProjectId, storeId, imageUUID, upc ) a where upc in (select upc from ProjectUpc where customerCode = "+customerCode+" and customerProjectId = "+customerProjectId+") group by customerCode, customerProjectId, storeId, upc order by upc;";
+        String sql ="SELECT d.imageUUID, " +
+                "       d.customerCode, " +
+                "       d.customerProjectId, " +
+                "       d.storeId, " +
+                "       d.newUpc AS upc, " +
+                "       max(facing) AS facing, " +
+                "       upcConfidence " +
+                "FROM " +
+                "  (SELECT c.imageUUID, " +
+                "          c.customerCode,  " +
+                "          c.customerProjectId, " +
+                "          c.storeId, " +
+                "          c.newUpc, " +
+                "          count(c.newUpc) AS facing, " +
+                "                             avg(c.upcConfidence) AS upcConfidence " +
+                "   FROM " +
+                "     (SELECT imageUUID, " +
+                "             customerCode, " +
+                "             customerProjectId, " +
+                "             storeId, " +
+                "             upcConfidence, " +
+                "             CASE WHEN b.upc IS NULL THEN \"999999999999\" ELSE b.upc END AS newUpc " +
+                "      FROM ImageAnalysisNew a " +
+                "      LEFT OUTER JOIN " +
+                "        ( SELECT upc " +
+                "         FROM ProjectUpc " +
+                "         WHERE customerCode = \""+customerCode+"\" "+
+                "           AND customerProjectId = \""+customerProjectId+"\" ) b ON (a.upc=b.upc) " +
+                "      WHERE customerCode = \"" +customerCode+"\" "+
+                "        AND customerProjectId = \""+customerProjectId +"\" "+
+                "        AND storeId = \""+storeId +"\" "+
+                "        AND imageUUID = \""+imageUUID +"\" "+
+                "   GROUP BY c.customerCode, " +
+                "            c.customerProjectId, " +
+                "            c.storeId, " +
+                "            c.newUpc, " +
+                "            c.imageUUID) d " +
+                "GROUP BY d.customerCode, " +
+                "         d.customerProjectId, " +
+                "         d.storeId, " +
+                "         d.newUpc ";
         String sql2 = "insert into ProjectStoreData (imageUUID, customerCode, customerProjectId, storeId, upc, facing, upcConfidence) values (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         Connection conn2 = null;
@@ -717,11 +757,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             conn2.setAutoCommit(false);
             PreparedStatement ps = conn.prepareStatement(sql);
             PreparedStatement ps2 = conn2.prepareStatement(sql2);
-
-            ps.setString(1, customerCode);
-            ps.setString(2, customerProjectId);
-            ps.setString(3, storeId);
-            ps.setString(4, imageUUID);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
