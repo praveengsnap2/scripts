@@ -40,6 +40,7 @@ public interface ParamMapper {
     String TASK_ID="taskId";
     String AGENT_ID="agentId";
     String ID="id";
+    String LIMIT="limit";
 
 
 

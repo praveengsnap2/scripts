@@ -16,14 +16,20 @@ public class ConverterUtil {
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
         for (ImageAnalysis listEntry : dataList) {
             java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
-            temp.put("Upc", listEntry.getUpc());
-            temp.put("LeftTopX", listEntry.getLeftTopX());
-            temp.put("LeftTopY", listEntry.getLeftTopY());
-            temp.put("Width", listEntry.getWidth());
-            temp.put("Height", listEntry.getHeight());
-            temp.put("Promotion", listEntry.getPromotion());
-            temp.put("Price", listEntry.getPrice());
-            temp.put("PriceLabel", listEntry.getPriceLabel());
+            temp.put("imageUUID", listEntry.getImageUUID());
+            temp.put("customerCode", listEntry.getCustomerCode());
+            temp.put("customerProjectId", listEntry.getCustomerProjectId());
+            temp.put("storeId", listEntry.getStoreId());
+            temp.put("dateId", listEntry.getDateId());
+            temp.put("upc", listEntry.getUpc());
+            temp.put("upcConfidence", listEntry.getUpcConfidence());
+            temp.put("leftTopX", listEntry.getLeftTopX());
+            temp.put("leftTopY", listEntry.getLeftTopY());
+            temp.put("width", listEntry.getWidth());
+            temp.put("height", listEntry.getHeight());
+            temp.put("promotion", listEntry.getPromotion());
+            temp.put("price", listEntry.getPrice());
+            temp.put("priceLabel", listEntry.getPriceLabel());
             temp.put("productShortName", listEntry.getProductShortName());
             temp.put("productLongName", listEntry.getProductLongName());
             temp.put("brandName", listEntry.getBrandName());

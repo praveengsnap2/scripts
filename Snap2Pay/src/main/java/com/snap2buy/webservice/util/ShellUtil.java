@@ -18,7 +18,6 @@ public class ShellUtil {
         LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "userId= "+userId+"projectTypeId= "+projectTypeId+"----------------\n");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
-
         pb.environment().put("Image_File_Path", imageFilePath);
         pb.environment().put("Category", category);
         pb.environment().put("Uuid", uuid);

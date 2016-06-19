@@ -25,4 +25,8 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> getImageMetaData(InputObject inputObject);
     public void updateLatLong(InputObject inputObject);
     public File doShareOfShelfAnalysisCsv(InputObject inputObject,String tempFilePath);
+    public List<LinkedHashMap<String, String>> generateAggs(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> getProjectStoreResults(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> getProjectTopStores(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> getProjectBottomStores(InputObject inputObject);
 }

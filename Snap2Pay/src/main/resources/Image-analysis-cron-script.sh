@@ -8,19 +8,19 @@ HOST_ID="AWS1"
 echo "checking for already running job"
 
 jobRunning=`ps aux |grep "sh Image-analysis-cron-script.sh >> Image-analysis-cron-script.log" |grep -v "grep" |grep -v "tail" | wc -l`
-if [ "${jobRunning}" -gt "2" ]; then
-       echo "One instance of job is already running "
+if [ "${jobRunning}" -gt "1" ]; then
+       echo "jobRunning = ${jobRunning} instance of job is already running "
        exit 1
 else {
-	    echo "no instance of job is running moving ahead"
+            echo "jobRunning = ${jobRunning} instance of job is running moving ahead"
      }
 fi
 
-echo "Making call to process next Image api  curl http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/processNextImage?"
-RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Pay-1.0/service/S2P/processNextImage?`
+echo "Making call to process next Image api  curl http://$WS_MACHINE:8080/Snap2Buy-2.0/service/S2B/processNextImage?"
+RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Buy-2.0/service/S2B/processNextImage?`
 if [ $? -ne 0 ]; then
    echo "RESULT=${RESULT}"
-   echo "Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/processNextImage?"
+   echo "Failed: http://${WS_MACHINE}:8080/Snap2Buy-2.0/service/S2B/processNextImage?"
    exit 1
 fi
 
