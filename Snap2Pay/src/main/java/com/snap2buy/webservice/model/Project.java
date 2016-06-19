@@ -38,7 +38,7 @@ public class Project {
     String updatedBy;
     @XmlElement
     String status;
-    @XmlElementWrapper(name="projectUpcList")
+    @XmlElement(name = "projectUpcList")
     List<ProjectUpc> projectUpcList = new ArrayList<>();
 
     public Project() {
