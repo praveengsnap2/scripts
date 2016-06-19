@@ -702,8 +702,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> generateAggs(String customerCode, String customerProjectId, String storeId, String imageUUID) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts generateAggs::::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"imageUUID= "+imageUUID+"----------------\n");
+    public List<LinkedHashMap<String, String>> generateAggs(String customerCode, String customerProjectId, String storeId) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts generateAggs::::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"----------------\n");
         //String sql = "select imageUUID, customerCode, customerProjectId, storeId, upc, max(facing) as facing, upcConfidence from (select customerCode, customerProjectId, storeId, imageUUID, upc, count(upc) as facing, avg(upcConfidence) as upcConfidence from ImageAnalysisNew where customerCode = ? and customerProjectId = ? and storeId = ? and imageUUID = ? group by customerCode, customerProjectId, storeId, imageUUID, upc ) a group by customerCode, customerProjectId, storeId, upc order by upc";
         String sql ="SELECT d.imageUUID, " +
                 "       d.customerCode, " +
@@ -736,7 +736,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "      WHERE customerCode = \"" +customerCode+"\" "+
                 "        AND customerProjectId = \""+customerProjectId +"\" "+
                 "        AND storeId = \""+storeId +"\" "+
-                "        AND imageUUID = \""+imageUUID +"\" "+
                 "       ) c "+
                 "   GROUP BY c.customerCode, " +
                 "            c.customerProjectId, " +
@@ -747,18 +746,18 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "         d.customerProjectId, " +
                 "         d.storeId, " +
                 "         d.newUpc ";
-        String sql2 = "insert into ProjectStoreData (imageUUID, customerCode, customerProjectId, storeId, upc, facing, upcConfidence) values (?, ?, ?, ?, ?, ?, ?)";
+        String sql2 = "delete from ProjectStoreData where customerCode = ? and customerProjectId = ? and storeId = ?";
+        String sql3 = "insert into ProjectStoreData (imageUUID, customerCode, customerProjectId, storeId, upc, facing, upcConfidence) values (?, ?, ?, ?, ?, ?, ?)";
         LOGGER.info("---------------ProcessImageDaoImpl Starts generateSql="+sql+"insertSql= "+sql2+"---------------------");
         Connection conn = null;
-        Connection conn2 = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
         try {
             conn = dataSource.getConnection();
-            conn2 = dataSource.getConnection();
-            conn2.setAutoCommit(false);
+            conn.setAutoCommit(false);
             PreparedStatement ps = conn.prepareStatement(sql);
-            PreparedStatement ps2 = conn2.prepareStatement(sql2);
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            PreparedStatement ps3 = conn.prepareStatement(sql3);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -771,21 +770,23 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 map.put("facing", rs.getString("facing"));
                 map.put("upcConfidence", rs.getString("upcConfidence"));
                 result.add(map);
-                ps2.setString(1, map.get("imageUUID"));
-                ps2.setString(2, map.get("customerCode"));
-                ps2.setString(3, map.get("customerProjectId"));
-                ps2.setString(4, map.get("storeId"));
-                ps2.setString(5, map.get("upc"));
-                ps2.setString(6, map.get("facing"));
-                ps2.setString(7, map.get("upcConfidence"));
-                ps2.addBatch();
+                ps3.setString(1, map.get("imageUUID"));
+                ps3.setString(2, map.get("customerCode"));
+                ps3.setString(3, map.get("customerProjectId"));
+                ps3.setString(4, map.get("storeId"));
+                ps3.setString(5, map.get("upc"));
+                ps3.setString(6, map.get("facing"));
+                ps3.setString(7, map.get("upcConfidence"));
+                ps3.addBatch();
             }
-            int[] rs2 = ps2.executeBatch();
-            conn2.commit();
+            Boolean rs2 = ps2.execute();
+            int[] rs3 = ps3.executeBatch();
+            conn.commit();
+
             rs.close();
             ps.close();
             ps2.close();
-
+            ps3.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends generateAggs----------------\n");
             return result;
         } catch (SQLException e) {
@@ -793,10 +794,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             LOGGER.error("exception", e);
             throw new RuntimeException(e);
         } finally {
-            if ((conn != null)||(conn2 != null)) {
+            if (conn != null) {
                 try {
                     conn.close();
-                    conn2.close();
                 } catch (SQLException e) {
                     LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
                     LOGGER.error("exception", e);

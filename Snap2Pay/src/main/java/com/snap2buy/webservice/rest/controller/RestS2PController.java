@@ -1593,7 +1593,6 @@ public class RestS2PController {
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
-            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1603,7 +1602,6 @@ public class RestS2PController {
             inputObject.setCustomerCode(customerCode);
             inputObject.setCustomerProjectId(customerProjectId);
             inputObject.setStoreId(storeId);
-            inputObject.setImageUUID(imageUUID);
             return restS2PAction.generateAggs(inputObject);
 
         } catch (Exception e) {
@@ -1618,7 +1616,6 @@ public class RestS2PController {
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("storeId",storeId);
-            inputList.put("imageUUID",imageUUID);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends generateAggs----------------\n");
             return rio;

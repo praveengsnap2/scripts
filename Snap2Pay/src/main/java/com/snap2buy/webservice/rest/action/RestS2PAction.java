@@ -824,7 +824,6 @@ public class RestS2PAction {
         reportInput.put("customerCode",inputObject.getCustomerCode());
         reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
         reportInput.put("storeId",inputObject.getStoreId());
-        reportInput.put("imageUUID",inputObject.getImageUUID());
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends generateAggs----------------\n");
 

@@ -546,7 +546,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> generateAggs(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts generateAggs----------------\n");
 
-        List<LinkedHashMap<String, String>> result = processImageDao.generateAggs(inputObject.getCustomerCode(),inputObject.getCustomerProjectId(),inputObject.getStoreId(),inputObject.getImageUUID());
+        List<LinkedHashMap<String, String>> result = processImageDao.generateAggs(inputObject.getCustomerCode(),inputObject.getCustomerProjectId(),inputObject.getStoreId());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends generateAggs----------------\n");
 

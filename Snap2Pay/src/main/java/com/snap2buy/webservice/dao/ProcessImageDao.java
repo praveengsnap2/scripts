@@ -29,7 +29,7 @@ public interface ProcessImageDao {
 //    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString);
     public void updateLatLong(String imageUUID,String latitude,String longitude);
 
-    public  List<LinkedHashMap<String, String>>  generateAggs(String customerCode, String customerProjectId, String storeId, String imageUUID);
+    public  List<LinkedHashMap<String, String>>  generateAggs(String customerCode, String customerProjectId, String storeId);
     public List<LinkedHashMap<String,String>>  getProjectStoreResults(String customerCode, String customerProjectId, String storeId);
     public List<LinkedHashMap<String,String>>  getProjectTopStores(String customerCode, String customerProjectId, String limit);
     public List<LinkedHashMap<String,String>>  getProjectBottomStores(String customerCode, String customerProjectId, String limit);
