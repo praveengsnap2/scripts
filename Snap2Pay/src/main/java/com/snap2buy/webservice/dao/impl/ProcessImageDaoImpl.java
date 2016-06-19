@@ -741,7 +741,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "            c.customerProjectId, " +
                 "            c.storeId, " +
                 "            c.newUpc, " +
-                "            c.imageUUID" +
+                "            c.imageUUID " +
                 "order by c.upcConfidence) d " +
                 "GROUP BY d.customerCode, " +
                 "         d.customerProjectId, " +
