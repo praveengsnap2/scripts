@@ -1,6 +1,7 @@
 package com.snap2buy.webservice.model;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class Project {
     @XmlElement
     String status;
     @XmlElementWrapper(name="projectUpcList")
-    List<ProjectUpc> projectUpcList;
+    List<ProjectUpc> projectUpcList = new ArrayList<>();
 
     public Project() {
         super();

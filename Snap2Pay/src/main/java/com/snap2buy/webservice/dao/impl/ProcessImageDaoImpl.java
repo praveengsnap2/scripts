@@ -857,7 +857,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String, String>> getProjectTopStores(String customerCode, String customerProjectId, String limit) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreResults::customerCode= "+customerCode+"::customerProjectId= "+customerProjectId+"limit = "+limit+"----------------\n");
-        String sql = "select customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? group by customerCode, customerProjectId, storeId order by order1, order2, order3 desc limit ?";
+        String sql = "select customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1, order2, order3 desc limit ?";
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
@@ -899,7 +899,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String, String>> getProjectBottomStores(String customerCode, String customerProjectId, String limit) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectBottomStores::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"limit ="+limit+"----------------\n");
-        String sql = "select customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? group by customerCode, customerProjectId, storeId order by order1, order2, order3 asc limit ?";
+        String sql = "select customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1, order2, order3 asc limit ?";
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
