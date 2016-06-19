@@ -741,7 +741,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "            c.customerProjectId, " +
                 "            c.storeId, " +
                 "            c.newUpc, " +
-                "            c.imageUUID) d " +
+                "            c.imageUUID" +
+                "order by c.upcConfidence) d " +
                 "GROUP BY d.customerCode, " +
                 "         d.customerProjectId, " +
                 "         d.storeId, " +
@@ -869,7 +870,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 map.put("customerCode", rs.getString("customerCode"));
                 map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("countDistinctUpc", rs.getString("order1"));
-                map.put("sumfacing", rs.getString("order2"));
+                map.put("sumFacing", rs.getString("order2"));
                 map.put("sumUpcConfidence", rs.getString("order3"));
                 result.add(map);
             }
@@ -911,7 +912,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 map.put("customerCode", rs.getString("customerCode"));
                 map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("countDistinctUpc", rs.getString("order1"));
-                map.put("sumfacing", rs.getString("order2"));
+                map.put("sumFacing", rs.getString("order2"));
                 map.put("sumUpcConfidence", rs.getString("order3"));
                 result.add(map);
             }
