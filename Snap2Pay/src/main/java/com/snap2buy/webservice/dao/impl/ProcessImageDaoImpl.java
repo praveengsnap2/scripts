@@ -748,6 +748,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "         d.storeId, " +
                 "         d.newUpc ";
         String sql2 = "insert into ProjectStoreData (imageUUID, customerCode, customerProjectId, storeId, upc, facing, upcConfidence) values (?, ?, ?, ?, ?, ?, ?)";
+        LOGGER.info("---------------ProcessImageDaoImpl Starts generateSql="+sql+"insertSql= "+sql2+"---------------------");
         Connection conn = null;
         Connection conn2 = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
@@ -780,6 +781,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 ps2.addBatch();
             }
             int[] rs2 = ps2.executeBatch();
+            conn2.commit();
             rs.close();
             ps.close();
             ps2.close();
