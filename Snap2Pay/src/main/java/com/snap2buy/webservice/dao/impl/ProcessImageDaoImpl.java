@@ -503,15 +503,15 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                     ps.setString(5, imageStore.getDateId());
                     ps.setString(6, imageAnalysis.getUpc());
                     ps.setString(7, imageAnalysis.getUpcConfidence());
-                    ps.setString(9, imageAnalysis.getAlternateUpc());
-                    ps.setString(10, imageAnalysis.getAlternateUpcConfidence());
-                    ps.setString(11, imageAnalysis.getLeftTopX());
-                    ps.setString(12, imageAnalysis.getLeftTopY());
-                    ps.setString(13, imageAnalysis.getWidth());
-                    ps.setString(14, imageAnalysis.getHeight());
-                    ps.setString(15, imageAnalysis.getPromotion());
-                    ps.setString(16, imageAnalysis.getPrice());
-                    ps.setString(17, imageAnalysis.getPriceLabel());
+                    ps.setString(8, imageAnalysis.getAlternateUpc());
+                    ps.setString(9, imageAnalysis.getAlternateUpcConfidence());
+                    ps.setString(10, imageAnalysis.getLeftTopX());
+                    ps.setString(11, imageAnalysis.getLeftTopY());
+                    ps.setString(12, imageAnalysis.getWidth());
+                    ps.setString(13, imageAnalysis.getHeight());
+                    ps.setString(14, imageAnalysis.getPromotion());
+                    ps.setString(15, imageAnalysis.getPrice());
+                    ps.setString(16, imageAnalysis.getPriceLabel());
                     ps.executeUpdate();
                     ps.close();
                 }
