@@ -954,7 +954,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void addUpcListToProjectId(List<ProjectUpc> projectUpcList) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts addUpcToProjectId::projectUpcList=" + projectUpcList + "----------------\n");
-        String sql = "INSERT INTO ProjectUpc ( customerProjectId, customerCode upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ProjectUpc ( customerProjectId, customerCode, upc, skuTypeId, expectedFacingCount, imageUrl1, imageUrl2, imageUrl3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         if (!projectUpcList.isEmpty()) {
