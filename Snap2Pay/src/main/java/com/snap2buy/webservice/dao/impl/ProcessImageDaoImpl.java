@@ -858,9 +858,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, customerCode);
-            ps.setString(2, customerProjectId);
-            ps.setString(3, storeId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
