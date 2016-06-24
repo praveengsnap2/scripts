@@ -706,9 +706,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         LOGGER.info("---------------ProcessImageDaoImpl Starts generateAggs::::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"----------------\n");
         //String sql = "select imageUUID, customerCode, customerProjectId, storeId, upc, max(facing) as facing, upcConfidence from (select customerCode, customerProjectId, storeId, imageUUID, upc, count(upc) as facing, avg(upcConfidence) as upcConfidence from ImageAnalysisNew where customerCode = ? and customerProjectId = ? and storeId = ? and imageUUID = ? group by customerCode, customerProjectId, storeId, imageUUID, upc ) a group by customerCode, customerProjectId, storeId, upc order by upc";
         String sql ="SELECT d.imageUUID, " +
-                "       d.customerCode, " +
-                "       d.customerProjectId, " +
-                "       d.storeId, " +
+                "       c.customerCode, " +
+                "       c.customerProjectId, " +
+                "       c.storeId, " +
                 "       c.facing, " +
                 "       c.upc, " +
                 "       d.upcConfidence " +
@@ -843,7 +843,15 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String, String>> getProjectStoreResults(String customerCode, String customerProjectId, String storeId) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreResults::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"----------------\n");
-        String sql = "select * from ProjectStoreData where customerCode = ? and customerProjectId = ? and storeId = ? order by facing";
+
+        String sql = "select a.imageUUID,b.customerCode,b.customerProjectId,a.storeId,b.upc,a.facing,a.upcConfidence from " +
+                " (select * from  ProjectStoreData where customerCode= \""+customerCode+"\" and customerProjectId = \""+customerProjectId+"\" and storeId = \""+storeId+"\") a  " +
+                " right outer join  " +
+                " (select * from ProjectUpc where customerCode=\""+customerCode+"\" and customerProjectId = \""+customerProjectId+"\") b  " +
+                " on (a.upc = b.upc) " +
+                "  and (a.customerCode = b.customerCode)  " +
+                "  and (a.customerProjectId = b.customerProjectId) ";
+
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
