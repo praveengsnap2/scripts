@@ -1228,7 +1228,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 ", updatedDate=\"" + projectInput.getUpdatedDate() + "\"  " +
                 ", updatedBy=\"" + projectInput.getUpdatedBy() + "\"  " +
                 ", status=\"" + projectInput.getStatus() + "\"  " +
-                "where projectId=\"" + projectInput.getId() + "\" ";
+                "where id=\"" + projectInput.getId() + "\" ";
 
         Connection conn = null;
         try {
