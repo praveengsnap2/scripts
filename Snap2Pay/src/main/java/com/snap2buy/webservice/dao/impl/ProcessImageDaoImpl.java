@@ -762,7 +762,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "   FROM ImageAnalysisNew " +
                 "   WHERE customerCode = \""+ customerCode +"\" "+
                 "     AND customerProjectId = \""+ customerProjectId +"\" "+
-                "     AND storeId = \""+ storeId +" "+
+                "     AND storeId = \""+ storeId +"\" "+
                 "     AND upc IN " +
                 "       (SELECT upc " +
                 "        FROM ProjectUpc " +
