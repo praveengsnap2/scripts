@@ -734,9 +734,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "              count(*) AS facing, " +
                 "                          avg(upcConfidence) AS upcConfidence " +
                 "      FROM ImageAnalysisNew " +
-                "      WHERE customerCode = "+ customerCode +" "+
-                "        AND customerProjectId = "+ customerProjectId +" "+
-                "        AND storeId = "+ storeId +" "+
+                "      WHERE customerCode = \""+ customerCode +"\" "+
+                "        AND customerProjectId = \""+ customerProjectId +"\" "+
+                "        AND storeId = \""+ storeId +"\" "+
                 "      GROUP BY imageUUID, " +
                 "               customerCode, " +
                 "               customerProjectId, " +
@@ -745,8 +745,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "   LEFT JOIN " +
                 "     ( SELECT upc " +
                 "      FROM ProjectUpc " +
-                "      WHERE customerCode = "+ customerCode +" "+
-                "        AND customerProjectId = "+customerProjectId+") b ON (a.upc = b.upc) " +
+                "      WHERE customerCode = \""+ customerCode +"\" "+
+                "        AND customerProjectId = \""+customerProjectId+"\") b ON (a.upc = b.upc) " +
                 "   GROUP BY customerCode, " +
                 "            customerProjectId, " +
                 "            storeId, " +
@@ -760,14 +760,14 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "          count(*) AS facing, " +
                 "                      avg(upcConfidence) AS upcConfidence " +
                 "   FROM ImageAnalysisNew " +
-                "   WHERE customerCode = "+ customerCode +" "+
-                "     AND customerProjectId = "+ customerProjectId +" "+
-                "     AND storeId = "+ storeId +" "+
+                "   WHERE customerCode = \""+ customerCode +"\" "+
+                "     AND customerProjectId = \""+ customerProjectId +"\" "+
+                "     AND storeId = \""+ storeId +" "+
                 "     AND upc IN " +
                 "       (SELECT upc " +
                 "        FROM ProjectUpc " +
-                "        WHERE customerCode = "+ customerCode +" "+
-                "          AND customerProjectId = "+ customerProjectId +") " +
+                "        WHERE customerCode = \""+ customerCode +"\" "+
+                "          AND customerProjectId = \""+ customerProjectId +"\") " +
                 "   GROUP BY imageUUID, " +
                 "            customerCode, " +
                 "            customerProjectId, " +
