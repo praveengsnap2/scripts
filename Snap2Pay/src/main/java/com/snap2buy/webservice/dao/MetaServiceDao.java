@@ -23,7 +23,7 @@ public interface MetaServiceDao {
     public List<LinkedHashMap<String, String>> getProjectDetail(String customerProjectId, String customerCode);
     public List<LinkedHashMap<String, String>> getProjectTypeDetail(String id);
     public List<LinkedHashMap<String, String>> getSkuTypeDetail(String id);
-    public List<LinkedHashMap<String, String>> getProjectUpcDetail(String customerProjectId);
+    public List<ProjectUpc> getProjectUpcDetail(String customerProjectId, String customerCode);
     public List<LinkedHashMap<String, String>> getRetailerDetail(String retailerCode);
 
     public void createCustomer(Customer customerInput);
@@ -32,6 +32,6 @@ public interface MetaServiceDao {
     public void createProjectType(ProjectType projectTypeInput);
     public void createSkuType(SkuType skuTypeInput);
     public void createProject(Project projectInput);
-    public void addUpcListToProjectId(List<ProjectUpc> projectUpcList);
+    public void addUpcListToProjectId(List<ProjectUpc> projectUpcList, String customerProjectId, String customerCode);
     public void addUpcToProjectId(ProjectUpc projectUpcList);
 }

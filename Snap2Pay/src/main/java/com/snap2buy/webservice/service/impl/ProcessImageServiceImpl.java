@@ -563,6 +563,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         return result;
     }
+
     @Override
     public List<LinkedHashMap<String, String>> getProjectTopStores(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectTopStores----------------\n");
@@ -573,6 +574,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         return result;
     }
+
     @Override
     public List<LinkedHashMap<String, String>> getProjectBottomStores(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectBottomStores----------------\n");

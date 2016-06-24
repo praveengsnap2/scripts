@@ -38,6 +38,26 @@ public class ConverterUtil {
         return result;
     }
 
+
+    public static List<LinkedHashMap<String, String>> convertProjectUpcObjectToMap(List<ProjectUpc> dataList) {
+
+        List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
+        for (ProjectUpc listEntry : dataList) {
+            java.util.LinkedHashMap<String, String> temp = new java.util.LinkedHashMap<String, String>();
+            temp.put("id", listEntry.getId());
+            temp.put("customerCode", listEntry.getCustomerCode());
+            temp.put("customerProjectId", listEntry.getCustomerProjectId());
+            temp.put("expectedFacingCount", listEntry.getExpectedFacingCount());
+            temp.put("upc", listEntry.getUpc());
+            temp.put("skuTypeId", listEntry.getSkuTypeId());
+            temp.put("imageUrl1", listEntry.getImageUrl1());
+            temp.put("imageUrl2", listEntry.getImageUrl2());
+            temp.put("imageUrl3", listEntry.getImageUrl3());
+            result.add(temp);
+        }
+        return result;
+    }
+
     public static List<LinkedHashMap<String, String>> convertImageStoreObjectToMap(List<ImageStore> dataList) {
 
         List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();

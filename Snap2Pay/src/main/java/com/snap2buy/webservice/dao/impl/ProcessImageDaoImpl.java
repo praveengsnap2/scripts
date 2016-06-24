@@ -709,47 +709,78 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 "       d.customerCode, " +
                 "       d.customerProjectId, " +
                 "       d.storeId, " +
-                "       d.newUpc AS upc, " +
-                "       max(facing) AS facing, " +
-                "       upcConfidence " +
+                "       c.facing, " +
+                "       c.upc, " +
+                "       d.upcConfidence " +
                 "FROM " +
-                "  (SELECT c.imageUUID, " +
-                "          c.customerCode,  " +
-                "          c.customerProjectId, " +
-                "          c.storeId, " +
-                "          c.newUpc, " +
-                "          count(c.newUpc) AS facing, " +
-                "          avg(c.upcConfidence) AS upcConfidence " +
+                "  (SELECT customerCode, " +
+                "          customerProjectId, " +
+                "          storeId, " +
+                "          CASE " +
+                "              WHEN b.upc IS NULL THEN sum(facing) " +
+                "              ELSE max(facing) " +
+                "          END AS facing, " +
+                "                 CASE " +
+                "                     WHEN b.upc IS NULL THEN \"999999999999\" " +
+                "                     ELSE b.upc " +
+                "                 END AS upc, " +
+                "                        max(upcConfidence) AS upcConfidence " +
                 "   FROM " +
-                "     (SELECT imageUUID, " +
-                "             customerCode, " +
-                "             customerProjectId, " +
-                "             storeId, " +
-                "             upcConfidence, " +
-                "             CASE WHEN b.upc IS NULL THEN \"999999999999\" ELSE b.upc END AS newUpc " +
-                "      FROM ImageAnalysisNew a " +
-                "      LEFT OUTER JOIN " +
-                "        ( SELECT upc " +
-                "         FROM ProjectUpc " +
-                "         WHERE customerCode = \""+customerCode+"\" "+
-                "           AND customerProjectId = \""+customerProjectId+"\" ) b ON (a.upc=b.upc) " +
-                "      WHERE customerCode = \"" +customerCode+"\" "+
-                "        AND customerProjectId = \""+customerProjectId +"\" "+
-                "        AND storeId = \""+storeId +"\" "+
-                "       ) c "+
-                "   GROUP BY c.customerCode, " +
-                "            c.customerProjectId, " +
-                "            c.storeId, " +
-                "            c.newUpc, " +
-                "            c.imageUUID " +
-                "   order by c.upcConfidence) d " +
-                "GROUP BY d.customerCode, " +
-                "         d.customerProjectId, " +
-                "         d.storeId, " +
-                "         d.newUpc ";
+                "     ( SELECT imageUUID, " +
+                "              customerCode, " +
+                "              customerProjectId, " +
+                "              storeId, " +
+                "              upc, " +
+                "              count(*) AS facing, " +
+                "                          avg(upcConfidence) AS upcConfidence " +
+                "      FROM ImageAnalysisNew " +
+                "      WHERE customerCode = "+ customerCode +" "+
+                "        AND customerProjectId = "+ customerProjectId +" "+
+                "        AND storeId = "+ storeId +" "+
+                "      GROUP BY imageUUID, " +
+                "               customerCode, " +
+                "               customerProjectId, " +
+                "               storeId, " +
+                "               upc ) a " +
+                "   LEFT JOIN " +
+                "     ( SELECT upc " +
+                "      FROM ProjectUpc " +
+                "      WHERE customerCode = "+ customerCode +" "+
+                "        AND customerProjectId = "+customerProjectId+") b ON (a.upc = b.upc) " +
+                "   GROUP BY customerCode, " +
+                "            customerProjectId, " +
+                "            storeId, " +
+                "            upc ) c " +
+                "LEFT OUTER JOIN " +
+                "  (SELECT imageUUID, " +
+                "          customerCode, " +
+                "          customerProjectId, " +
+                "          storeId, " +
+                "          upc, " +
+                "          count(*) AS facing, " +
+                "                      avg(upcConfidence) AS upcConfidence " +
+                "   FROM ImageAnalysisNew " +
+                "   WHERE customerCode = "+ customerCode +" "+
+                "     AND customerProjectId = "+ customerProjectId +" "+
+                "     AND storeId = "+ storeId +" "+
+                "     AND upc IN " +
+                "       (SELECT upc " +
+                "        FROM ProjectUpc " +
+                "        WHERE customerCode = "+ customerCode +" "+
+                "          AND customerProjectId = "+ customerProjectId +") " +
+                "   GROUP BY imageUUID, " +
+                "            customerCode, " +
+                "            customerProjectId, " +
+                "            storeId, " +
+                "            upc) d ON (c.upc=d.upc) " +
+                "AND (c.facing=d.facing) " +
+                "AND (c.upcConfidence = d.upcConfidence)";
+
+
         String sql2 = "delete from ProjectStoreData where customerCode = ? and customerProjectId = ? and storeId = ?";
         String sql3 = "insert into ProjectStoreData (imageUUID, customerCode, customerProjectId, storeId, upc, facing, upcConfidence) values (?, ?, ?, ?, ?, ?, ?)";
-        LOGGER.info("---------------ProcessImageDaoImpl Starts generateSql="+sql+"insertSql= "+sql2+"---------------------");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts generateSql="+sql+"" +"---------------------");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts insertSql= "+sql2+"---------------------");
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
@@ -857,7 +888,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String, String>> getProjectTopStores(String customerCode, String customerProjectId, String limit) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreResults::customerCode= "+customerCode+"::customerProjectId= "+customerProjectId+"limit = "+limit+"----------------\n");
-        String sql = "select customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1, order2, order3 desc limit ?";
+        String sql = "select storeId, customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1 desc, order2 desc, order3 desc limit ?";
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
@@ -870,6 +901,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("storeId"));
                 map.put("customerCode", rs.getString("customerCode"));
                 map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("countDistinctUpc", rs.getString("order1"));
@@ -899,7 +931,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String, String>> getProjectBottomStores(String customerCode, String customerProjectId, String limit) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectBottomStores::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"limit ="+limit+"----------------\n");
-        String sql = "select customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1, order2, order3 asc limit ?";
+        String sql = "select storeId, customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1 asc, order2 asc, order3 asc limit ?";
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
 
@@ -912,6 +944,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("storeId"));
                 map.put("customerCode", rs.getString("customerCode"));
                 map.put("customerProjectId", rs.getString("customerProjectId"));
                 map.put("countDistinctUpc", rs.getString("order1"));

@@ -1220,6 +1220,7 @@ public class RestS2PController {
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("customerProjectId",customerProjectId);
+            inputList.put("customerCode",customerCode);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectDetail----------------\n");
             return rio;
@@ -1286,6 +1287,7 @@ public class RestS2PController {
     @Path("/getProjectUpcDetail")
     public Snap2PayOutput getProjectUpcDetail(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1293,6 +1295,7 @@ public class RestS2PController {
         try {
             InputObject inputObject = new InputObject();
             inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setCustomerCode(customerCode);
             return restS2PAction.getProjectUpcDetail(inputObject);
 
         } catch (Exception e) {
@@ -1304,6 +1307,7 @@ public class RestS2PController {
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("customerProjectId",customerProjectId);
+            inputList.put("customerCode",customerCode);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectUpcDetail----------------\n");
             return rio;
