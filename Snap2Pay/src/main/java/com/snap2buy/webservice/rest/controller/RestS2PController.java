@@ -1814,5 +1814,68 @@ public class RestS2PController {
             return rio;
         }
     }
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateProject")
+    public Snap2PayOutput updateProject(
+            JAXBElement<Project> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateProject----------------\n");
+        try {
+
+            Project projectInput = p.getValue();
+
+            LOGGER.info("---------------Controller  projectInput::="+projectInput.toString()+"----------------\n");
+
+            return restS2PAction.updateProject(projectInput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateProject----------------\n");
+            return rio;
+        }
+    }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectSummary")
+    public Snap2PayOutput getProjectSummary(
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectSummary::id::="+customerProjectId+"customerCode = "+customerCode+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setCustomerCode(customerCode);
+            return restS2PAction.getProjectSummary(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            inputList.put("customerProjectId",customerProjectId);
+            inputList.put("customerCode",customerCode);
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getProjectSummary----------------\n");
+            return rio;
+        }
+    }
 }
 

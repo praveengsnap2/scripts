@@ -921,4 +921,39 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends updateStore----------------\n");
         return reportIO;
     }
+    public Snap2PayOutput updateProject(Project projectInput) {
+        LOGGER.info("---------------RestAction Starts updateProject----------------\n");
+
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("name: " + projectInput.getProjectName());
+        metaService.updateProject(projectInput);
+        LOGGER.info("updateProject done");
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result.put("responseCode", "200");
+        result.put("responseMessage", "Project Updated Successfully");
+        resultListToPass.add(result);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id", projectInput.getCustomerProjectId());
+        reportInput.put("name", projectInput.getProjectName());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends updateProject----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput getProjectSummary(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectSummary----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.getProjectSummary(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectSummary----------------\n");
+
+        return reportIO;
+    }
 }

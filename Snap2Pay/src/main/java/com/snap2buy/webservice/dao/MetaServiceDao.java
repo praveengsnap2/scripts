@@ -32,10 +32,13 @@ public interface MetaServiceDao {
     public void createProjectType(ProjectType projectTypeInput);
     public void createSkuType(SkuType skuTypeInput);
     public void createProject(Project projectInput);
+    public void updateProject(Project projectInput);
     public void addUpcListToProjectId(List<ProjectUpc> projectUpcList, String customerProjectId, String customerCode);
     public void addUpcToProjectId(ProjectUpc projectUpcList);
 
     public List<LinkedHashMap<String, String>> listStores();
     public void createStore(StoreMaster storeMaster);
     public void updateStore(StoreMaster storeMaster);
+
+    public List<LinkedHashMap<String, String>> getProjectSummary(String customerProjectId, String customerCode);
 }

@@ -269,4 +269,23 @@ public class MetaServiceImpl implements MetaService {
         LOGGER.info("---------------MetaServiceImpl Ends updateStore ----------------\n");
 
     }
+    @Override
+    public void updateProject(Project projectInput) {
+        LOGGER.info("---------------MetaServiceImpl Starts createProject Project code = " + projectInput.getProjectName()+ "----------------\n");
+        metaServiceDao.createProject(projectInput);
+
+        LOGGER.info("---------------MetaServiceImpl project created with id ="+projectInput.getId()+"now adding upc list -------------");
+        metaServiceDao.addUpcListToProjectId(projectInput.getProjectUpcList(), projectInput.getCustomerProjectId(), projectInput.getCustomerCode());
+        LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
+        LOGGER.info("---------------MetaServiceImpl Ends createProject id generate = "+projectInput.getId()+"----------------\n");
+    }
+
+    public List<LinkedHashMap<String, String>> getProjectSummary(InputObject inputObject){
+        LOGGER.info("---------------MetaServiceImpl Starts getProjectSummary inputObject="+inputObject+"----------------\n");
+       // List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        List<LinkedHashMap<String, String>> resultList =metaServiceDao.getProjectSummary(inputObject.getCustomerProjectId(),  inputObject.getCustomerCode());
+
+        LOGGER.info("---------------MetaServiceImpl Ends getProjectSummary ----------------\n");
+        return resultList;
+    }
 }
