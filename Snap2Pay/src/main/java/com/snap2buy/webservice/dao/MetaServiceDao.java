@@ -34,6 +34,7 @@ public interface MetaServiceDao {
     public void createProject(Project projectInput);
     public void updateProject(Project projectInput);
     public void addUpcListToProjectId(List<ProjectUpc> projectUpcList, String customerProjectId, String customerCode);
+    public void updateUpcListToProjectId(List<ProjectUpc> projectUpcList, String customerProjectId, String customerCode);
     public void addUpcToProjectId(ProjectUpc projectUpcList);
 
     public List<LinkedHashMap<String, String>> listStores();

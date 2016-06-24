@@ -272,10 +272,10 @@ public class MetaServiceImpl implements MetaService {
     @Override
     public void updateProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createProject Project code = " + projectInput.getProjectName()+ "----------------\n");
-        metaServiceDao.createProject(projectInput);
+        metaServiceDao.updateProject(projectInput);
 
         LOGGER.info("---------------MetaServiceImpl project created with id ="+projectInput.getId()+"now adding upc list -------------");
-        metaServiceDao.addUpcListToProjectId(projectInput.getProjectUpcList(), projectInput.getCustomerProjectId(), projectInput.getCustomerCode());
+        metaServiceDao.updateUpcListToProjectId(projectInput.getProjectUpcList(), projectInput.getCustomerProjectId(), projectInput.getCustomerCode());
         LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
         LOGGER.info("---------------MetaServiceImpl Ends createProject id generate = "+projectInput.getId()+"----------------\n");
     }
