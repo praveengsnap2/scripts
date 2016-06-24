@@ -239,4 +239,34 @@ public class MetaServiceImpl implements MetaService {
         LOGGER.info("---------------MetaServiceImpl Ends addUpcToProjectId ----------------\n");
 
     }
+
+    @Override
+    public List<LinkedHashMap<String, String>> listStores() {
+        LOGGER.info("---------------MetaServiceImpl Starts listStores ----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList =  metaServiceDao.listStores();
+
+        LOGGER.info("---------------MetaServiceImpl Ends listStores ----------------\n");
+
+        return resultList;
+    }
+
+    @Override
+    public void createStore(StoreMaster storeMaster) {
+        LOGGER.info("---------------MetaServiceImpl Starts createStore id = " + storeMaster.getStoreId()+ "----------------\n");
+
+        metaServiceDao.createStore(storeMaster);
+
+        LOGGER.info("---------------MetaServiceImpl Ends createStore ----------------\n");
+
+    }
+    @Override
+    public void updateStore(StoreMaster storeMaster) {
+        LOGGER.info("---------------MetaServiceImpl Starts updateStore id = " + storeMaster.getStoreId()+ "----------------\n");
+
+        metaServiceDao.updateStore(storeMaster);
+
+        LOGGER.info("---------------MetaServiceImpl Ends updateStore ----------------\n");
+
+    }
 }

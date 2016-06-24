@@ -1029,6 +1029,134 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 }
             }
         }
+    }
+    @Override
+    public List<LinkedHashMap<String, String>> listStores() {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts listStores----------------\n");
+        String sql = "SELECT * FROM StoreMaster";
+        List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("StoreID"));
+                map.put("retailerStoreId", rs.getString("RetailerStoreID"));
+                map.put("retailerChainCode", rs.getString("RetailerChainCode"));
+                map.put("retailer", rs.getString("Retailer"));
+                map.put("street", rs.getString("Street"));
+                map.put("city", rs.getString("City"));
+                map.put("stateCode", rs.getString("StateCode"));
+                map.put("state", rs.getString("State"));
+                map.put("zip", rs.getString("ZIP"));
+                map.put("latitude", rs.getString("Latitude"));
+                map.put("longitude", rs.getString("Longitude"));
+                map.put("comments", rs.getString("comments"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends listStores----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+    @Override
+    public void createStore(StoreMaster storeMaster) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts createStore::storeMaster=" + storeMaster + "----------------\n");
+        String sql = "INSERT INTO StoreMaster ( StoreID, RetailerStoreID, RetailerChainCode, Retailer, Street, City, StateCode, State, ZIP, Latitude, Longitude, comments ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, storeMaster.getStoreId());
+            ps.setString(2, storeMaster.getRetailerStoreId());
+            ps.setString(3, storeMaster.getRetailerChainCode());
+            ps.setString(4, storeMaster.getRetailer());
+            ps.setString(5, storeMaster.getStreet());
+            ps.setString(6, storeMaster.getCity());
+            ps.setString(7, storeMaster.getStateCode());
+            ps.setString(8, storeMaster.getState());
+            ps.setString(9, storeMaster.getZip());
+            ps.setString(10, storeMaster.getLatitude());
+            ps.setString(11, storeMaster.getLongitude());
+            ps.setString(12, storeMaster.getComments());
+            Boolean status = ps.execute();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends createRetailer----------------\n");
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+
+                }
+            }
+        }
+    }
+    @Override
+    public void updateStore(StoreMaster storeMaster) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts updateStore::storeMaster=" + storeMaster + "----------------\n");
+        String sql = "UPDATE StoreMaster" +
+                "set StoreID=\""+storeMaster.getStoreId()+"\" " +
+                "set RetailerStoreID=\""+storeMaster.getRetailerStoreId()+"\"  " +
+                "set RetailerChainCode=\""+storeMaster.getRetailerChainCode()+"\"  " +
+                "set Retailer=\""+storeMaster.getRetailer()+"\"  " +
+                "set Street=\""+storeMaster.getStreet()+"\"  " +
+                "set City=\""+storeMaster.getCity()+"\"  " +
+                "set StateCode=\""+storeMaster.getStateCode()+"\"  " +
+                "set State=\""+storeMaster.getState()+"\"  " +
+                "set ZIP=\""+storeMaster.getZip()+"\"  " +
+                "set Latitude=\""+storeMaster.getLatitude()+"\"  " +
+                "set Longitude=\""+storeMaster.getLongitude()+"\"  " +
+                "set comments=\""+storeMaster.getComments()+"\"  " +
+                "where StoreID=\""+storeMaster.getStoreId()+"\" ";
+
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int id = ps.executeUpdate();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends updateStore----------------\n");
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+
+                }
+            }
+        }
     }
 }

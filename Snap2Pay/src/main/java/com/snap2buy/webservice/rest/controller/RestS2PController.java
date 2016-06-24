@@ -1734,4 +1734,85 @@ public class RestS2PController {
             return rio;
         }
     }
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/listStores")
+    public Snap2PayOutput listStores(
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts listStores----------------\n");
+        try {
+            return restS2PAction.listStores();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends listStores----------------\n");
+            return rio;
+        }
+    }
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/createStore")
+    public Snap2PayOutput createStore(
+            JAXBElement<StoreMaster> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts createStore----------------\n");
+        try {
+            StoreMaster storeMaster = p.getValue();
+            return restS2PAction.createStore(storeMaster);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends createStore----------------\n");
+            return rio;
+        }
+    }
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateStore")
+    public Snap2PayOutput updateStore(
+            JAXBElement<StoreMaster> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateStore----------------\n");
+        try {
+            StoreMaster storeMaster = p.getValue();
+            return restS2PAction.updateStore(storeMaster);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateStore----------------\n");
+            return rio;
+        }
+    }
 }
+

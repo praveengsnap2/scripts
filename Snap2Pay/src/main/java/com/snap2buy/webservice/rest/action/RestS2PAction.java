@@ -868,4 +868,57 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    public Snap2PayOutput listStores() {
+        LOGGER.info("---------------RestAction Starts listStores-----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.listStores();
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends listStores----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput createStore(StoreMaster storeMaster) {
+        LOGGER.info("---------------RestAction Starts storeMaster----------------\n");
+
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("id : " + storeMaster.getStoreId());
+        metaService.createStore(storeMaster);
+        LOGGER.info("createStore done");
+
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result.put("responseCode", "200");
+        result.put("responseMessage", "store Created Successfully");
+        resultListToPass.add(result);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id",storeMaster.getStoreId());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends storeMaster----------------\n");
+        return reportIO;
+    }
+    public Snap2PayOutput updateStore(StoreMaster storeMaster) {
+        LOGGER.info("---------------RestAction Starts updateStore----------------\n");
+
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("id : " + storeMaster.getStoreId());
+        metaService.updateStore(storeMaster);
+        LOGGER.info("updateStore done");
+
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result.put("responseCode", "200");
+        result.put("responseMessage", "store updated Successfully");
+        resultListToPass.add(result);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("id",storeMaster.getStoreId());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends updateStore----------------\n");
+        return reportIO;
+    }
 }

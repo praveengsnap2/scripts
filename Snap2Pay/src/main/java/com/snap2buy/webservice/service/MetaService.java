@@ -34,4 +34,8 @@ public interface MetaService {
     public void createProject(Project projectInput);
     public void addUpcToProjectId(ProjectUpc projectUpc);
 
+    public void createStore(StoreMaster storeMaster);
+    public void updateStore(StoreMaster storeMaster);
+    public List<LinkedHashMap<String, String>> listStores();
+
 }
