@@ -919,7 +919,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(13, projectInput.getStatus());
             id = ps.executeUpdate();
 
-            if (id == 0) {
+            if ((id == 0)||(id == null)) {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
 
@@ -1216,8 +1216,6 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         LOGGER.info("---------------MetaServiceDaoImpl Starts updateProject::projectInput=" + projectInput + "----------------\n");
         String sql = "UPDATE Project  " +
                 "set projectName=\"" + projectInput.getProjectName() + "\"  " +
-                ", customerProjectId=\"" + projectInput.getCustomerProjectId() + "\"  " +
-                ", customerCode=\"" + projectInput.getCustomerCode() + "\"  " +
                 ", projectTypeId=\"" + projectInput.getProjectTypeId() + "\"  " +
                 ", categoryId=\"" + projectInput.getCategoryId() + "\"  " +
                 ", retailerCode=\"" + projectInput.getRetailerCode() + "\"  " +
@@ -1228,7 +1226,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 ", updatedDate=\"" + projectInput.getUpdatedDate() + "\"  " +
                 ", updatedBy=\"" + projectInput.getUpdatedBy() + "\"  " +
                 ", status=\"" + projectInput.getStatus() + "\"  " +
-                "where id=\"" + projectInput.getId() + "\" ";
+                "where customerCode = \""+projectInput.getCustomerCode()+"\" and customerProjectId= \""+projectInput.getCustomerProjectId() +"\" ";
 
         Connection conn = null;
         try {
@@ -1328,7 +1326,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 
 
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-            map.put("storesWithPartialProjectUpcs", String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithAllProjectUpcs)));
+            storesWithPartialProjectUpcs=String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithAllProjectUpcs));
+            map.put("storesWithPartialProjectUpcs", storesWithPartialProjectUpcs);
             resultList.add(map);
             LOGGER.info("---------------MetaServiceDaoImpl Ends getProjectSummary----------------\n");
 
