@@ -1121,18 +1121,17 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     public void updateStore(StoreMaster storeMaster) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts updateStore::storeMaster=" + storeMaster + "----------------\n");
         String sql = "UPDATE StoreMaster" +
-                "set StoreID=\""+storeMaster.getStoreId()+"\" " +
                 "set RetailerStoreID=\""+storeMaster.getRetailerStoreId()+"\"  " +
-                "set RetailerChainCode=\""+storeMaster.getRetailerChainCode()+"\"  " +
-                "set Retailer=\""+storeMaster.getRetailer()+"\"  " +
-                "set Street=\""+storeMaster.getStreet()+"\"  " +
-                "set City=\""+storeMaster.getCity()+"\"  " +
-                "set StateCode=\""+storeMaster.getStateCode()+"\"  " +
-                "set State=\""+storeMaster.getState()+"\"  " +
-                "set ZIP=\""+storeMaster.getZip()+"\"  " +
-                "set Latitude=\""+storeMaster.getLatitude()+"\"  " +
-                "set Longitude=\""+storeMaster.getLongitude()+"\"  " +
-                "set comments=\""+storeMaster.getComments()+"\"  " +
+                ",set RetailerChainCode=\""+storeMaster.getRetailerChainCode()+"\"  " +
+                ",set Retailer=\""+storeMaster.getRetailer()+"\"  " +
+                ",set Street=\""+storeMaster.getStreet()+"\"  " +
+                ",set City=\""+storeMaster.getCity()+"\"  " +
+                ",set StateCode=\""+storeMaster.getStateCode()+"\"  " +
+                ",set State=\""+storeMaster.getState()+"\"  " +
+                ",set ZIP=\""+storeMaster.getZip()+"\"  " +
+                ",set Latitude=\""+storeMaster.getLatitude()+"\"  " +
+                ",set Longitude=\""+storeMaster.getLongitude()+"\"  " +
+                ",set comments=\""+storeMaster.getComments()+"\"  " +
                 "where StoreID=\""+storeMaster.getStoreId()+"\" ";
 
         Connection conn = null;

@@ -438,23 +438,44 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
-    public String getNextImageUuid() {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageUuid----------------\n");
-        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE imageStatus = \"cron\" order by timeStamp limit 1";
+    public ImageStore getNextImageDetails() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails----------------\n");
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus = \"cron\" order by timeStamp limit 1";
         Connection conn = null;
-        String imageUUID="queryFailed";
+        ImageStore imageStore = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                imageUUID = rs.getString("imageUUID");
+            if (rs.next()) { imageStore = new ImageStore(
+                    rs.getString("ImageUUID"),
+                    rs.getString("ImageFilePath"),
+                    rs.getString("CategoryId"),
+                    rs.getString("Latitude"),
+                    rs.getString("Longitude"),
+                    rs.getString("TimeStamp"),
+                    rs.getString("StoreId"),
+                    rs.getString("HostId"),
+                    rs.getString("dateId"),
+                    rs.getString("imageStatus"),
+                    rs.getString("shelfStatus"),
+                    rs.getString("origWidth"),
+                    rs.getString("origHeight"),
+                    rs.getString("newWidth"),
+                    rs.getString("newHeight"),
+                    rs.getString("thumbnailPath"),
+                    rs.getString("userId"),
+                    rs.getString("customerCode"),
+                    rs.getString("customerProjectId"),
+                    rs.getString("taskId"),
+                    rs.getString("agentId")
+                );
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageUuid imageUUID = "+imageUUID+"----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails imageStore = "+imageStore+"----------------\n");
 
-            return imageUUID;
+            return imageStore;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
