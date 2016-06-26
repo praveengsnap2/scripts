@@ -1326,7 +1326,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 
 
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-            storesWithPartialProjectUpcs=String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithAllProjectUpcs));
+            storesWithPartialProjectUpcs=String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithAllProjectUpcs)- Integer.parseInt(StoresWithNoProjectUpcs));
             map.put("storesWithPartialProjectUpcs", storesWithPartialProjectUpcs);
             resultList.add(map);
             LOGGER.info("---------------MetaServiceDaoImpl Ends getProjectSummary----------------\n");
