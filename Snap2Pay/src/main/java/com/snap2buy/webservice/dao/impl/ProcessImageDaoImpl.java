@@ -38,28 +38,33 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void insert(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
-        String sql = "INSERT INTO ImageStore (ImageUUID,ImageFilePath,UserId,CategoryId,Latitude,Longitude,TimeStamp,StoreId,dateId,imageStatus,shelfStatus,origWidth,origHeight,newWidth,newHeight,thumbnailPath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into ImageStoreNew (imageUUID, userId, ImageFilePath, categoryId, latitude, longitude, timeStamp, storeId, hostId, dateId, imageStatus, shelfStatus, origWidth, origHeight, newWidth, newHeight, thumbnailPath, customerCode, customerProjectId, taskId, agentId)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, imageStore.getImageUUID());
-            ps.setString(2, imageStore.getImageFilePath());
-            ps.setString(3, imageStore.getUserId());
+            ps.setString(2, imageStore.getUserId());
+            ps.setString(3, imageStore.getImageFilePath());
             ps.setString(4, imageStore.getCategoryId());
             ps.setString(5, imageStore.getLatitude());
             ps.setString(6, imageStore.getLongitude());
             ps.setString(7, imageStore.getTimeStamp());
             ps.setString(8, imageStore.getStoreId());
-            ps.setString(9, imageStore.getDateId());
-            ps.setString(10, imageStore.getImageStatus());
-            ps.setString(11, imageStore.getShelfStatus());
-            ps.setString(12, imageStore.getOrigWidth());
-            ps.setString(13, imageStore.getOrigHeight());
-            ps.setString(14, imageStore.getNewWidth());
-            ps.setString(15, imageStore.getNewHeight());
-            ps.setString(16, imageStore.getThumbnailPath());
+            ps.setString(9, imageStore.getHostId());
+            ps.setString(10, imageStore.getDateId());
+            ps.setString(11, imageStore.getImageStatus());
+            ps.setString(12, imageStore.getShelfStatus());
+            ps.setString(13, imageStore.getOrigWidth());
+            ps.setString(14, imageStore.getOrigHeight());
+            ps.setString(15, imageStore.getNewWidth());
+            ps.setString(16, imageStore.getNewHeight());
+            ps.setString(17, imageStore.getThumbnailPath());
+            ps.setString(18, imageStore.getCustomerCode());
+            ps.setString(19, imageStore.getCustomerProjectId());
+            ps.setString(20, imageStore.getTaskId());
+            ps.setString(21, imageStore.getAgentId());
             ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends insert----------------\n");
@@ -83,7 +88,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore findByImageUUId(String imageUUId) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId::imageUUId="+imageUUId+"----------------\n");
-        String sql = "SELECT * FROM ImageStore WHERE imageUUID = ?";
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageUUID = ?";
 
         Connection conn = null;
         ImageStore imageStore = null;
@@ -93,11 +98,31 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"), rs.getString("imageStatus"), rs.getString("shelfStatus"), rs.getString("origWidth"), rs.getString("origHeight"), rs.getString("newWidth"), rs.getString("newHeight"), rs.getString("thumbnailPath"));
+                imageStore = new ImageStore(rs.getString("ImageUUID"),
+                        rs.getString("ImageFilePath"),
+                        rs.getString("CategoryId"),
+                        rs.getString("Latitude"),
+                        rs.getString("Longitude"),
+                        rs.getString("TimeStamp"),
+                        rs.getString("StoreId"),
+                        rs.getString("HostId"),
+                        rs.getString("dateId"),
+                        rs.getString("imageStatus"),
+                        rs.getString("shelfStatus"),
+                        rs.getString("origWidth"),
+                        rs.getString("origHeight"),
+                        rs.getString("newWidth"),
+                        rs.getString("newHeight"),
+                        rs.getString("thumbnailPath"),
+                        rs.getString("userId"),
+                        rs.getString("customerCode"),
+                        rs.getString("customerProjectId"),
+                        rs.getString("taskId"),
+                        rs.getString("agentId"));
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Starts findByImageUUId result= "+imageStore.getImageUUID()+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -121,7 +146,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore getImageByStatus(String shelfStatus) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImageByStatus::shelfStatus="+shelfStatus+"----------------\n");
-        String sql = "SELECT * FROM ImageStore WHERE shelfStatus = ?";
+        String sql = "SELECT * FROM ImageStoreNew WHERE shelfStatus = ?";
 
         Connection conn = null;
         ImageStore imageStore = null;
@@ -131,11 +156,32 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, shelfStatus);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                imageStore = new ImageStore(rs.getString("ImageUUID"), rs.getString("ImageFilePath"), rs.getString("UserId"), rs.getString("CategoryId"), rs.getString("Latitude"), rs.getString("Longitude"), rs.getString("TimeStamp"), rs.getString("StoreId"), rs.getString("dateId"),rs.getString("imageStatus"), rs.getString("shelfStatus"), rs.getString("origWidth"), rs.getString("origHeight"), rs.getString("newWidth"), rs.getString("newHeight"), rs.getString("thumbnailPath"));
+
+                imageStore = new ImageStore(rs.getString("ImageUUID"),
+                        rs.getString("ImageFilePath"),
+                        rs.getString("CategoryId"),
+                        rs.getString("Latitude"),
+                        rs.getString("Longitude"),
+                        rs.getString("TimeStamp"),
+                        rs.getString("StoreId"),
+                        rs.getString("HostId"),
+                        rs.getString("dateId"),
+                        rs.getString("imageStatus"),
+                        rs.getString("shelfStatus"),
+                        rs.getString("origWidth"),
+                        rs.getString("origHeight"),
+                        rs.getString("newWidth"),
+                        rs.getString("newHeight"),
+                        rs.getString("thumbnailPath"),
+                        rs.getString("userId"),
+                        rs.getString("customerCode"),
+                        rs.getString("customerProjectId"),
+                        rs.getString("taskId"),
+                        rs.getString("agentId"));
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageByStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageByStatus result= "+imageStore.getImageUUID()+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -157,7 +203,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public Integer getJobCount(String shelfStatus) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getJobCount::shelfStatus="+shelfStatus+"----------------\n");
-        String sql = "SELECT count(*) FROM ImageStore WHERE shelfStatus = ?";
+        String sql = "SELECT count(*) FROM ImageStoreNew WHERE shelfStatus = ?";
 
         Connection conn = null;
         ImageStore imageStore = null;
@@ -172,7 +218,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getJobCount----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getJobCount numberOfRows = "+numberOfRows+"----------------\n");
 
             return numberOfRows;
         } catch (SQLException e) {
@@ -194,7 +240,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateStatusAndHost(String hostId, String shelfStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatusAndHost::hostId="+hostId+"::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET shelfStatus = ? , hostId = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET shelfStatus = ? , hostId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -226,7 +272,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateShelfAnalysisStatus(String shelfStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateShelfAnalysisStatus::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET shelfStatus = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET shelfStatus = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -258,7 +304,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateImageAnalysisStatus(String imageStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus::imageStatus="+imageStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET imageStatus = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET imageStatus = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -290,7 +336,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateStoreId(String storeId, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus::storeId="+storeId+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStore SET storeId = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET storeId = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -322,7 +368,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
      public List<ImageAnalysis> getImageAnalysis(String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysis::imageUUID="+imageUUID+"----------------\n");
-        String sql = "select ImageAnalysis.imageUUID, ImageAnalysis.storeId, ImageAnalysis.dateId, ImageAnalysis.upc, ImageAnalysis.upcConfidence, ImageAnalysis.alternateUpc, ImageAnalysis.alternateUpcConfidence, ImageAnalysis.leftTopX, ImageAnalysis.leftTopY, ImageAnalysis.width, ImageAnalysis.height, ImageAnalysis.promotion, ImageAnalysis.price, ImageAnalysis.priceLabel, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID = ? ";
+        String sql = "select ImageAnalysisNew.imageUUID, ImageAnalysisNew.customerCode, ImageAnalysisNew.customerProjectId, ImageAnalysisNew.storeId, ImageAnalysisNew.dateId, ImageAnalysisNew.upc, ImageAnalysisNew.upcConfidence, ImageAnalysisNew.alternateUpc, ImageAnalysisNew.alternateUpcConfidence, ImageAnalysisNew.leftTopX, ImageAnalysisNew.leftTopY, ImageAnalysisNew.width, ImageAnalysisNew.height, ImageAnalysisNew.promotion, ImageAnalysisNew.price, ImageAnalysisNew.priceLabel, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysisNew, ProductMaster where ImageAnalysisNew.upc = ProductMaster.UPC and ImageAnalysisNew.imageUUID = ? ";
         List<ImageAnalysis> ImageAnalysisList=new ArrayList<ImageAnalysis>();
         Connection conn = null;
         ImageAnalysis imageAnalysis = null;
@@ -332,12 +378,12 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(1, imageUUID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"),rs.getString("PRODUCT_SHORT_NAME"), rs.getString("PRODUCT_LONG_NAME"), rs.getString("BRAND_NAME"));
+                imageAnalysis = new ImageAnalysis(rs.getString("imageUUID"), rs.getString("customerCode"), rs.getString("customerProjectId"), rs.getString("storeId"), rs.getString("dateId"), rs.getString("upc"), rs.getString("upcConfidence"), rs.getString("alternateUpc"), rs.getString("alternateUpcConfidence"), rs.getString("leftTopX"), rs.getString("leftTopY"), rs.getString("width"), rs.getString("height"), rs.getString("promotion"), rs.getString("price"), rs.getString("priceLabel"),rs.getString("PRODUCT_SHORT_NAME"), rs.getString("PRODUCT_LONG_NAME"), rs.getString("BRAND_NAME"));
                 ImageAnalysisList.add(imageAnalysis);
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysis----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysis numberOfRows = "+ImageAnalysisList.size()+"----------------\n");
 
             return ImageAnalysisList;
         } catch (SQLException e) {
@@ -359,7 +405,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public String getImageAnalysisStatus(String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImageAnalysisStatus::imageUUID="+imageUUID+"----------------\n");
-        String sql = "SELECT imageStatus FROM ImageStore WHERE imageUUID = ?";
+        String sql = "SELECT imageStatus FROM ImageStoreNew WHERE imageUUID = ?";
         Connection conn = null;
         String imageStatus="queryFailed";
         try {
@@ -372,7 +418,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysisStatus----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImageAnalysisStatus imageStatus = "+imageStatus+"----------------\n");
 
             return imageStatus;
         } catch (SQLException e) {
@@ -391,33 +437,105 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
     }
 
+    @Override
+    public ImageStore getNextImageDetails() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails----------------\n");
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus = \"cron\" order by timeStamp limit 1";
+        Connection conn = null;
+        ImageStore imageStore = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) { imageStore = new ImageStore(
+                    rs.getString("ImageUUID"),
+                    rs.getString("ImageFilePath"),
+                    rs.getString("CategoryId"),
+                    rs.getString("Latitude"),
+                    rs.getString("Longitude"),
+                    rs.getString("TimeStamp"),
+                    rs.getString("StoreId"),
+                    rs.getString("HostId"),
+                    rs.getString("dateId"),
+                    rs.getString("imageStatus"),
+                    rs.getString("shelfStatus"),
+                    rs.getString("origWidth"),
+                    rs.getString("origHeight"),
+                    rs.getString("newWidth"),
+                    rs.getString("newHeight"),
+                    rs.getString("thumbnailPath"),
+                    rs.getString("userId"),
+                    rs.getString("customerCode"),
+                    rs.getString("customerProjectId"),
+                    rs.getString("taskId"),
+                    rs.getString("agentId")
+                );
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails imageStore = "+imageStore+"----------------\n");
+
+            return imageStore;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
     //change to insert multiple statement at one go
     @Override
-    public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore) {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts storeImageAnalysis::ImageAnalysisList="+ImageAnalysisList+"::imageStore="+imageStore+"----------------\n");
-        String sql = "INSERT INTO ImageAnalysis (imageUUID, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height, promotion, price, priceLabel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList, ImageStore imageStore) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts storeImageAnalysis::ImageAnalysisList size="+ImageAnalysisList.size()+"::imageStore="+imageStore+"----------------\n");
+        String sql = "INSERT INTO ImageAnalysisNew (imageUUID, customerCode, customerProjectId, storeId, dateId, upc, upcConfidence, alternateUpc, alternateUpcConfidence, leftTopX, leftTopY, width, height, promotion, price, priceLabel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
+
+        String checkSql = "select count(*) as count from ImageAnalysisNew where imageUUID = ?";
+
 
         for (ImageAnalysis imageAnalysis : ImageAnalysisList) {
             try {
                 conn = dataSource.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, imageStore.getImageUUID());
-                ps.setString(2, imageStore.getStoreId());
-                ps.setString(3, imageStore.getDateId());
-                ps.setString(4, imageAnalysis.getUpc());
-                ps.setString(5, imageAnalysis.getUpcConfidence());
-                ps.setString(6, imageAnalysis.getAlternateUpc());
-                ps.setString(7, imageAnalysis.getAlternateUpcConfidence());
-                ps.setString(8, imageAnalysis.getLeftTopX());
-                ps.setString(9, imageAnalysis.getLeftTopY());
-                ps.setString(10, imageAnalysis.getWidth());
-                ps.setString(11, imageAnalysis.getHeight());
-                ps.setString(12, imageAnalysis.getPromotion());
-                ps.setString(13, imageAnalysis.getPrice());
-                ps.setString(14, imageAnalysis.getPriceLabel());
-                ps.executeUpdate();
-                ps.close();
+                Boolean insert=false;
+                PreparedStatement checkPs = conn.prepareStatement(checkSql);
+                checkPs.setString(1,imageStore.getImageUUID());
+                ResultSet rs = checkPs.executeQuery();
+                while (rs.next()) {
+                   if (rs.getInt("count") == 0 ){
+                       insert=true;
+                   }
+                }
+                rs.close();
+                checkPs.close();
+                if (insert=true) {
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setString(1, imageStore.getImageUUID());
+                    ps.setString(2, imageStore.getCustomerCode());
+                    ps.setString(3, imageStore.getCustomerProjectId());
+                    ps.setString(4, imageStore.getStoreId());
+                    ps.setString(5, imageStore.getDateId());
+                    ps.setString(6, imageAnalysis.getUpc());
+                    ps.setString(7, imageAnalysis.getUpcConfidence());
+                    ps.setString(8, imageAnalysis.getAlternateUpc());
+                    ps.setString(9, imageAnalysis.getAlternateUpcConfidence());
+                    ps.setString(10, imageAnalysis.getLeftTopX());
+                    ps.setString(11, imageAnalysis.getLeftTopY());
+                    ps.setString(12, imageAnalysis.getWidth());
+                    ps.setString(13, imageAnalysis.getHeight());
+                    ps.setString(14, imageAnalysis.getPromotion());
+                    ps.setString(15, imageAnalysis.getPrice());
+                    ps.setString(16, imageAnalysis.getPriceLabel());
+                    ps.executeUpdate();
+                    ps.close();
+                }
                 LOGGER.info("---------------ProcessImageDaoImpl Ends storeImageAnalysis----------------\n");
 
             } catch (SQLException e) {
@@ -440,7 +558,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getImages::storeId="+storeId+"::dateId="+dateId+"----------------\n");
-        String sql = "SELECT imageUUID FROM ImageStore WHERE storeId = ? and dateId = ?";
+        String sql = "SELECT imageUUID FROM ImageStoreNew WHERE storeId = ? and dateId = ?";
         List<LinkedHashMap<String,String>> imageStoreList=new ArrayList<LinkedHashMap<String,String>>();
         Connection conn = null;
         try {
@@ -456,7 +574,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getImages----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImages numberOfRows = "+imageStoreList+"----------------\n");
 
             return imageStoreList;
         } catch (SQLException e) {
@@ -478,7 +596,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public LinkedHashMap<String,Object> getFacing(String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::imageUUID="+imageUUID+"----------------\n");
-        String sql = "select IA.UPC , PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME, IA.count from ProductMaster join (SELECT upc, count(*) as count FROM ImageAnalysis WHERE imageUUID = ? group by upc) IA on ProductMaster.UPC = IA.upc;";
+        String sql = "select IA.UPC , PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME, IA.count from ProductMaster join (SELECT upc, count(*) as count FROM ImageAnalysisNew WHERE imageUUID = ? group by upc) IA on ProductMaster.UPC = IA.upc;";
         LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
         Connection conn = null;
         try {
@@ -491,7 +609,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing numberOfRows" + map.keySet().size()+"----------------\n");
 
             return map;
         } catch (SQLException e) {
@@ -514,7 +632,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::getImageUUIDCsvString="+getImageUUIDCsvString+"----------------\n");
 
-        String baseSql = "select upc, max(facing) as facing, PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME from  (select ImageAnalysis.imageUUID as imageUUID, ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
+        String baseSql = "select upc, max(facing) as facing, PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME from  (select ImageAnalysisNew.imageUUID as imageUUID, ImageAnalysisNew.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysisNew, ProductMaster where ImageAnalysisNew.upc = ProductMaster.UPC and ImageAnalysisNew.imageUUID IN (";
 
         StringBuilder builder = new StringBuilder();
         builder.append(baseSql);
@@ -523,7 +641,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             builder.append("?,");
         }
 
-        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc, ImageAnalysis.imageUUID order by ProductMaster.BRAND_NAME) a group by upc";
+        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysisNew.upc, ImageAnalysisNew.imageUUID order by ProductMaster.BRAND_NAME) a group by upc";
         LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
 
        // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
@@ -550,27 +668,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 map.put("productLongName", rs.getString("PRODUCT_LONG_NAME"));
                 map.put("brandName", rs.getString("BRAND_NAME"));
                 multipleImageAnalysisList.add(map);
-
-//                if (curr.equals("initialTestString")){
-//                    curr=rs.getString("BRAND_NAME");
-//                }
-//
-//                if (curr.equals(rs.getString("BRAND_NAME"))){
-//                    upcFacingDetailList.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("facing"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
-//                }
-//                else{
-//                    map.put(rs.getString("BRAND_NAME"),upcFacingDetailList);
-//                    curr=rs.getString("BRAND_NAME");
-//                    upcFacingDetailList.clear();
-//                    upcFacingDetailList.add(new UpcFacingDetail(rs.getString("upc"),rs.getString("facing"),rs.getString("PRODUCT_SHORT_NAME"),rs.getString("PRODUCT_LONG_NAME"),rs.getString("BRAND_NAME")));
-//
-//                }
             }
-           // map.put(curr,upcFacingDetailList);
             rs.close();
             ps.close();
 
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing numberOfRows = "+multipleImageAnalysisList.size()+"----------------\n");
             return multipleImageAnalysisList;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
@@ -588,69 +690,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         }
     }
 
-//    @Override
-//    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString) {
-//        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::getImageUUIDCsvString="+getImageUUIDCsvString+"----------------\n");
-//
-//        String baseSql = "select upc, max(facing), PRODUCT_SHORT_NAME, PRODUCT_LONG_NAME, BRAND_NAME from  (select ImageAnalysis.imageUUID as imageUUID, ImageAnalysis.upc, count(*) as facing, ProductMaster.PRODUCT_SHORT_NAME, ProductMaster.PRODUCT_LONG_NAME, ProductMaster.BRAND_NAME from ImageAnalysis, ProductMaster where ImageAnalysis.upc = ProductMaster.UPC and ImageAnalysis.imageUUID IN (";
-//
-//        StringBuilder builder = new StringBuilder();
-//        builder.append(baseSql);
-//
-//        for( String entry: getImageUUIDCsvString.split(",")) {
-//            builder.append("?,");
-//        }
-//
-//        String sql = builder.deleteCharAt(builder.length() -1).toString()+") group by ImageAnalysis.upc, ImageAnalysis.imageUUID order by ProductMaster.BRAND_NAME) a group by upc";
-//        LOGGER.info("---------------ProcessImageDaoImpl Starts getFacing::sql="+sql+";----------------\n");
-//
-//        // LinkedHashMap<String,Object> map=new LinkedHashMap<String,Object>();
-//        Connection conn = null;
-//        try {
-//            conn = dataSource.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            int i=1;
-//            for( String entry: getImageUUIDCsvString.split(",")) {
-//                ps.setString(i++, entry);
-//            }
-//            ResultSet rs = ps.executeQuery();
-//            List<LinkedHashMap<String,String>> multipleImageAnalysisList=new ArrayList<LinkedHashMap<String,String>>();
-//
-//            while (rs.next()) {
-//                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-//                map.put("upc", rs.getString("upc"));
-//                map.put("facing", rs.getString("facing"));
-//                map.put("productShortName", rs.getString("PRODUCT_SHORT_NAME"));
-//                map.put("productLongName", rs.getString("PRODUCT_LONG_NAME"));
-//                map.put("brandName", rs.getString("BRAND_NAME"));
-//                multipleImageAnalysisList.add(map);
-//            }
-//            // map.put(curr,upcFacingDetailList);
-//            rs.close();
-//            ps.close();
-//
-//            LOGGER.info("---------------ProcessImageDaoImpl Ends getFacing----------------\n");
-//            return multipleImageAnalysisList;
-//        } catch (SQLException e) {
-//            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-//            LOGGER.error("exception", e);
-//            throw new RuntimeException(e);
-//        } finally {
-//            if (conn != null) {
-//                try {
-//                    conn.close();
-//                } catch (SQLException e) {
-//                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-//                    LOGGER.error("exception", e);
-//                }
-//            }
-//        }
-//    }
-
     @Override
     public void updateLatLong(String imageUUID, String latitude, String longitude) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateLatLong::imageUUID="+imageUUID+"::latitude="+latitude+"::longitude="+longitude+"----------------\n");
-        String sql = "UPDATE ImageStore SET latitude = ? , longitude = ? WHERE imageUUID = ? ";
+        String sql = "UPDATE ImageStoreNew SET latitude = ? , longitude = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
@@ -667,6 +710,282 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> generateAggs(String customerCode, String customerProjectId, String storeId) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts generateAggs::::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"----------------\n");
+        //String sql = "select imageUUID, customerCode, customerProjectId, storeId, upc, max(facing) as facing, upcConfidence from (select customerCode, customerProjectId, storeId, imageUUID, upc, count(upc) as facing, avg(upcConfidence) as upcConfidence from ImageAnalysisNew where customerCode = ? and customerProjectId = ? and storeId = ? and imageUUID = ? group by customerCode, customerProjectId, storeId, imageUUID, upc ) a group by customerCode, customerProjectId, storeId, upc order by upc";
+        String sql ="SELECT d.imageUUID, " +
+                "       c.customerCode, " +
+                "       c.customerProjectId, " +
+                "       c.storeId, " +
+                "       c.facing, " +
+                "       c.upc, " +
+                "       d.upcConfidence " +
+                "FROM " +
+                "  (SELECT customerCode, " +
+                "          customerProjectId, " +
+                "          storeId, " +
+                "          CASE " +
+                "              WHEN b.upc IS NULL THEN sum(facing) " +
+                "              ELSE max(facing) " +
+                "          END AS facing, " +
+                "                 CASE " +
+                "                     WHEN b.upc IS NULL THEN \"999999999999\" " +
+                "                     ELSE b.upc " +
+                "                 END AS upc, " +
+                "                        max(upcConfidence) AS upcConfidence " +
+                "   FROM " +
+                "     ( SELECT imageUUID, " +
+                "              customerCode, " +
+                "              customerProjectId, " +
+                "              storeId, " +
+                "              upc, " +
+                "              count(*) AS facing, " +
+                "                          avg(upcConfidence) AS upcConfidence " +
+                "      FROM ImageAnalysisNew " +
+                "      WHERE customerCode = \""+ customerCode +"\" "+
+                "        AND customerProjectId = \""+ customerProjectId +"\" "+
+                "        AND storeId = \""+ storeId +"\" "+
+                "      GROUP BY imageUUID, " +
+                "               customerCode, " +
+                "               customerProjectId, " +
+                "               storeId, " +
+                "               upc ) a " +
+                "   LEFT JOIN " +
+                "     ( SELECT upc " +
+                "      FROM ProjectUpc " +
+                "      WHERE customerCode = \""+ customerCode +"\" "+
+                "        AND customerProjectId = \""+customerProjectId+"\") b ON (a.upc = b.upc) " +
+                "   GROUP BY customerCode, " +
+                "            customerProjectId, " +
+                "            storeId, " +
+                "            upc ) c " +
+                "LEFT OUTER JOIN " +
+                "  (SELECT imageUUID, " +
+                "          customerCode, " +
+                "          customerProjectId, " +
+                "          storeId, " +
+                "          upc, " +
+                "          count(*) AS facing, " +
+                "                      avg(upcConfidence) AS upcConfidence " +
+                "   FROM ImageAnalysisNew " +
+                "   WHERE customerCode = \""+ customerCode +"\" "+
+                "     AND customerProjectId = \""+ customerProjectId +"\" "+
+                "     AND storeId = \""+ storeId +"\" "+
+                "     AND upc IN " +
+                "       (SELECT upc " +
+                "        FROM ProjectUpc " +
+                "        WHERE customerCode = \""+ customerCode +"\" "+
+                "          AND customerProjectId = \""+ customerProjectId +"\") " +
+                "   GROUP BY imageUUID, " +
+                "            customerCode, " +
+                "            customerProjectId, " +
+                "            storeId, " +
+                "            upc) d ON (c.upc=d.upc) " +
+                "AND (c.facing=d.facing) " +
+                "AND (c.upcConfidence = d.upcConfidence)";
+
+
+        String sql2 = "delete from ProjectStoreData where customerCode = ? and customerProjectId = ? and storeId = ?";
+        String sql3 = "insert into ProjectStoreData (imageUUID, customerCode, customerProjectId, storeId, upc, facing, upcConfidence) values (?, ?, ?, ?, ?, ?, ?)";
+        LOGGER.info("---------------ProcessImageDaoImpl Starts generateSql="+sql+"" +"---------------------");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts insertSql= "+sql2+"---------------------");
+        Connection conn = null;
+        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            PreparedStatement ps3 = conn.prepareStatement(sql3);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("imageUUID", rs.getString("imageUUID"));
+                map.put("customerCode", rs.getString("customerCode"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
+                map.put("storeId", rs.getString("storeId"));
+                map.put("upc", rs.getString("upc"));
+                map.put("facing", rs.getString("facing"));
+                map.put("upcConfidence", rs.getString("upcConfidence"));
+                result.add(map);
+                ps3.setString(1, map.get("imageUUID"));
+                ps3.setString(2, map.get("customerCode"));
+                ps3.setString(3, map.get("customerProjectId"));
+                ps3.setString(4, map.get("storeId"));
+                ps3.setString(5, map.get("upc"));
+                ps3.setString(6, map.get("facing"));
+                ps3.setString(7, map.get("upcConfidence"));
+                ps3.addBatch();
+            }
+            ps2.setString(1,customerCode);
+            ps2.setString(2,customerProjectId);
+            ps2.setString(3,storeId);
+            Boolean rs2 = ps2.execute();
+            int[] rs3 = ps3.executeBatch();
+            conn.commit();
+
+            rs.close();
+            ps.close();
+            ps2.close();
+            ps3.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends generateAggs----------------\n");
+            return result;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectStoreResults(String customerCode, String customerProjectId, String storeId) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreResults::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"----------------\n");
+
+        String sql = "select a.imageUUID,b.customerCode,b.customerProjectId,a.storeId,b.upc,a.facing,a.upcConfidence from " +
+                " (select * from  ProjectStoreData where customerCode= \""+customerCode+"\" and customerProjectId = \""+customerProjectId+"\" and storeId = \""+storeId+"\") a  " +
+                " right outer join  " +
+                " (select * from ProjectUpc where customerCode=\""+customerCode+"\" and customerProjectId = \""+customerProjectId+"\") b  " +
+                " on (a.upc = b.upc) " +
+                "  and (a.customerCode = b.customerCode)  " +
+                "  and (a.customerProjectId = b.customerProjectId) ";
+
+        Connection conn = null;
+        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("imageUUID", rs.getString("imageUUID"));
+                map.put("customerCode", rs.getString("customerCode"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
+                map.put("storeId", rs.getString("storeId"));
+                map.put("upc", rs.getString("upc"));
+                map.put("facing", rs.getString("facing"));
+                map.put("upcConfidence", rs.getString("upcConfidence"));
+                result.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreResults----------------\n");
+            return result;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectTopStores(String customerCode, String customerProjectId, String limit) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreResults::customerCode= "+customerCode+"::customerProjectId= "+customerProjectId+"limit = "+limit+"----------------\n");
+        String sql = "select storeId, customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1 desc, order2 desc, order3 desc limit ?";
+        Connection conn = null;
+        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ps.setInt(3, Integer.valueOf(limit));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("storeId"));
+                map.put("customerCode", rs.getString("customerCode"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
+                map.put("countDistinctUpc", rs.getString("order1"));
+                map.put("sumFacing", rs.getString("order2"));
+                map.put("sumUpcConfidence", rs.getString("order3"));
+                result.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectTopStores----------------\n");
+            return result;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectBottomStores(String customerCode, String customerProjectId, String limit) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectBottomStores::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"limit ="+limit+"----------------\n");
+        String sql = "select storeId, customerCode, customerProjectId, count(distinct(upc)) as order1, sum(facing) as order2, sum(upcConfidence) as order3 from ProjectStoreData where customerCode = ? and customerProjectId = ? and upc !=\"999999999999\" group by customerCode, customerProjectId, storeId order by order1 asc, order2 asc, order3 asc limit ?";
+        Connection conn = null;
+        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ps.setInt(3, Integer.valueOf(limit));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("storeId"));
+                map.put("customerCode", rs.getString("customerCode"));
+                map.put("customerProjectId", rs.getString("customerProjectId"));
+                map.put("countDistinctUpc", rs.getString("order1"));
+                map.put("sumFacing", rs.getString("order2"));
+                map.put("sumUpcConfidence", rs.getString("order3"));
+                result.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectBottomStores----------------\n");
+            return result;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
         } finally {
             if (conn != null) {
                 try {

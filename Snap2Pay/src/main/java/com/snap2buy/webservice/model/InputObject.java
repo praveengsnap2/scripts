@@ -45,7 +45,7 @@ public class InputObject {
     private String endDate;
     private String startDate;
     private String frequency;
-    private String dateId;
+    //private String dateId;
     private String storeId;
     private String brandId;
     private String marketId;
@@ -62,6 +62,60 @@ public class InputObject {
     private String imageUUIDCsvString;
     private String street;
     private String retailer;
+    private String customerCode;
+    private String retailerCode;
+    private String customerProjectId;
+    private String taskId;
+    private String agentId;
+    private String id;
+
+    public String getRetailerCode() {
+        return retailerCode;
+    }
+
+    public void setRetailerCode(String retailerCode) {
+        this.retailerCode = retailerCode;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    public String getCustomerProjectId() {
+        return customerProjectId;
+    }
+
+    public void setCustomerProjectId(String customerProjectId) {
+        this.customerProjectId = customerProjectId;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
 
     public String getStreet() {
         return street;
@@ -257,13 +311,13 @@ public class InputObject {
         this.frequency = frequency;
     }
 
-    public String getDateId() {
-        return dateId;
-    }
-
-    public void setDateId(String dateId) {
-        this.dateId = dateId;
-    }
+//    public String getDateId() {
+//        return dateId;
+//    }
+//
+//    public void setDateId(String dateId) {
+//        this.dateId = dateId;
+//    }
 
     public String getStoreId() {
         return storeId;
@@ -454,7 +508,6 @@ public class InputObject {
                 ", endDate='" + endDate + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", frequency='" + frequency + '\'' +
-                ", dateId='" + dateId + '\'' +
                 ", storeId='" + storeId + '\'' +
                 ", brandId='" + brandId + '\'' +
                 ", marketId='" + marketId + '\'' +
@@ -469,6 +522,14 @@ public class InputObject {
                 ", newHeight='" + newHeight + '\'' +
                 ", thumbnailPath='" + thumbnailPath + '\'' +
                 ", imageUUIDCsvString='" + imageUUIDCsvString + '\'' +
+                ", street='" + street + '\'' +
+                ", retailer='" + retailer + '\'' +
+                ", customerCode='" + customerCode + '\'' +
+                ", retailerCode='" + retailerCode + '\'' +
+                ", customerProjectId='" + customerProjectId + '\'' +
+                ", taskId='" + taskId + '\'' +
+                ", agentId='" + agentId + '\'' +
+                ", id='" + id + '\'' +
                 ", morefiltersMap=" + morefiltersMap +
                 '}';
     }

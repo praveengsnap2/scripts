@@ -7,27 +7,33 @@ public class StoreMaster {
     String storeId;
     String retailerStoreId;
     String retailerChainCode;
+    String retailer;
     String street;
     String city;
+    String stateCode;
     String state;
     String zip;
     String latitude;
     String longitude;
+    String comments;
 
     public StoreMaster() {
         super();
     }
 
-    public StoreMaster(String storeId, String retailerStoreId, String retailerChainCode, String street, String city, String state, String zip, String latitude, String longitude) {
+    public StoreMaster(String storeId, String retailerStoreId, String retailerChainCode, String retailer, String street, String city, String stateCode, String state, String zip, String latitude, String longitude, String comments) {
         this.storeId = storeId;
         this.retailerStoreId = retailerStoreId;
         this.retailerChainCode = retailerChainCode;
+        this.retailer = retailer;
         this.street = street;
         this.city = city;
+        this.stateCode = stateCode;
         this.state = state;
         this.zip = zip;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.comments = comments;
     }
 
     public String getStoreId() {
@@ -102,18 +108,45 @@ public class StoreMaster {
         this.longitude = longitude;
     }
 
+    public String getRetailer() {
+        return retailer;
+    }
+
+    public void setRetailer(String retailer) {
+        this.retailer = retailer;
+    }
+
+    public String getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "StoreMaster{" +
                 "storeId='" + storeId + '\'' +
                 ", retailerStoreId='" + retailerStoreId + '\'' +
                 ", retailerChainCode='" + retailerChainCode + '\'' +
+                ", retailer='" + retailer + '\'' +
                 ", street='" + street + '\'' +
                 ", city='" + city + '\'' +
+                ", stateCode='" + stateCode + '\'' +
                 ", state='" + state + '\'' +
                 ", zip='" + zip + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
+                ", comments='" + comments + '\'' +
                 '}';
     }
 }

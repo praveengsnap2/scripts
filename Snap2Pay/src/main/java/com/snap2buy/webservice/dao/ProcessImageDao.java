@@ -12,9 +12,10 @@ import java.util.List;
 public interface ProcessImageDao {
 
     public ImageStore findByImageUUId(String imageUUId);
-    public ImageStore getImageByStatus(String status);
-    public Integer getJobCount(String status);
+    public ImageStore getImageByStatus(String shelfStatus);
+    public Integer getJobCount(String shelfStatus);
     public String getImageAnalysisStatus(String imageUUID);
+    public ImageStore getNextImageDetails();
     public void insert(ImageStore imageStore);
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore);
     public void updateStatusAndHost(String hostId, String status, String imageUUID);
@@ -27,4 +28,10 @@ public interface ProcessImageDao {
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString);
 //    public List<LinkedHashMap<String,String>> doShareOfShelfAnalysisCsv(String getImageUUIDCsvString);
     public void updateLatLong(String imageUUID,String latitude,String longitude);
+
+    public  List<LinkedHashMap<String, String>>  generateAggs(String customerCode, String customerProjectId, String storeId);
+    public List<LinkedHashMap<String,String>>  getProjectStoreResults(String customerCode, String customerProjectId, String storeId);
+    public List<LinkedHashMap<String,String>>  getProjectTopStores(String customerCode, String customerProjectId, String limit);
+    public List<LinkedHashMap<String,String>>  getProjectBottomStores(String customerCode, String customerProjectId, String limit);
+
 }

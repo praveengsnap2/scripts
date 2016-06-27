@@ -17,11 +17,13 @@ public interface BeanMapper {
     String BEAN_SHELF_ANALYSIS_SERVICE = "ShelfAnalysisServiceImpl";
     String BEAN_PRODUCT_MASTER_SERVICE = "ProductMasterServiceImpl";
     String BEAN_QUERY_GENERATION_SERVICE = "QueryGenerationServiceImpl";
+    String BEAN_META_SERVICE = "MetaServiceImpl";
+
 
     String BEAN_IMAGE_STORE_DAO = "ProcessImageDaoImpl";
     String BEAN_SHELF_ANALYSIS_DAO = "ShelfAnalysisDaoImpl";
     String BEAN_STORE_MASTER_DAO = "StoreMasterDaoImpl";
     String BEAN_PRODUCT_MASTER_DAO = "ProductMasterDaoImpl";
-
+    String BEAN_META_SERVICE_DAO = "MetaServiceDaoImpl";
 
 }

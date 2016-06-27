@@ -5,6 +5,8 @@ package com.snap2buy.webservice.model;
  */
 public class ImageAnalysis {
     String imageUUID;
+    String customerCode;
+    String customerProjectId;
     String storeId;
     String dateId;
     String upc;
@@ -27,8 +29,10 @@ public class ImageAnalysis {
         super();
     }
 
-    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String promotion, String price, String priceLabel, String productShortName, String productLongName, String brandName) {
+    public ImageAnalysis(String imageUUID, String customerCode, String customerProjectId, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String promotion, String price, String priceLabel, String productShortName, String productLongName, String brandName) {
         this.imageUUID = imageUUID;
+        this.customerCode = customerCode;
+        this.customerProjectId = customerProjectId;
         this.storeId = storeId;
         this.dateId = dateId;
         this.upc = upc;
@@ -45,6 +49,41 @@ public class ImageAnalysis {
         this.productShortName = productShortName;
         this.productLongName = productLongName;
         this.brandName = brandName;
+    }
+//    public ImageAnalysis(String imageUUID, String storeId, String dateId, String upc, String upcConfidence, String alternateUpc, String alternateUpcConfidence, String leftTopX, String leftTopY, String width, String height, String promotion, String price, String priceLabel, String productShortName, String productLongName, String brandName) {
+//        this.imageUUID = imageUUID;
+//        this.storeId = storeId;
+//        this.dateId = dateId;
+//        this.upc = upc;
+//        this.upcConfidence = upcConfidence;
+//        this.alternateUpc = alternateUpc;
+//        this.alternateUpcConfidence = alternateUpcConfidence;
+//        this.leftTopX = leftTopX;
+//        this.leftTopY = leftTopY;
+//        this.width = width;
+//        this.height = height;
+//        this.promotion = promotion;
+//        this.price = price;
+//        this.priceLabel = priceLabel;
+//        this.productShortName = productShortName;
+//        this.productLongName = productLongName;
+//        this.brandName = brandName;
+//    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    public String getCustomerProjectId() {
+        return customerProjectId;
+    }
+
+    public void setCustomerProjectId(String customerProjectId) {
+        this.customerProjectId = customerProjectId;
     }
 
     public String getProductShortName() {
@@ -187,6 +226,8 @@ public class ImageAnalysis {
     public String toString() {
         return "ImageAnalysis{" +
                 "imageUUID='" + imageUUID + '\'' +
+                ", customerCode='" + customerCode + '\'' +
+                ", customerProjectId='" + customerProjectId + '\'' +
                 ", storeId='" + storeId + '\'' +
                 ", dateId='" + dateId + '\'' +
                 ", upc='" + upc + '\'' +
