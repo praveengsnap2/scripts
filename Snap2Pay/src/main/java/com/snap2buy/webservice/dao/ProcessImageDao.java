@@ -23,6 +23,7 @@ public interface ProcessImageDao {
     public void updateShelfAnalysisStatus(String status, String imageUUID);
     public void updateStoreId(String storeId, String imageUUID);
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId);
+    public List<LinkedHashMap<String,String>> getProjectStoreImages(String customerCode, String customerProjectId, String storeId);   
     public List<ImageAnalysis> getImageAnalysis(String imageUUID);
     public LinkedHashMap<String,Object> getFacing(String imageUUID);
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString);

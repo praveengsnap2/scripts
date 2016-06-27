@@ -310,6 +310,25 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    
+    public Snap2PayOutput getProjectStoreImages(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectStoreImages----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        resultListToPass = processImageService.getProjectStoreImages(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectStoreImages----------------\n");
+
+        return reportIO;
+    }
+    
     public Snap2PayOutput getStores(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getStores----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
@@ -954,6 +973,16 @@ public class RestS2PAction {
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends getProjectSummary----------------\n");
 
+        return reportIO;
+    }
+    public Snap2PayOutput getStoreDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getStoreDetail--storeId : " + inputObject.getStoreId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.getStoreDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("storeId", inputObject.getStoreId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getStoreDetail----------------\n");
         return reportIO;
     }
 }

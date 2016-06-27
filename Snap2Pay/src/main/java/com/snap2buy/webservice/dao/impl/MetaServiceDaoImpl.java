@@ -1126,6 +1126,56 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
         }
     }
+    
+    @Override
+    public List<LinkedHashMap<String, String>> getStoreDetail(String storeId) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts getStoreDetail----------------\n");
+        String sql = "SELECT * FROM StoreMaster where StoreID = ?";
+        List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, storeId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("StoreID"));
+                map.put("retailerStoreId", rs.getString("RetailerStoreID"));
+                map.put("retailerChainCode", rs.getString("RetailerChainCode"));
+                map.put("retailer", rs.getString("Retailer"));
+                map.put("street", rs.getString("Street"));
+                map.put("city", rs.getString("City"));
+                map.put("stateCode", rs.getString("StateCode"));
+                map.put("state", rs.getString("State"));
+                map.put("zip", rs.getString("ZIP"));
+                map.put("latitude", rs.getString("Latitude"));
+                map.put("longitude", rs.getString("Longitude"));
+                map.put("comments", rs.getString("comments"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends getStoreDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void createStore(StoreMaster storeMaster) {

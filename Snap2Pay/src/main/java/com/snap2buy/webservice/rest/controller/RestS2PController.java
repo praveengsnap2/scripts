@@ -633,6 +633,42 @@ public class RestS2PController {
             return rio;
         }
     }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectStoreImages")
+    public Snap2PayOutput getProjectStoreImages(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectStoreImages::customerCode="+customerCode+"::customerProjectId="+customerProjectId+
+        		"::storeId="+storeId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);       
+            inputObject.setStoreId(storeId);
+            return restS2PAction.getProjectStoreImages(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getProjectStoreImages----------------\n");
+            return rio;
+        }
+    }
 
     @GET
       @Produces({MediaType.APPLICATION_JSON})
@@ -1874,6 +1910,35 @@ public class RestS2PController {
             inputList.put("customerCode",customerCode);
             rio = new Snap2PayOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectSummary----------------\n");
+            return rio;
+        }
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getStoreDetail")
+    public Snap2PayOutput getStoreDetail(
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getStoreDetail::id::="+storeId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setStoreId(storeId);
+            return restS2PAction.getStoreDetail(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            inputList.put("storeId",storeId);
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getStoreDetail----------------\n");
             return rio;
         }
     }

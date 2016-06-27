@@ -311,6 +311,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Ends getImages ----------------\n");
         return imageStoreList;
     }
+    
+    @Override
+    public List<LinkedHashMap<String, String>> getProjectStoreImages(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectStoreImages----------------\n");
+
+        List<LinkedHashMap<String, String>> imageStoreList = processImageDao.getProjectStoreImages(inputObject.getCustomerCode(),
+        		inputObject.getCustomerProjectId(),inputObject.getStoreId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectStoreImages ----------------\n");
+        return imageStoreList;
+    }
 
     @Override
     public List<LinkedHashMap<String, String>> getStores(InputObject inputObject) {

@@ -19,6 +19,7 @@ public interface ProcessImageService {
     public LinkedHashMap<String, String> getJob(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getStoreOptions();
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject);
+    public List<LinkedHashMap<String, String>> getProjectStoreImages(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getStores(InputObject inputObject);
     public List<LinkedHashMap<String, String>> doDistributionCheck(InputObject inputObject);
     public List<LinkedHashMap<String, String>> doBeforeAfterCheck(InputObject inputObject);

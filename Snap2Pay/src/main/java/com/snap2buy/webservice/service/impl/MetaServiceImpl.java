@@ -252,6 +252,16 @@ public class MetaServiceImpl implements MetaService {
     }
 
     @Override
+    public List<LinkedHashMap<String, String>> getStoreDetail(InputObject inputObject) {
+        LOGGER.info("---------------MetaServiceImpl Starts getStoreDetail storeId = " + inputObject.getStoreId() + "----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = metaServiceDao.getStoreDetail(inputObject.getStoreId());
+
+        LOGGER.info("---------------MetaServiceImpl Ends getStoreDetail ----------------\n");
+        return resultList;
+    }
+    
+    @Override
     public void createStore(StoreMaster storeMaster) {
         LOGGER.info("---------------MetaServiceImpl Starts createStore id = " + storeMaster.getStoreId()+ "----------------\n");
 

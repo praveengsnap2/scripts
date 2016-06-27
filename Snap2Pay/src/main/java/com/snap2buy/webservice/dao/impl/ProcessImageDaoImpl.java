@@ -997,4 +997,50 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
         }
     }
+
+	@Override
+	public List<LinkedHashMap<String, String>> getProjectStoreImages(
+			String customerCode, String customerProjectId, String storeId) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreImages::customerCode="+customerCode
+				+"::customerProjectId="+customerProjectId+"::storeId="+storeId+"----------------\n");
+        String sql = "SELECT imageUUID,dateId,agentId,taskId FROM ImageStoreNew WHERE  "
+        		+ "customerCode = ? and customerProjectId = ? and storeId = ? order by dateId desc";
+        List<LinkedHashMap<String,String>> imageStoreList=new ArrayList<LinkedHashMap<String,String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ps.setString(3, storeId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("imageUUID", rs.getString("imageUUID"));
+                map.put("dateId", rs.getString("dateId"));
+                map.put("agentId", rs.getString("agentId"));
+                map.put("taskId", rs.getString("taskId"));
+                
+                imageStoreList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getImages numberOfRows = "+imageStoreList+"----------------\n");
+
+            return imageStoreList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+	}
 }
