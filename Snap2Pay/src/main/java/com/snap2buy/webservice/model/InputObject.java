@@ -68,6 +68,33 @@ public class InputObject {
     private String taskId;
     private String agentId;
     private String id;
+    private String CsvFilePath;
+    private String webPageLink;
+    private String downloadImageUrl;
+
+    public String getDownloadImageUrl() {
+        return downloadImageUrl;
+    }
+
+    public void setDownloadImageUrl(String downloadImageUrl) {
+        this.downloadImageUrl = downloadImageUrl;
+    }
+
+    public String getWebPageLink() {
+        return webPageLink;
+    }
+
+    public void setWebPageLink(String webPageLink) {
+        this.webPageLink = webPageLink;
+    }
+
+    public String getCsvFilePath() {
+        return CsvFilePath;
+    }
+
+    public void setCsvFilePath(String csvFilePath) {
+        CsvFilePath = csvFilePath;
+    }
 
     public String getRetailerCode() {
         return retailerCode;
@@ -530,6 +557,9 @@ public class InputObject {
                 ", taskId='" + taskId + '\'' +
                 ", agentId='" + agentId + '\'' +
                 ", id='" + id + '\'' +
+                ", CsvFilePath='" + CsvFilePath + '\'' +
+                ", webPageLink='" + webPageLink + '\'' +
+                ", downloadImageUrl='" + downloadImageUrl + '\'' +
                 ", morefiltersMap=" + morefiltersMap +
                 '}';
     }

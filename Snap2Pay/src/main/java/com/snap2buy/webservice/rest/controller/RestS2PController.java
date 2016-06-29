@@ -10,6 +10,7 @@ import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.mapper.ParamMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
+import com.snap2buy.webservice.util.ParseExcelSheet;
 import com.snap2buy.webservice.util.ShellUtil;
 import com.snap2buy.webservice.util.Snap2PayOutput;
 import org.apache.commons.fileupload.FileItem;
@@ -50,6 +51,7 @@ public class RestS2PController {
     @Autowired
     @Qualifier(BeanMapper.BEAN_REST_ACTION_S2P)
     private RestS2PAction restS2PAction;
+
     @Value(value = "{appProp.filePath}")
     private String filePath;
 
@@ -1877,5 +1879,119 @@ public class RestS2PController {
             return rio;
         }
     }
-}
 
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/bulkUploadProjectImages")
+    public Snap2PayOutput bulkUploadProjectImages(
+            @QueryParam(ParamMapper.CATEGORY_ID) @DefaultValue("-9") String categoryId,
+            @QueryParam(ParamMapper.TIMESTAMP) @DefaultValue("-9") String timeStamp,
+            @QueryParam(ParamMapper.USER_ID) @DefaultValue("app") String userId,
+            @QueryParam(ParamMapper.SYNC) @DefaultValue("false") String sync,
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.TASK_ID) @DefaultValue("-9") String taskId,
+            @QueryParam(ParamMapper.AGENT_ID) @DefaultValue("-9") String agentId,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @QueryParam(ParamMapper.DATE_ID) @DefaultValue("-9") String dateId,
+
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts bulkUploadProjectImages----------------\n");
+        try {
+            UUID uniqueKey = UUID.randomUUID();
+            InputObject inputObject = new InputObject();
+
+            if (!dateId.equalsIgnoreCase("-9"))
+            {
+                LOGGER.info("---------------Controller----dateId = " + dateId + "---------------");
+                inputObject.setVisitDate(dateId);
+
+            } else if((!timeStamp.isEmpty())||(timeStamp!=null)||(!timeStamp.equalsIgnoreCase("-9"))) {
+                LOGGER.info("---------------Controller----timeStamp = " + timeStamp + "---------------");
+                Date date = new Date(Long.parseLong(timeStamp));
+                DateFormat format = new SimpleDateFormat("yyyyMMdd");
+                format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+                String formattedDate = format.format(date);
+                inputObject.setVisitDate(formattedDate);
+            } else {
+                LOGGER.info("---------------Controller----dateId and timeStamp are empty---------------");
+                inputObject.setVisitDate(dateId);
+            }
+
+            if (!storeId.equalsIgnoreCase("-9")){
+                inputObject.setStoreId(storeId);
+            }
+            inputObject.setHostId("1");
+            inputObject.setCategoryId(categoryId.trim());
+            inputObject.setTimeStamp(timeStamp.trim());
+            inputObject.setUserId(userId.trim());
+            inputObject.setSync(sync);
+            inputObject.setAgentId(agentId);
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setTaskId(taskId);
+
+            //Create a factory for disk-based file items
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+
+            // Configure a repository (to ensure a secure temp location is used)
+            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+            factory.setRepository(repository);
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            String result = "";
+            // Parse the request
+            List<FileItem> items = upload.parseRequest(request);
+            // Process the uploaded items
+            Iterator<FileItem> iter = items.iterator();
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+                String name = item.getFieldName();
+                String value = item.getString();
+                if (item.isFormField()) {
+                    LOGGER.info("Form field " + name + " with value "
+                            + value + " detected.");
+                } else {
+                    String csvFilePath = "/usr/share/s2pCsv/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".csv";
+
+                    inputObject.setCsvFilePath(csvFilePath);
+
+                    File uploadedFile = new File(csvFilePath);
+
+                    if (!uploadedFile.exists()) {
+                        uploadedFile.getParentFile().mkdirs();
+                        uploadedFile.getParentFile().setReadable(true);
+                        uploadedFile.getParentFile().setWritable(true);
+                        uploadedFile.getParentFile().setExecutable(true);
+                    }
+                    item.write(uploadedFile);
+                    result = ("File field " + name + " with file name "
+                            + item.getName() + " detected.");
+                    LOGGER.info(result);
+                }
+            }
+            LOGGER.info("---------------Controller Starts saveImage with details " + inputObject + "----------------\n");
+            ParseExcelSheet.parseCsv(inputObject);
+            return restS2PAction.saveImage(inputObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("userId", userId);
+            inputList.put("error in Input","-9");
+            //inputList.put("csvFilePath",csvFilePath);
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends----------------\n");
+            return rio;
+        }
+    }
+}
