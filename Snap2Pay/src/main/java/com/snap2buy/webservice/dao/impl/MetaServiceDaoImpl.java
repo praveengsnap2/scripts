@@ -1316,7 +1316,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                         "on (a.upcCount >= b.upcCount) " +
                         ")";
         
-        String storesWithProjectUpcs = "select count(distinct(storeId)) as storesWithProjectUpcs from projectstoredata where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
+        String storesWithProjectUpcs = "select count(distinct(storeId)) as storesWithProjectUpcs from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
         
 
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
