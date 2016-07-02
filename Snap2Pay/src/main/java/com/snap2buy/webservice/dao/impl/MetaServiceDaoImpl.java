@@ -1307,7 +1307,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     public List<LinkedHashMap<String, String>> getProjectSummary(String customerProjectId, String customerCode) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectSummary----------------\n");
         String totalStoresSql = "SELECT storeCount FROM Project where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\"";
-        String storesWithImagesSql = "select count(distinct(storeId)) as storesWithImages from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\"";
+        String storesWithImagesSql = "select count(distinct(storeId)) as storesWithImages from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\"";
         String storesWithAllProjectUpcsSql =
                 "select count(storeId) as storesWithAllProjectUpcs from ( " +
                         "(select storeId, count(distinct(upc))  as upcCount from ProjectStoreData where upc != \"999999999999\" and customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" group by storeId) a  " +
@@ -1315,8 +1315,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                         "( select count(distinct(upc)) as upcCount from ProjectUpc where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" ) b  " +
                         "on (a.upcCount >= b.upcCount) " +
                         ")";
-        String storesWithNoProjectUpcsSql = "select count(a.StoreId) as storesWithNoProjectUpcs from (select storeId, count(distinct(upc))  as storesWithImages from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode= \"" + customerCode + "\" group by storeId ) a where storesWithImages <= 1";
-
+        
+        String storesWithProjectUpcs = "select count(distinct(storeId)) as storesWithProjectUpcs from projectstoredata where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
+        
 
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
@@ -1332,7 +1333,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             PreparedStatement totalStoresPs = conn.prepareStatement(totalStoresSql);
             PreparedStatement storesWithImagesPs = conn.prepareStatement(storesWithImagesSql);
             PreparedStatement storesWithAllProjectUpcsPs = conn.prepareStatement(storesWithAllProjectUpcsSql);
-            PreparedStatement StoresWithNoProjectUpcsPs = conn.prepareStatement(storesWithNoProjectUpcsSql);
+            PreparedStatement storesWithProjectUpcsPs = conn.prepareStatement(storesWithProjectUpcs);
 
             ResultSet totalStoresRs = totalStoresPs.executeQuery();
             if (totalStoresRs.next()) {
@@ -1364,15 +1365,16 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             storesWithAllProjectUpcsRs.close();
             storesWithAllProjectUpcsPs.close();
 
-            ResultSet StoresWithNoProjectUpcsRs = StoresWithNoProjectUpcsPs.executeQuery();
-            if (StoresWithNoProjectUpcsRs.next()) {
+            ResultSet storesWithProjectUpcsRs = storesWithProjectUpcsPs.executeQuery();
+            if (storesWithProjectUpcsRs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-                StoresWithNoProjectUpcs = StoresWithNoProjectUpcsRs.getString("storesWithNoProjectUpcs");
+                String storesWithProjectUpcsVal = storesWithProjectUpcsRs.getString("storesWithProjectUpcs");
+                StoresWithNoProjectUpcs = String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithProjectUpcsVal));
                 map.put("StoresWithNoProjectUpcs", StoresWithNoProjectUpcs);
                 resultList.add(map);
             }
-            StoresWithNoProjectUpcsRs.close();
-            StoresWithNoProjectUpcsPs.close();
+            storesWithProjectUpcsRs.close();
+            storesWithProjectUpcsPs.close();
 
 
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
