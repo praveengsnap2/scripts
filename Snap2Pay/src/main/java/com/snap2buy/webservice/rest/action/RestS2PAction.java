@@ -803,6 +803,32 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends createProject----------------\n");
         return reportIO;
     }
+    
+    public Snap2PayOutput createUpc(ProductMaster upcInput) {
+        LOGGER.info("---------------RestAction Starts createUpc----------------\n");
+
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("UPC : " + upcInput.getUpc());
+        productMasterService.createUpc(upcInput);
+        LOGGER.info("createUpc done");
+
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result.put("responseCode", "200");
+        result.put("responseMessage", "UPC Created Successfully");
+        resultListToPass.add(result);
+
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("upc", upcInput.getUpc());
+
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends createUpc----------------\n");
+        return reportIO;
+    }
+    
     public Snap2PayOutput addUpcToProjectId(ProjectUpc projectUpc) {
         LOGGER.info("---------------RestAction Starts createProject----------------\n");
 

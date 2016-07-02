@@ -1,6 +1,7 @@
 package com.snap2buy.webservice.service;
 
 import com.snap2buy.webservice.model.InputObject;
+import com.snap2buy.webservice.model.ProductMaster;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -17,5 +18,7 @@ public interface ProductMasterService {
     void storeThumbnails(String imageFolderPath);
 
     public List<LinkedHashMap<String, String>> getDistributionLists();
+
+	public void createUpc(ProductMaster upcInput);
 }
 

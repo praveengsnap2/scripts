@@ -804,7 +804,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insertSql= "+sql2+"---------------------");
         Connection conn = null;
         List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
-
+        List<String> selectedUpcs = new ArrayList<String>();
         try {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -822,15 +822,18 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 map.put("upc", rs.getString("upc"));
                 map.put("facing", rs.getString("facing"));
                 map.put("upcConfidence", rs.getString("upcConfidence"));
-                result.add(map);
-                ps3.setString(1, map.get("imageUUID"));
-                ps3.setString(2, map.get("customerCode"));
-                ps3.setString(3, map.get("customerProjectId"));
-                ps3.setString(4, map.get("storeId"));
-                ps3.setString(5, map.get("upc"));
-                ps3.setString(6, map.get("facing"));
-                ps3.setString(7, map.get("upcConfidence"));
-                ps3.addBatch();
+                if ( !selectedUpcs.contains( map.get("upc") ) ) {
+                	selectedUpcs.add(map.get("upc"));
+                	result.add(map);
+	                ps3.setString(1, map.get("imageUUID"));
+	                ps3.setString(2, map.get("customerCode"));
+	                ps3.setString(3, map.get("customerProjectId"));
+	                ps3.setString(4, map.get("storeId"));
+	                ps3.setString(5, map.get("upc"));
+	                ps3.setString(6, map.get("facing"));
+	                ps3.setString(7, map.get("upcConfidence"));
+	                ps3.addBatch();
+                }
             }
             ps2.setString(1,customerCode);
             ps2.setString(2,customerProjectId);

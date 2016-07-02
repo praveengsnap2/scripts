@@ -5,6 +5,7 @@ import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.DistributionList;
 import com.snap2buy.webservice.model.ProductMaster;
 import com.snap2buy.webservice.model.UpcFacingDetail;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -302,4 +304,65 @@ public class ProductMasterDaoImpl implements ProductMasterDao {
             }
         }
     }
+
+	@Override
+	public void createUpc(ProductMaster upcInput) {
+		LOGGER.info("---------------ProductMasterDaoImpl Starts createUpc::categoryInput=" + upcInput + "----------------\n");
+        String sql = "INSERT INTO ProductMaster (UPC,MFG_NAME,BRAND_NAME,PRODUCT_TYPE,PRODUCT_SHORT_NAME,PRODUCT_LONG_NAME,Attribute_1,Attribute_2,Attribute_3,Attribute_4,Attribute_5,why_buy_1,why_buy_2,why_buy_3,why_buy_4,romance_copy_1,romance_copy_2,romance_copy_3,romance_copy_4,height,width,depth,product_rating) "
+        		+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        Connection conn = null;
+        Integer id = -1;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, upcInput.getUpc());
+            ps.setString(2, upcInput.getMfg_name());
+            ps.setString(3, upcInput.getBrand_name());
+            ps.setString(4, upcInput.getProduct_type());
+            ps.setString(5, upcInput.getProduct_short_name());
+            ps.setString(6, upcInput.getProduct_long_name());
+            ps.setString(7, upcInput.getAttribute_1());
+            ps.setString(8, upcInput.getAttribute_2());
+            ps.setString(9, upcInput.getAttribute_3());
+            ps.setString(10, upcInput.getAttribute_4());
+            ps.setString(11, upcInput.getAttribute_5());
+            ps.setString(12, upcInput.getWhy_buy_1());
+            ps.setString(13, upcInput.getWhy_buy_2());
+            ps.setString(14, upcInput.getWhy_buy_3());
+            ps.setString(15, upcInput.getWhy_buy_4());
+            ps.setString(16, upcInput.getRomance_copy_1());
+            ps.setString(17, upcInput.getRomance_copy_2());
+            ps.setString(18, upcInput.getRomance_copy_3());
+            ps.setString(19, upcInput.getRomance_copy_4());
+            ps.setString(20, upcInput.getHeight());
+            ps.setString(21, upcInput.getWidth());
+            ps.setString(22, upcInput.getDepth());
+            ps.setString(23, upcInput.getProduct_rating());
+            
+            id = ps.executeUpdate();
+
+            if (id == 0) {
+                throw new SQLException("Creating UPC failed, no rows affected.");
+            }
+
+            ps.close();
+            LOGGER.info("---------------ProductMasterDaoImpl Ends createUpc----------------\n");
+
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+
+                }
+            }
+        }
+		
+	}
 }

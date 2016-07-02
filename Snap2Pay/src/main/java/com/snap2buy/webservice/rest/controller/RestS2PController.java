@@ -1572,6 +1572,39 @@ public class RestS2PController {
     }
     @POST
     @Produces({MediaType.APPLICATION_JSON})
+    @Path("/createUpc")
+    public Snap2PayOutput createUpc(
+            JAXBElement<ProductMaster> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts createUpc----------------\n");
+        try {
+
+            ProductMaster upcInput = p.getValue();
+
+            LOGGER.info("---------------Controller  upcInput::="+upcInput.toString()+"----------------\n");
+
+            return restS2PAction.createUpc(upcInput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends createUpc----------------\n");
+            return rio;
+        }
+    }
+    
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/addUpcToProjectId")
     public Snap2PayOutput addUpcToProjectId(
             JAXBElement<ProjectUpc> p,
