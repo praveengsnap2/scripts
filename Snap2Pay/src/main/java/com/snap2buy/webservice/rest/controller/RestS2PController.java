@@ -5,13 +5,16 @@
  */
 package com.snap2buy.webservice.rest.controller;
 
+import com.google.gson.Gson;
 import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.mapper.ParamMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
+import com.snap2buy.webservice.util.CustomSnap2PayOutput;
 import com.snap2buy.webservice.util.ShellUtil;
 import com.snap2buy.webservice.util.Snap2PayOutput;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -31,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.JAXBElement;
+
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -1975,5 +1979,84 @@ public class RestS2PController {
             return rio;
         }
     }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectStoresWithNoUPCs")
+    public String getProjectStoresWithNoUPCs(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectStoresWithNoUPCs::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);       
+            return restS2PAction.getProjectStoresWithNoUPCs(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            Map<String, String> input = new HashMap<String, String>();
+            input.put("error in Input","-9");
+            List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+            metaList.add(input);
+            
+            Map<String, String> emptyOutput = new HashMap<String, String>();
+        	emptyOutput.put("Message", "No Data Returned");
+        	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+        	emptyOutputList.add(emptyOutput);
+        	CustomSnap2PayOutput reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+        	//convert to json here
+            Gson gson = new Gson();
+            String output = gson.toJson(reportIO);
+            LOGGER.info("---------------Controller Ends getProjectStoresWithNoUPCs----------------\n");
+            return output;
+        }
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectAllStoreImages")
+    public String getProjectAllStoreImages(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectAllStoreImages::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);       
+            return restS2PAction.getProjectAllStoreImages(inputObject);
+
+        } catch (Exception e) {
+        	 e.printStackTrace();
+             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+             LOGGER.error("exception", e);
+             Map<String, String> input = new HashMap<String, String>();
+             input.put("error in Input","-9");
+             List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+             metaList.add(input);
+             
+             Map<String, String> emptyOutput = new HashMap<String, String>();
+         	emptyOutput.put("Message", "No Data Returned");
+         	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+         	emptyOutputList.add(emptyOutput);
+         	CustomSnap2PayOutput reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+         	//convert to json here
+             Gson gson = new Gson();
+             String output = gson.toJson(reportIO);
+            LOGGER.info("---------------Controller Ends getProjectAllStoreImages----------------\n");
+            return output;
+        }
+    }
+
 }
 

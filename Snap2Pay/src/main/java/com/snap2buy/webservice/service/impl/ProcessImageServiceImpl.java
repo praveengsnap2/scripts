@@ -10,6 +10,7 @@ import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.ProcessImageService;
 import com.snap2buy.webservice.util.ConverterUtil;
 import com.snap2buy.webservice.util.ShellUtil;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -603,6 +604,28 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         return result;
     }
+
+	@Override
+	public List<StoreWithImages> getProjectStoresWithNoUPCs(InputObject inputObject) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectStoresWithNoUPCs----------------\n");
+
+        List<StoreWithImages>  result = processImageDao.getProjectStoresWithNoUPCs(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
+        
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectStoresWithNoUPCs----------------\n");
+        
+        return result;
+	}
+
+	@Override
+	public List<StoreWithImages> getProjectAllStoreImages(InputObject inputObject) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectAllStoreImages----------------\n");
+
+        List<StoreWithImages>  result = processImageDao.getProjectAllStoreImages(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
+        
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectAllStoreImages----------------\n");
+        
+        return result;
+	}
 
     //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
