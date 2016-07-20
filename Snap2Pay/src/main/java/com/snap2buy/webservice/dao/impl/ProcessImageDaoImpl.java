@@ -43,7 +43,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void insert(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts insert " + imageStore + "----------------\n");
-        String sql = "insert into ImageStoreNew (imageUUID, userId, ImageFilePath, categoryId, latitude, longitude, timeStamp, storeId, hostId, dateId, imageStatus, shelfStatus, origWidth, origHeight, newWidth, newHeight, thumbnailPath, customerCode, customerProjectId, taskId, agentId)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        long currTimestamp = System.currentTimeMillis() / 1000L;
+
+        String sql = "insert into ImageStoreNew (imageUUID, userId, ImageFilePath, categoryId, latitude, longitude, timeStamp, storeId, hostId, dateId, imageStatus, shelfStatus, origWidth, origHeight, newWidth, newHeight, thumbnailPath, customerCode, customerProjectId, taskId, agentId, lastUpdatedTimestamp)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -70,6 +72,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             ps.setString(19, imageStore.getCustomerProjectId());
             ps.setString(20, imageStore.getTaskId());
             ps.setString(21, imageStore.getAgentId());
+            ps.setString(22, String.valueOf(currTimestamp));
+            
             ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends insert----------------\n");
@@ -309,14 +313,16 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public void updateImageAnalysisStatus(String imageStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus::imageStatus="+imageStatus+"::imageUUID="+imageUUID+"----------------\n");
-        String sql = "UPDATE ImageStoreNew SET imageStatus = ? WHERE imageUUID = ? ";
+        long currTimestamp = System.currentTimeMillis() / 1000L;
+        String sql = "UPDATE ImageStoreNew SET imageStatus = ?, lastUpdatedTimestamp = ? WHERE imageUUID = ? ";
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, imageStatus);
-            ps.setString(2, imageUUID);
+            ps.setString(2, String.valueOf(currTimestamp));
+            ps.setString(3, imageUUID);
             ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------ProcessImageDaoImpl Ends updateImageAnalysisStatus----------------\n");
@@ -445,7 +451,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore getNextImageDetails() {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails----------------\n");
-        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus = \"cron\" order by timeStamp limit 1";
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\") order by lastUpdatedTimestamp limit 1";
         Connection conn = null;
         ImageStore imageStore = null;
         try {
