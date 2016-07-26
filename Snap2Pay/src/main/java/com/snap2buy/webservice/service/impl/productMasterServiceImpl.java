@@ -100,4 +100,11 @@ public class productMasterServiceImpl implements ProductMasterService {
         LOGGER.info("---------------productMasterServiceImpl Ends getDistributionLists ----------------\n");
         return result;
     }
+
+	@Override
+	public void createUpc(ProductMaster upcInput) {
+		LOGGER.info("---------------productMasterServiceImpl Starts createUpc UPC = " + upcInput.getUpc()+ "----------------\n");
+		productMasterDao.createUpc(upcInput);
+		LOGGER.info("---------------productMasterServiceImpl Ends createUpc UPC = " + upcInput.getUpc()+ "----------------\n");
+	}
 }

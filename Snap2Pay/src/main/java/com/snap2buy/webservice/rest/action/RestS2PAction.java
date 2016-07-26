@@ -7,13 +7,16 @@ package com.snap2buy.webservice.rest.action;
 
 //import com.mongodb.client.MongoDatabase;
 
+import com.google.gson.Gson;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.MetaService;
 import com.snap2buy.webservice.service.ProcessImageService;
 import com.snap2buy.webservice.service.ProductMasterService;
 import com.snap2buy.webservice.service.ShelfAnalysisService;
+import com.snap2buy.webservice.util.CustomSnap2PayOutput;
 import com.snap2buy.webservice.util.Snap2PayOutput;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sachin
@@ -310,6 +314,25 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    
+    public Snap2PayOutput getProjectStoreImages(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectStoreImages----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        resultListToPass = processImageService.getProjectStoreImages(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectStoreImages----------------\n");
+
+        return reportIO;
+    }
+    
     public Snap2PayOutput getStores(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getStores----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
@@ -784,6 +807,32 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends createProject----------------\n");
         return reportIO;
     }
+    
+    public Snap2PayOutput createUpc(ProductMaster upcInput) {
+        LOGGER.info("---------------RestAction Starts createUpc----------------\n");
+
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LOGGER.info("UPC : " + upcInput.getUpc());
+        productMasterService.createUpc(upcInput);
+        LOGGER.info("createUpc done");
+
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result.put("responseCode", "200");
+        result.put("responseMessage", "UPC Created Successfully");
+        resultListToPass.add(result);
+
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("upc", upcInput.getUpc());
+
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends createUpc----------------\n");
+        return reportIO;
+    }
+    
     public Snap2PayOutput addUpcToProjectId(ProjectUpc projectUpc) {
         LOGGER.info("---------------RestAction Starts createProject----------------\n");
 
@@ -956,4 +1005,67 @@ public class RestS2PAction {
 
         return reportIO;
     }
+    public Snap2PayOutput getStoreDetail(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getStoreDetail--storeId : " + inputObject.getStoreId()+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.getStoreDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("storeId", inputObject.getStoreId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getStoreDetail----------------\n");
+        return reportIO;
+    }
+    
+    public String getProjectStoresWithNoUPCs(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectStoresWithNoUPCs----------------\n");
+        Map<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+        metaList.add(reportInput);
+               
+        List<StoreWithImages> resultListToPass = new ArrayList<StoreWithImages>();
+        resultListToPass = processImageService.getProjectStoresWithNoUPCs(inputObject);
+        CustomSnap2PayOutput reportIO = null;
+        if ( resultListToPass.isEmpty()) {
+        	Map<String, String> emptyOutput = new HashMap<String, String>();
+        	emptyOutput.put("Message", "No Data Returned");
+        	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+        	emptyOutputList.add(emptyOutput);
+        	reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+        } else {
+        	reportIO = new CustomSnap2PayOutput(resultListToPass, metaList);
+        }
+        //convert to json here
+        Gson gson = new Gson();
+        String output = gson.toJson(reportIO);
+        LOGGER.info("---------------RestAction Ends getProjectStoresWithNoUPCs----------------\n");
+        return output;
+    }
+
+	public String getProjectAllStoreImages(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts getProjectAllStoreImages----------------\n");
+		Map<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+        metaList.add(reportInput);
+               
+        List<StoreWithImages> resultListToPass = new ArrayList<StoreWithImages>();
+        resultListToPass = processImageService.getProjectAllStoreImages(inputObject);
+        CustomSnap2PayOutput reportIO = null;
+        if ( resultListToPass.isEmpty()) {
+        	Map<String, String> emptyOutput = new HashMap<String, String>();
+        	emptyOutput.put("Message", "No Data Returned");
+        	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+        	emptyOutputList.add(emptyOutput);
+        	reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+        } else {
+        	reportIO = new CustomSnap2PayOutput(resultListToPass, metaList);
+        }
+        //convert to json here
+        Gson gson = new Gson();
+        String output = gson.toJson(reportIO);
+        return output;
+	}
 }

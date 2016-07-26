@@ -38,6 +38,7 @@ public interface MetaService {
     public void updateStore(StoreMaster storeMaster);
     public void updateProject(Project projectInput);
     public List<LinkedHashMap<String, String>> listStores();
+    public List<LinkedHashMap<String, String>> getStoreDetail(InputObject inputObject);
 
     public List<LinkedHashMap<String, String>> getProjectSummary(InputObject inputObject);
 

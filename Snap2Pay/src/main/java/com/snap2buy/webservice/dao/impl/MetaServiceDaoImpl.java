@@ -1126,6 +1126,56 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
         }
     }
+    
+    @Override
+    public List<LinkedHashMap<String, String>> getStoreDetail(String storeId) {
+        LOGGER.info("---------------MetaServiceDaoImpl Starts getStoreDetail----------------\n");
+        String sql = "SELECT * FROM StoreMaster where StoreID = ?";
+        List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, storeId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                map.put("storeId", rs.getString("StoreID"));
+                map.put("retailerStoreId", rs.getString("RetailerStoreID"));
+                map.put("retailerChainCode", rs.getString("RetailerChainCode"));
+                map.put("retailer", rs.getString("Retailer"));
+                map.put("street", rs.getString("Street"));
+                map.put("city", rs.getString("City"));
+                map.put("stateCode", rs.getString("StateCode"));
+                map.put("state", rs.getString("State"));
+                map.put("zip", rs.getString("ZIP"));
+                map.put("latitude", rs.getString("Latitude"));
+                map.put("longitude", rs.getString("Longitude"));
+                map.put("comments", rs.getString("comments"));
+                resultList.add(map);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends getStoreDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void createStore(StoreMaster storeMaster) {
@@ -1257,7 +1307,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     public List<LinkedHashMap<String, String>> getProjectSummary(String customerProjectId, String customerCode) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectSummary----------------\n");
         String totalStoresSql = "SELECT storeCount FROM Project where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\"";
-        String storesWithImagesSql = "select count(distinct(storeId)) as storesWithImages from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\"";
+        String storesWithImagesSql = "select count(distinct(storeId)) as storesWithImages from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\"";
         String storesWithAllProjectUpcsSql =
                 "select count(storeId) as storesWithAllProjectUpcs from ( " +
                         "(select storeId, count(distinct(upc))  as upcCount from ProjectStoreData where upc != \"999999999999\" and customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" group by storeId) a  " +
@@ -1265,9 +1315,16 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                         "( select count(distinct(upc)) as upcCount from ProjectUpc where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" ) b  " +
                         "on (a.upcCount >= b.upcCount) " +
                         ")";
-        String storesWithNoProjectUpcsSql = "select count(a.StoreId) as storesWithNoProjectUpcs from (select storeId, count(distinct(upc))  as storesWithImages from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode= \"" + customerCode + "\" group by storeId ) a where storesWithImages <= 1";
+        
+        String storesWithProjectUpcsSql = "select count(distinct(storeId)) as storesWithProjectUpcs from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
+        
+        String storesToBeProcessedSql = "select count(distinct(storeId)) as storesToBeProcessed from ImageStoreNew  where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " +
+        		"and imageStatus like \"cron%\" and imageStatus not in ( \"done\", \"error\")";
 
-
+        String imagesReceivedSql = "select count(distinct(imageUUID)) as imagesReceived from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
+        String imagesProcessedSql = "select count(distinct(imageUUID)) as imagesProcessed from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
+        		+ "and imageStatus in (\"done\", \"error\") " ;
+        
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
 
@@ -1276,13 +1333,20 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         String storesWithAllProjectUpcs = null;
         String StoresWithNoProjectUpcs = null;
         String storesWithPartialProjectUpcs = null;
+        String storesWithProjectUpcsVal = null;
+        String storesToBeProcessedVal = null;
+        String imagesReceivedVal = null;
+        String imagesProcessedVal = null;
 
         try {
             conn = dataSource.getConnection();
             PreparedStatement totalStoresPs = conn.prepareStatement(totalStoresSql);
             PreparedStatement storesWithImagesPs = conn.prepareStatement(storesWithImagesSql);
             PreparedStatement storesWithAllProjectUpcsPs = conn.prepareStatement(storesWithAllProjectUpcsSql);
-            PreparedStatement StoresWithNoProjectUpcsPs = conn.prepareStatement(storesWithNoProjectUpcsSql);
+            PreparedStatement storesWithProjectUpcsPs = conn.prepareStatement(storesWithProjectUpcsSql);
+            PreparedStatement storesToBeProcessedPs = conn.prepareStatement(storesToBeProcessedSql);
+            PreparedStatement imagesProcessedPs = conn.prepareStatement(imagesProcessedSql);
+            PreparedStatement imagesReceivedPs = conn.prepareStatement(imagesReceivedSql);
 
             ResultSet totalStoresRs = totalStoresPs.executeQuery();
             if (totalStoresRs.next()) {
@@ -1304,6 +1368,16 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             storesWithImagesRs.close();
             storesWithImagesPs.close();
 
+            ResultSet storesToBeProcessedRs = storesToBeProcessedPs.executeQuery();
+            if (storesToBeProcessedRs.next()) {
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                storesToBeProcessedVal = storesToBeProcessedRs.getString("storesToBeProcessed");
+                map.put("storesToBeProcessed", storesToBeProcessedVal);
+                resultList.add(map);
+            }
+            storesToBeProcessedRs.close();
+            storesToBeProcessedPs.close();
+            
             ResultSet storesWithAllProjectUpcsRs = storesWithAllProjectUpcsPs.executeQuery();
             if (storesWithAllProjectUpcsRs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -1313,22 +1387,43 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
             storesWithAllProjectUpcsRs.close();
             storesWithAllProjectUpcsPs.close();
-
-            ResultSet StoresWithNoProjectUpcsRs = StoresWithNoProjectUpcsPs.executeQuery();
-            if (StoresWithNoProjectUpcsRs.next()) {
+            
+            ResultSet storesWithProjectUpcsRs = storesWithProjectUpcsPs.executeQuery();
+            if (storesWithProjectUpcsRs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-                StoresWithNoProjectUpcs = StoresWithNoProjectUpcsRs.getString("storesWithNoProjectUpcs");
+                storesWithProjectUpcsVal = storesWithProjectUpcsRs.getString("storesWithProjectUpcs");
+                StoresWithNoProjectUpcs = String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithProjectUpcsVal) - Integer.parseInt(storesToBeProcessedVal));
                 map.put("StoresWithNoProjectUpcs", StoresWithNoProjectUpcs);
                 resultList.add(map);
             }
-            StoresWithNoProjectUpcsRs.close();
-            StoresWithNoProjectUpcsPs.close();
-
+            storesWithProjectUpcsRs.close();
+            storesWithProjectUpcsPs.close();
 
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-            storesWithPartialProjectUpcs=String.valueOf(Integer.parseInt(storesWithImages) - Integer.parseInt(storesWithAllProjectUpcs)- Integer.parseInt(StoresWithNoProjectUpcs));
+            storesWithPartialProjectUpcs=String.valueOf(Integer.parseInt(storesWithProjectUpcsVal) - Integer.parseInt(storesWithAllProjectUpcs));
             map.put("storesWithPartialProjectUpcs", storesWithPartialProjectUpcs);
             resultList.add(map);
+            
+            ResultSet imagesProcessedRs = imagesProcessedPs.executeQuery();
+            if (imagesProcessedRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                imagesProcessedVal = imagesProcessedRs.getString("imagesProcessed");
+                map1.put("imagesProcessed", imagesProcessedVal);
+                resultList.add(map1);
+            }
+            imagesProcessedRs.close();
+            imagesProcessedPs.close();
+            
+            ResultSet imagesReceivedRs = imagesReceivedPs.executeQuery();
+            if (imagesReceivedRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                imagesReceivedVal = imagesReceivedRs.getString("imagesReceived");
+                map1.put("imagesReceived", imagesReceivedVal);
+                resultList.add(map1);
+            }
+            imagesReceivedRs.close();
+            imagesReceivedPs.close();
+            
             LOGGER.info("---------------MetaServiceDaoImpl Ends getProjectSummary----------------\n");
 
             return resultList;

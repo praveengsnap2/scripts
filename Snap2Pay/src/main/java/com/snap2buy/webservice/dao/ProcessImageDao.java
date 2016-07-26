@@ -2,6 +2,7 @@ package com.snap2buy.webservice.dao;
 
 import com.snap2buy.webservice.model.ImageAnalysis;
 import com.snap2buy.webservice.model.ImageStore;
+import com.snap2buy.webservice.model.StoreWithImages;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ public interface ProcessImageDao {
     public void updateShelfAnalysisStatus(String status, String imageUUID);
     public void updateStoreId(String storeId, String imageUUID);
     public List<LinkedHashMap<String,String>> getImages(String storeId, String dateId);
+    public List<LinkedHashMap<String,String>> getProjectStoreImages(String customerCode, String customerProjectId, String storeId);   
     public List<ImageAnalysis> getImageAnalysis(String imageUUID);
     public LinkedHashMap<String,Object> getFacing(String imageUUID);
     public List<LinkedHashMap<String,String>> doShareOfShelfAnalysis(String getImageUUIDCsvString);
@@ -33,5 +35,7 @@ public interface ProcessImageDao {
     public List<LinkedHashMap<String,String>>  getProjectStoreResults(String customerCode, String customerProjectId, String storeId);
     public List<LinkedHashMap<String,String>>  getProjectTopStores(String customerCode, String customerProjectId, String limit);
     public List<LinkedHashMap<String,String>>  getProjectBottomStores(String customerCode, String customerProjectId, String limit);
+	public List<StoreWithImages> getProjectStoresWithNoUPCs(String customerCode, String customerProjectId);
+	public List<StoreWithImages> getProjectAllStoreImages(String customerCode,String customerProjectId);
 
 }

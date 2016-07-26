@@ -40,6 +40,7 @@ public interface MetaServiceDao {
     public List<LinkedHashMap<String, String>> listStores();
     public void createStore(StoreMaster storeMaster);
     public void updateStore(StoreMaster storeMaster);
+    public List<LinkedHashMap<String, String>> getStoreDetail(String storeId);
 
     public List<LinkedHashMap<String, String>> getProjectSummary(String customerProjectId, String customerCode);
 }

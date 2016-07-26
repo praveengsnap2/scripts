@@ -1,32 +1,62 @@
 package com.snap2buy.webservice.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by sachin on 1/23/16.
  */
+@XmlRootElement(name = "ProductMaster")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ProductMaster {
-    String upc;
+	@XmlElement
+	String upc;
+	@XmlElement
     String mfg_name;
-    String brand_name;
-    String product_type;
-    String product_short_name;
-    String product_long_name;
-    String attribute_1;
-    String attribute_2;
-    String attribute_3;
-    String attribute_4;
-    String attribute_5;
-    String why_buy_1;
-    String why_buy_2;
-    String why_buy_3;
-    String why_buy_4;
-    String romance_copy_1;
-    String romance_copy_2;
-    String romance_copy_3;
-    String romance_copy_4;
-    String height;
-    String width;
-    String depth;
-    String product_rating;
+	@XmlElement
+	String brand_name;
+	@XmlElement
+	String product_type;
+	@XmlElement
+	String product_short_name;
+	@XmlElement
+	String product_long_name;
+	@XmlElement
+	String attribute_1;
+	@XmlElement
+	String attribute_2;
+	@XmlElement
+	String attribute_3;
+	@XmlElement
+	String attribute_4;
+	@XmlElement
+	String attribute_5;
+	@XmlElement
+	String why_buy_1;
+	@XmlElement
+	String why_buy_2;
+	@XmlElement
+	String why_buy_3;
+	@XmlElement
+	String why_buy_4;
+	@XmlElement
+	String romance_copy_1;
+	@XmlElement
+	String romance_copy_2;
+	@XmlElement
+	String romance_copy_3;
+	@XmlElement
+	String romance_copy_4;
+	@XmlElement
+	String height;
+	@XmlElement
+	String width;
+	@XmlElement
+	String depth;
+	@XmlElement
+	String product_rating;
 
     public ProductMaster() {
         super();

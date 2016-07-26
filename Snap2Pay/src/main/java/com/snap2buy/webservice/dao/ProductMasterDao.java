@@ -22,4 +22,6 @@ public interface ProductMasterDao {
 
     public List<UpcFacingDetail> getUpcForList(String listId);
 
+	public void createUpc(ProductMaster upcInput);
+
 }
