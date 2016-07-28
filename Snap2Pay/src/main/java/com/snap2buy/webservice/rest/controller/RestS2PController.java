@@ -2058,5 +2058,45 @@ public class RestS2PController {
         }
     }
 
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectStoresWithDuplicateImages")
+    public String getProjectStoresWithDuplicateImages (
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectStoresWithDuplicateImages::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);       
+            return restS2PAction.getProjectStoresWithDuplicateImages(inputObject);
+
+        } catch (Exception e) {
+        	 e.printStackTrace();
+             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+             LOGGER.error("exception", e);
+             Map<String, String> input = new HashMap<String, String>();
+             input.put("error in Input","-9");
+             List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+             metaList.add(input);
+             
+             Map<String, String> emptyOutput = new HashMap<String, String>();
+         	emptyOutput.put("Message", "No Data Returned");
+         	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+         	emptyOutputList.add(emptyOutput);
+         	CustomSnap2PayOutput reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+         	//convert to json here
+             Gson gson = new Gson();
+             String output = gson.toJson(reportIO);
+            LOGGER.info("---------------Controller Ends getProjectStoresWithDuplicateImages----------------\n");
+            return output;
+        }
+    }
+
 }
 

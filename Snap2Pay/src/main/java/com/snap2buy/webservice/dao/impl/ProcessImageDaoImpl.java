@@ -2,6 +2,8 @@ package com.snap2buy.webservice.dao.impl;
 
 import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
+import com.snap2buy.webservice.model.DuplicateImageInfo;
+import com.snap2buy.webservice.model.DuplicateImages;
 import com.snap2buy.webservice.model.ImageAnalysis;
 import com.snap2buy.webservice.model.ImageStore;
 import com.snap2buy.webservice.model.StoreImageInfo;
@@ -1202,6 +1204,79 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectAllStoreImages numberOofStores = "+storesWithImages.size()+"----------------\n");
 
             return storesWithImages;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+	}
+
+	@Override
+	public List<DuplicateImages> getProjectStoresWithDuplicateImages(String customerCode, String customerProjectId) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoresWithDuplicateImages::customerCode="+customerCode
+				+"::customerProjectId="+customerProjectId+"----------------\n");
+		
+        String duplicateImagesSql = "SELECT imageStore.imageUUID, imageStore.storeId, imageStore.agentId, imageStore.taskId, imageStore.dateId, imageStore.imageHashScore, "
+        		+ "store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip FROM ImageStoreNew imageStore, StoreMaster store"
+        		+ " WHERE imageHashScore IN (SELECT * FROM (SELECT imageHashScore FROM ImageStoreNew  where imageHashScore is not null and imageHashScore > 0 GROUP BY imageHashScore HAVING COUNT(imageHashScore) > 1) AS a)"
+        		+ " and imageStore.customerCode= ? and imageStore.customerProjectId = ? and imageStore.storeId = store.storeId order by imageHashScore";
+        
+        List<DuplicateImages> duplicateImagesList =new ArrayList<DuplicateImages>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(duplicateImagesSql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ResultSet rs = ps.executeQuery();
+            String previousHashScore = "dummyhashscore";
+            DuplicateImages dupImages = null;
+            int count = 1 ;
+            while (rs.next()) {
+            	String hashScore = rs.getString("imageHashScore");
+            	if ( !hashScore.equalsIgnoreCase(previousHashScore) ) {
+            		if ( null !=  dupImages ) {
+            			duplicateImagesList.add(dupImages);
+            		}
+            		dupImages = new DuplicateImages();
+            		dupImages.setImageHashScore(hashScore);
+            		dupImages.setSlNo(""+count);
+            		count++;
+            		previousHashScore = hashScore;
+            	}
+            	DuplicateImageInfo dup = new DuplicateImageInfo();
+            	dup.setStoreId(rs.getString("storeId"));
+            	dup.setRetailerStoreId(rs.getString("retailerStoreId"));
+            	dup.setRetailerChainCode( rs.getString("retailerChainCode"));
+            	dup.setRetailer( rs.getString("retailer"));
+            	dup.setStreet(rs.getString("street"));
+            	dup.setCity( rs.getString("city"));
+            	dup.setStateCode( rs.getString("stateCode"));
+            	dup.setStateCode( rs.getString("state"));
+            	dup.setStateCode( rs.getString("zip"));
+            	dup.setImageUUID(rs.getString("imageUUID"));
+            	dup.setDateId(rs.getString("dateId"));
+            	dup.setAgentId( rs.getString("agentId"));
+            	dup.setTaskId( rs.getString("taskId"));
+            	dupImages.getStoreIds().add(dup);
+            }
+            if (  null != dupImages ) {
+    			duplicateImagesList.add(dupImages);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoresWithDuplicateImages number of duplicates = "+duplicateImagesList.size()+"----------------\n");
+
+            return duplicateImagesList;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);

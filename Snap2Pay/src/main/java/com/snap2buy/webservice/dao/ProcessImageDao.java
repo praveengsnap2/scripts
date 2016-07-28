@@ -1,5 +1,6 @@
 package com.snap2buy.webservice.dao;
 
+import com.snap2buy.webservice.model.DuplicateImages;
 import com.snap2buy.webservice.model.ImageAnalysis;
 import com.snap2buy.webservice.model.ImageStore;
 import com.snap2buy.webservice.model.StoreWithImages;
@@ -37,5 +38,6 @@ public interface ProcessImageDao {
     public List<LinkedHashMap<String,String>>  getProjectBottomStores(String customerCode, String customerProjectId, String limit);
 	public List<StoreWithImages> getProjectStoresWithNoUPCs(String customerCode, String customerProjectId);
 	public List<StoreWithImages> getProjectAllStoreImages(String customerCode,String customerProjectId);
+	public List<DuplicateImages> getProjectStoresWithDuplicateImages(String customerCode, String customerProjectId);
 
 }

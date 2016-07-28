@@ -1068,4 +1068,30 @@ public class RestS2PAction {
         String output = gson.toJson(reportIO);
         return output;
 	}
+
+	public String getProjectStoresWithDuplicateImages(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts getProjectStoresWithDuplicateImages----------------\n");
+		Map<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+        metaList.add(reportInput);
+               
+        List<DuplicateImages> resultListToPass = new ArrayList<DuplicateImages>();
+        resultListToPass = processImageService.getProjectStoresWithDuplicateImages(inputObject);
+        CustomSnap2PayOutput reportIO = null;
+        if ( resultListToPass.isEmpty()) {
+        	Map<String, String> emptyOutput = new HashMap<String, String>();
+        	emptyOutput.put("Message", "No Data Returned");
+        	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+        	emptyOutputList.add(emptyOutput);
+        	reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+        } else {
+        	reportIO = new CustomSnap2PayOutput(resultListToPass, metaList);
+        }
+        //convert to json here
+        Gson gson = new Gson();
+        String output = gson.toJson(reportIO);
+        return output;
+	}
 }

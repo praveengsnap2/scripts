@@ -662,6 +662,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         return result;
 	}
 
+	@Override
+	public List<DuplicateImages> getProjectStoresWithDuplicateImages(InputObject inputObject) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectStoresWithDuplicateImages----------------\n");
+
+        List<DuplicateImages>  result = processImageDao.getProjectStoresWithDuplicateImages(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
+        
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectStoresWithDuplicateImages----------------\n");
+        
+        return result;
+	}
+
     //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
 //        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );
