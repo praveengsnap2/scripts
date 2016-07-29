@@ -1,5 +1,6 @@
 package com.snap2buy.webservice.util;
 
+import com.snap2buy.webservice.model.ImageStore;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -105,17 +106,19 @@ public class ShellUtil {
         }
     }
 
-    public static String createThumbnail(String filepath,String thumbnailPath) {
+    public static void createThumbnail(ImageStore imageStore) {
         String response = "";
         Boolean waitForResponse = true;
         String command = "createThumbnail.sh";
         File f = new File("/root");
-        LOGGER.info("---------------ShellUtil filepath=" + filepath+" thumbnailPath="+thumbnailPath+"----------------\n");
+        LOGGER.info("---------------ShellUtil filepath=" + imageStore.getImageFilePath()+" thumbnailPath="+imageStore.getThumbnailPath()+"imageRotation="+imageStore.getImageRotation()+"----------------\n");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
 
-        pb.environment().put("filepath", filepath);
-        pb.environment().put("thumbnailPath", thumbnailPath);
+        pb.environment().put("filepath", imageStore.getImageFilePath());
+        pb.environment().put("thumbnailPath", imageStore.getThumbnailPath());
+        pb.environment().put("imageRotation", imageStore.getImageRotation());
+
         pb.directory(f);
         pb.redirectErrorStream(true);
 
@@ -138,6 +141,12 @@ public class ShellUtil {
                     + e.getMessage());
         }
         LOGGER.info("---------------ShellUtil response=" + response);
-        return response;
+
+        String values[]=response.split(",");
+
+        imageStore.setOrigWidth(values[0].replace("\r","").replace("\n","").trim());
+        imageStore.setOrigHeight(values[1].replace("\r","").replace("\n","").trim());
+        imageStore.setNewWidth(values[2].replace("\r","").replace("\n","").trim());
+        imageStore.setNewHeight(values[3].replace("\r","").replace("\n","").trim());
     }
 }

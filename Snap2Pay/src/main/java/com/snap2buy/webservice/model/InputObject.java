@@ -68,6 +68,24 @@ public class InputObject {
     private String taskId;
     private String agentId;
     private String id;
+    private String imageHashScore;
+    private String imageRotation;
+
+    public String getImageHashScore() {
+        return imageHashScore;
+    }
+
+    public void setImageHashScore(String imageHashScore) {
+        this.imageHashScore = imageHashScore;
+    }
+
+    public String getImageRotation() {
+        return imageRotation;
+    }
+
+    public void setImageRotation(String imageRotation) {
+        this.imageRotation = imageRotation;
+    }
 
     public String getRetailerCode() {
         return retailerCode;
@@ -530,6 +548,8 @@ public class InputObject {
                 ", taskId='" + taskId + '\'' +
                 ", agentId='" + agentId + '\'' +
                 ", id='" + id + '\'' +
+                ", imageHashScore='" + imageHashScore + '\'' +
+                ", imageRotation='" + imageRotation + '\'' +
                 ", morefiltersMap=" + morefiltersMap +
                 '}';
     }

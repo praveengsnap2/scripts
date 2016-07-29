@@ -12,9 +12,7 @@ import com.snap2buy.webservice.mapper.ParamMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
 import com.snap2buy.webservice.util.CustomSnap2PayOutput;
-import com.snap2buy.webservice.util.ShellUtil;
 import com.snap2buy.webservice.util.Snap2PayOutput;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -34,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.JAXBElement;
-
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -119,6 +116,8 @@ public class RestS2PController {
             inputObject.setCustomerCode(customerCode);
             inputObject.setCustomerProjectId(customerProjectId);
             inputObject.setTaskId(taskId);
+            inputObject.setImageHashScore("0");
+            inputObject.setImageRotation("0");
 
             //Create a factory for disk-based file items
             DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -139,11 +138,20 @@ public class RestS2PController {
                 String name = item.getFieldName();
                 String value = item.getString();
                 if (item.isFormField()) {
-                    LOGGER.info("Form field " + name + " with value "
-                            + value + " detected.");
+                    LOGGER.info("Form field " + name + " with value " + value + " detected.");
                 } else {
+                    LOGGER.info("File field " + name + " with file name "+ item.getName() + " detected.");
+
                     String filenamePath = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".jpg";
                     String thumbnailPath  = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + "-thm.jpg";
+                    inputObject.setImageFilePath(filenamePath);
+                    inputObject.setOrigWidth("0");
+                    inputObject.setOrigHeight("0");
+                    inputObject.setNewWidth("0");
+                    inputObject.setNewHeight("0");
+                    inputObject.setThumbnailPath(thumbnailPath);
+
+
                     File uploadedFile = new File(filenamePath);
                     //File uploadedFile = new File("/Users/sachin/s2pImages/" + userId + "/" + item.getName());
 
@@ -154,19 +162,8 @@ public class RestS2PController {
                         uploadedFile.getParentFile().setExecutable(true);
                     }
                     item.write(uploadedFile);
-                    inputObject.setImageFilePath(uploadedFile.getAbsolutePath());
 
-                    String csv=ShellUtil.createThumbnail(filenamePath,thumbnailPath);
-                    String values[]=csv.split(",");
 
-                    inputObject.setOrigWidth(values[0].replace("\r","").replace("\n","").trim());
-                    inputObject.setOrigHeight(values[1].replace("\r","").replace("\n","").trim());
-                    inputObject.setNewWidth(values[2].replace("\r","").replace("\n","").trim());
-                    inputObject.setNewHeight(values[3].replace("\r","").replace("\n","").trim());
-                    inputObject.setThumbnailPath(thumbnailPath);
-                    result = ("File field " + name + " with file name "
-                            + item.getName() + " detected.");
-                    LOGGER.info(result);
                 }
             }
             LOGGER.info("---------------Controller Starts saveImage with details " + inputObject + "----------------\n");

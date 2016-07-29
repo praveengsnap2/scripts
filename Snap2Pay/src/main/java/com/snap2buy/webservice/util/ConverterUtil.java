@@ -84,6 +84,9 @@ public class ConverterUtil {
             temp.put("customerProjectId", listEntry.getCustomerProjectId());
             temp.put("taskId", listEntry.getTaskId());
             temp.put("agentId", listEntry.getAgentId());
+            temp.put("lastUpdatedTimestamp", listEntry.getLastUpdatedTimestamp());
+            temp.put("imageHashScore", listEntry.getImageHashScore());
+            temp.put("imageRotation", listEntry.getImageRotation());
             result.add(temp);
         }
         return result;
