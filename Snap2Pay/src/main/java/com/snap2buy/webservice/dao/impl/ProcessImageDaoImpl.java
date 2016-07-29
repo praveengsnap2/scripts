@@ -2,22 +2,13 @@ package com.snap2buy.webservice.dao.impl;
 
 import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
-import com.snap2buy.webservice.model.DuplicateImageInfo;
-import com.snap2buy.webservice.model.DuplicateImages;
-import com.snap2buy.webservice.model.ImageAnalysis;
-import com.snap2buy.webservice.model.ImageStore;
-import com.snap2buy.webservice.model.StoreImageInfo;
-import com.snap2buy.webservice.model.StoreWithImages;
-import com.snap2buy.webservice.model.UpcFacingDetail;
-import com.snap2buy.webservice.util.JAXBJsonize;
-
+import com.snap2buy.webservice.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -129,7 +120,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                         rs.getString("customerCode"),
                         rs.getString("customerProjectId"),
                         rs.getString("taskId"),
-                        rs.getString("agentId"));
+                        rs.getString("agentId"),
+                        rs.getString("lastUpdatedTimestamp"),
+                        rs.getString("imageHashScore"),
+                        rs.getString("imageRotation")
+                );
             }
             rs.close();
             ps.close();
@@ -188,7 +183,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                         rs.getString("customerCode"),
                         rs.getString("customerProjectId"),
                         rs.getString("taskId"),
-                        rs.getString("agentId"));
+                        rs.getString("agentId"),
+                        rs.getString("lastUpdatedTimestamp"),
+                        rs.getString("imageHashScore"),
+                        rs.getString("imageRotation")
+                );
             }
             rs.close();
             ps.close();
@@ -347,6 +346,44 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
+    public void updateOrientationDetails(ImageStore imageStore) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateOrientationDetails::imageRotation="+imageStore.getImageRotation()+"::imageHashScore="+imageStore.getImageHashScore()+"::orig-height::"+imageStore.getOrigHeight()+"::orig-width::"+imageStore.getOrigWidth()+"::new-height::"+imageStore.getNewHeight()+"::new-width::"+imageStore.getNewWidth()+"----------------\n");
+        long currTimestamp = System.currentTimeMillis() / 1000L;
+        String sql = "UPDATE ImageStoreNew SET imageRotation = ?, imageHashScore = ?, origWidth = ?, origHeight = ?, newWidth = ?, newHeight = ?, lastUpdatedTimestamp = ? WHERE imageUUID = ? ";
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, imageStore.getImageRotation());
+            ps.setString(2, imageStore.getImageHashScore());
+            ps.setString(3, imageStore.getOrigWidth());
+            ps.setString(4, imageStore.getOrigHeight());
+            ps.setString(5, imageStore.getNewWidth());
+            ps.setString(6, imageStore.getNewHeight());
+            ps.setString(7, String.valueOf(currTimestamp));
+            ps.setString(8, imageStore.getImageUUID());
+
+            ps.executeUpdate();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateOrientationDetails----------------\n");
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+    @Override
     public void updateStoreId(String storeId, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatus::storeId="+storeId+"::imageUUID="+imageUUID+"----------------\n");
         String sql = "UPDATE ImageStoreNew SET storeId = ? WHERE imageUUID = ? ";
@@ -481,7 +518,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                     rs.getString("customerCode"),
                     rs.getString("customerProjectId"),
                     rs.getString("taskId"),
-                    rs.getString("agentId")
+                    rs.getString("agentId"),
+                    rs.getString("lastUpdatedTimestamp"),
+                    rs.getString("imageHashScore"),
+                    rs.getString("imageRotation")
                 );
             }
             rs.close();
