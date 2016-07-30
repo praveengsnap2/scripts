@@ -115,11 +115,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             	processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
             	LOGGER.info("---------------ProcessImageServiceImpl start stored imageAnalysis sync----------------\n");
 
-                ShellUtil.createThumbnail(imageStore);
-                LOGGER.info("---------------ProcessImageServiceImpl create thumbnail done----------------\n");
+                try {
+					ShellUtil.createThumbnail(imageStore);
+					LOGGER.info("---------------ProcessImageServiceImpl create thumbnail done----------------\n");
 
-                processImageDao.updateOrientationDetails(imageStore);
-                LOGGER.info("---------------ProcessImageServiceImpl all orientation details update done----------------\n");
+					processImageDao.updateOrientationDetails(imageStore);
+					LOGGER.info("---------------ProcessImageServiceImpl all orientation details update done----------------\n");
+				} catch (Exception e) {
+					LOGGER.error("---------------ProcessImageServiceImpl - createThumbnail and Update Orientation failed----------------\n");
+					LOGGER.error("---------------ProcessImageServiceImpl - Marking imageStatus as puased----------------\n");
+					processImageDao.updateImageAnalysisStatus("paused", imageStore.getImageUUID());
+				}
 
 
                 processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
@@ -287,11 +293,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             	processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
             	LOGGER.info("--------------runImageAnalysis::storeImageAnalysis done-----------------\n");
 
-                ShellUtil.createThumbnail(imageStore);
-                LOGGER.info("---------------ProcessImageServiceImpl create thumbnail done----------------\n");
+                try {
+					ShellUtil.createThumbnail(imageStore);
+					LOGGER.info("---------------ProcessImageServiceImpl create thumbnail done----------------\n");
 
-                processImageDao.updateOrientationDetails(imageStore);
-                LOGGER.info("---------------ProcessImageServiceImpl all orientation details update done----------------\n");
+					processImageDao.updateOrientationDetails(imageStore);
+					LOGGER.info("---------------ProcessImageServiceImpl all orientation details update done----------------\n");
+				} catch (Exception e) {
+					LOGGER.error("---------------ProcessImageServiceImpl - createThumbNail and Update Orientation failed----------------\n");
+					LOGGER.error("---------------ProcessImageServiceImpl - Marking imageStatus as paused----------------\n");
+					processImageDao.updateImageAnalysisStatus("paused", imageStore.getImageUUID());
+				}
 
                 String imageStatus = "done";
             	processImageDao.updateImageAnalysisStatus(imageStatus, imageUUID);
@@ -345,7 +357,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
-        } else if (status.equalsIgnoreCase("error")) { // if status in error, all retries are completed. No more processing for this imageUUID.
+        } else if (status.equalsIgnoreCase("error") && status.equalsIgnoreCase("paused")) { // if status in error or paused, all retries are completed. No more processing for this imageUUID.
             LOGGER.error("--------------ProcessImageServiceImpl -- imageUUID " + imageUUID + " -- has exhausted allowed retries.--------\n");
             //dummy call for output format
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
