@@ -1319,7 +1319,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         String storesWithProjectUpcsSql = "select count(distinct(storeId)) as storesWithProjectUpcs from ProjectStoreData where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
         
         String storesToBeProcessedSql = "select count(distinct(storeId)) as storesToBeProcessed from ImageStoreNew  where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " +
-        		"and imageStatus like \"cron%\" and imageStatus not in ( \"done\", \"error\")";
+        		"and imageStatus in ( \"cron\", \"cron1\", \"cron2\", \"paused\")";
 
         String imagesReceivedSql = "select count(distinct(imageUUID)) as imagesReceived from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
         

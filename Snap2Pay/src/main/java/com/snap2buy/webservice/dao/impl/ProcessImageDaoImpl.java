@@ -1348,12 +1348,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 				+"::customerProjectId="+customerProjectId+"::storeId="+storeId +"----------------\n");
 		// get project UPCs
 		List<LinkedHashMap<String, String>> projectUPCs = metaServiceDao.listProjectUpc(customerProjectId, customerCode);
-		// get project Details
-		List<LinkedHashMap<String, String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);		
 		
 		Map<String,List<String>> skuTypeUPCMap = new LinkedHashMap<String,List<String>>();
 		for(Map<String,String> projectUPC : projectUPCs){
-			List<String> existingUPCs = skuTypeUPCMap.get(projectUPC.get("skuTypeId")); //,projectUPC.get("skuTypeId"));
+			List<String> existingUPCs = skuTypeUPCMap.get(projectUPC.get("skuTypeId")); 
 			if (existingUPCs == null ) {
 				existingUPCs = new ArrayList<String>();
 				existingUPCs.add(projectUPC.get("upc"));
@@ -1374,11 +1372,13 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		List<String> skuType2UPCsInProject = skuTypeUPCMap.get("2");
 		List<String> skuType1UPCsInProject = skuTypeUPCMap.get("1");
 		
+		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::skuType2UPCs :: " + skuType2UPCsInProject + " ------------------");
+		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::skuType1UPCs :: " + skuType1UPCsInProject + " ------------------");
+	
+		int projectType = Integer.parseInt( getProjectType(customerCode,customerProjectId) );
+		
 		//calculate resultCode based on UPC findings
-		int projectType = Integer.parseInt( projectDetail.get(0).get("projectTypeId") );
 		String resultCode = calculateStoreResult(projectType, aggUPCs, skuType2UPCsInProject, skuType1UPCsInProject);
-		
-		
 		
 		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
 		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence  ) VALUES (?,?,?,?,?,?,?)";
@@ -1449,6 +1449,42 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	    }
 	}
 	
+	private String getProjectType(String customerCode, String customerProjectId) {
+		String projectType = null;
+		String pTypeSql = "SELECT projectTypeId FROM Project WHERE customerCode=? and customerProjectId=?";
+		
+		Connection conn = null;
+	    try {
+	        conn = dataSource.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(pTypeSql);
+	        ps.setString(1, customerCode);
+	        ps.setString(2, customerProjectId);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	        	projectType = rs.getString("projectTypeId");
+	        }
+	        rs.close();
+	        ps.close();
+	        LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectType :: projectType = " + projectType + " ----------------\n");
+
+	        return projectType;
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (conn != null) {
+	           try {   
+	            	 conn.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	      }
+	}
+
 	private Map<String, String> getProjectStoreData(String customerCode,String customerProjectId, String storeId) {
 		Map<String,String> projectStoreData = new LinkedHashMap<String,String>();
 		String countFacingConfidenceSql = " select count(distinct(upc)) as count, sum(facing) facing, sum(upcConfidence) confidence from ProjectStoreData "
