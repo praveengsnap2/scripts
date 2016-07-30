@@ -40,5 +40,7 @@ public interface ProcessImageDao {
 	public List<StoreWithImages> getProjectStoresWithNoUPCs(String customerCode, String customerProjectId);
 	public List<StoreWithImages> getProjectAllStoreImages(String customerCode,String customerProjectId);
 	public List<DuplicateImages> getProjectStoresWithDuplicateImages(String customerCode, String customerProjectId);
+	public List<LinkedHashMap<String, String>> generateStoreResults(String customerCode, String customerProjectId, String storeId);
+	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(String customerCode, String customerProjectId);
 
 }

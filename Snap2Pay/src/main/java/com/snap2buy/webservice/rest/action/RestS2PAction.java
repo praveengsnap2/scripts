@@ -1094,4 +1094,31 @@ public class RestS2PAction {
         String output = gson.toJson(reportIO);
         return output;
 	}
+
+	public Snap2PayOutput generateStoreResults(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts generateStoreResults----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.generateStoreResults(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends generateStoreResults----------------\n");
+
+        return reportIO;
+	}
+
+	public Snap2PayOutput getProjectAllStoreResults(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts getProjectAllStoreResults----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getProjectAllStoreResults(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectAllStoreResults----------------\n");
+
+        return reportIO;
+	}
 }

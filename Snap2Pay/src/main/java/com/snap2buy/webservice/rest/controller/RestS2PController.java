@@ -2094,6 +2094,75 @@ public class RestS2PController {
             return output;
         }
     }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/generateStoreResults")
+    public Snap2PayOutput generateStoreResults(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts generateStoreResults----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setStoreId(storeId);
+            return restS2PAction.generateStoreResults(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            inputList.put("storeId",storeId);
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends generateStoreResults----------------\n");
+            return rio;
+        }
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectAllStoreResults")
+    public Snap2PayOutput getProjectAllStoreResults(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectAllStoreResults----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            return restS2PAction.getProjectAllStoreResults(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getProjectAllStoreResults----------------\n");
+            return rio;
+        }
+    }
 
 }
 

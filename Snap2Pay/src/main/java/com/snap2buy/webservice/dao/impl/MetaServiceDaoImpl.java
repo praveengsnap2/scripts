@@ -252,7 +252,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listProjectUpc(String customerProjectId, String customerCode) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listProjectUpc----------------\n");
-        String sql = "SELECT * FROM ProjectUpc where status = 1 and customerProjectId = ? and customerCode = ?";
+        String sql = "SELECT * FROM ProjectUpc where customerProjectId = ? and customerCode = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -1322,8 +1322,15 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         		"and imageStatus like \"cron%\" and imageStatus not in ( \"done\", \"error\")";
 
         String imagesReceivedSql = "select count(distinct(imageUUID)) as imagesReceived from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" " ;
+        
         String imagesProcessedSql = "select count(distinct(imageUUID)) as imagesProcessed from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
         		+ "and imageStatus in (\"done\", \"error\") " ;
+        
+        String successfulStoresSql = "SELECT COUNT(*) as successfulStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"1\"";
+        
+        String partiallySuccessfulStoresSql = "SELECT COUNT(*) as partiallySuccessfulStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"2\"";
+        
+        String failedStoresSql = "SELECT COUNT(*) as failedStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"3\"";
         
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
@@ -1347,6 +1354,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             PreparedStatement storesToBeProcessedPs = conn.prepareStatement(storesToBeProcessedSql);
             PreparedStatement imagesProcessedPs = conn.prepareStatement(imagesProcessedSql);
             PreparedStatement imagesReceivedPs = conn.prepareStatement(imagesReceivedSql);
+            PreparedStatement successfulStoresPs = conn.prepareStatement(successfulStoresSql);
+            PreparedStatement partiallySuccessfulStoresPs = conn.prepareStatement(partiallySuccessfulStoresSql);
+            PreparedStatement failedStoresPs = conn.prepareStatement(failedStoresSql);
 
             ResultSet totalStoresRs = totalStoresPs.executeQuery();
             if (totalStoresRs.next()) {
@@ -1423,6 +1433,36 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
             imagesReceivedRs.close();
             imagesReceivedPs.close();
+            
+            ResultSet successfulStoresRs = successfulStoresPs.executeQuery();
+            if (successfulStoresRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                String successfulStoresVal = successfulStoresRs.getString("successfulStores");
+                map1.put("successfulStores", successfulStoresVal);
+                resultList.add(map1);
+            }
+            successfulStoresRs.close();
+            successfulStoresPs.close();
+            
+            ResultSet partiallySuccessfulStoresRs = partiallySuccessfulStoresPs.executeQuery();
+            if (partiallySuccessfulStoresRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                String partiallySuccessfulStoresVal = partiallySuccessfulStoresRs.getString("partiallySuccessfulStores");
+                map1.put("partiallySuccessfulStores", partiallySuccessfulStoresVal);
+                resultList.add(map1);
+            }
+            partiallySuccessfulStoresRs.close();
+            partiallySuccessfulStoresPs.close();            
+            
+            ResultSet failedStoresRs = failedStoresPs.executeQuery();
+            if (failedStoresRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                String failedStoresVal = failedStoresRs.getString("failedStores");
+                map1.put("failedStores", failedStoresVal);
+                resultList.add(map1);
+            }
+            failedStoresRs.close();
+            failedStoresPs.close();
             
             LOGGER.info("---------------MetaServiceDaoImpl Ends getProjectSummary----------------\n");
 

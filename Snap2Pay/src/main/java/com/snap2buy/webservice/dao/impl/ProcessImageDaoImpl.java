@@ -1,14 +1,18 @@
 package com.snap2buy.webservice.dao.impl;
 
+import com.snap2buy.webservice.dao.MetaServiceDao;
 import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sachin on 10/17/15.
@@ -28,6 +33,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Autowired
     private DataSource dataSource;
+    
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_META_SERVICE_DAO)
+    private MetaServiceDao metaServiceDao;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -1301,8 +1310,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             	dup.setStreet(rs.getString("street"));
             	dup.setCity( rs.getString("city"));
             	dup.setStateCode( rs.getString("stateCode"));
-            	dup.setStateCode( rs.getString("state"));
-            	dup.setStateCode( rs.getString("zip"));
+            	dup.setState( rs.getString("state"));
+            	dup.setZip( rs.getString("zip"));
             	dup.setImageUUID(rs.getString("imageUUID"));
             	dup.setDateId(rs.getString("dateId"));
             	dup.setAgentId( rs.getString("agentId"));
@@ -1331,5 +1340,294 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                 }
             }
         }
+	}
+
+	@Override
+	public List<LinkedHashMap<String, String>> generateStoreResults(String customerCode, String customerProjectId, String storeId) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts generateStoreResults::customerCode="+customerCode
+				+"::customerProjectId="+customerProjectId+"::storeId="+storeId +"----------------\n");
+		// get project UPCs
+		List<LinkedHashMap<String, String>> projectUPCs = metaServiceDao.listProjectUpc(customerProjectId, customerCode);
+		// get project Details
+		List<LinkedHashMap<String, String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);		
+		
+		Map<String,List<String>> skuTypeUPCMap = new LinkedHashMap<String,List<String>>();
+		for(Map<String,String> projectUPC : projectUPCs){
+			List<String> existingUPCs = skuTypeUPCMap.get(projectUPC.get("skuTypeId")); //,projectUPC.get("skuTypeId"));
+			if (existingUPCs == null ) {
+				existingUPCs = new ArrayList<String>();
+				existingUPCs.add(projectUPC.get("upc"));
+				skuTypeUPCMap.put(projectUPC.get("skuTypeId"),existingUPCs);
+			} else {
+				existingUPCs.add(projectUPC.get("upc"));
+				skuTypeUPCMap.put(projectUPC.get("skuTypeId"),existingUPCs);
+			}
+		}
+		// get data from ProjectStoreData table for this customer code, project id and store combination
+		List<String> aggUPCs = getDistinctUPCsForProject(customerCode, customerProjectId, storeId);
+		Map<String,String> projectStoreData =getProjectStoreData(customerCode, customerProjectId, storeId);
+		String countDistinctUpc = projectStoreData.get("count");
+		String sumFacing = projectStoreData.get("facing");
+		String sumUpcConfidence = projectStoreData.get("confidence");
+		
+		
+		List<String> skuType2UPCsInProject = skuTypeUPCMap.get("2");
+		List<String> skuType1UPCsInProject = skuTypeUPCMap.get("1");
+		
+		//calculate resultCode based on UPC findings
+		int projectType = Integer.parseInt( projectDetail.get(0).get("projectTypeId") );
+		String resultCode = calculateStoreResult(projectType, aggUPCs, skuType2UPCsInProject, skuType1UPCsInProject);
+		
+		
+		
+		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
+		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence  ) VALUES (?,?,?,?,?,?,?)";
+		String doResultExistsSql = "SELECT COUNT(*) AS COUNT FROM ProjectStoreResult WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
+		int count = 0;
+		
+		//update/insert resultCode based on UPC findings.
+		Connection conn = null;
+	    try {
+	        conn = dataSource.getConnection();
+	        PreparedStatement doResultExistsPs = conn.prepareStatement(doResultExistsSql);
+	        doResultExistsPs.setString(1, customerCode);
+	        doResultExistsPs.setString(2, customerProjectId);
+	        doResultExistsPs.setString(3, storeId);
+	        ResultSet doResultExistsRs = doResultExistsPs.executeQuery();
+	        
+	        if (doResultExistsRs.next()) {
+	        	count = Integer.parseInt(doResultExistsRs.getString("COUNT"));
+	        }
+	        doResultExistsRs.close();
+	        doResultExistsPs.close();
+	        
+	        if ( count > 0 ) {
+	        	PreparedStatement updatePs = conn.prepareStatement(updateStoreResultSql);
+	        	updatePs.setString(1, resultCode);
+	        	updatePs.setString(2, countDistinctUpc);
+	        	updatePs.setString(3, sumFacing);
+	        	updatePs.setString(4, sumUpcConfidence);
+	        	updatePs.setString(5, customerCode);
+	        	updatePs.setString(6, customerProjectId);
+	        	updatePs.setString(7, storeId);
+	        	updatePs.executeUpdate();
+	        	updatePs.close();
+	        	
+	        } else {
+	        	PreparedStatement insertPs = conn.prepareStatement(insertStoreResultSql);
+	        	insertPs.setString(1, customerCode);
+	        	insertPs.setString(2, customerProjectId);
+	        	insertPs.setString(3, storeId);
+	        	insertPs.setString(4, resultCode);
+	        	insertPs.setString(5, countDistinctUpc);
+	        	insertPs.setString(6, sumFacing);
+	        	insertPs.setString(7, sumUpcConfidence);
+	        	insertPs.executeUpdate();
+	        	insertPs.close();
+	        }
+	        
+	        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+	        LinkedHashMap<String,String> map = new LinkedHashMap<String,String>();
+	        map.put("storeId", storeId);
+	        map.put("resultCode", resultCode);
+	        result.add(map);
+	        LOGGER.info("---------------ProcessImageDaoImpl Ends generateStoreResults result = "+map+"----------------\n");
+	        return result;
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (conn != null) {
+	           try {   
+	            	 conn.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	    }
+	}
+	
+	private Map<String, String> getProjectStoreData(String customerCode,String customerProjectId, String storeId) {
+		Map<String,String> projectStoreData = new LinkedHashMap<String,String>();
+		String countFacingConfidenceSql = " select count(distinct(upc)) as count, sum(facing) facing, sum(upcConfidence) confidence from ProjectStoreData "
+				+ "where customerCode=? and customerProjectId=? and storeId=? and upc !=\"999999999999\"";
+		
+		Connection conn = null;
+	    try {
+	        conn = dataSource.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(countFacingConfidenceSql);
+	        ps.setString(1, customerCode);
+	        ps.setString(2, customerProjectId);
+	        ps.setString(3, storeId);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        while (rs.next()) {
+	        	projectStoreData.put("count", rs.getString("count"));
+	        	projectStoreData.put("facing", rs.getString("facing"));
+	        	projectStoreData.put("confidence", rs.getString("confidence"));
+	        }
+	        rs.close();
+	        ps.close();
+	        LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreData ----------------\n");
+
+	        return projectStoreData;
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (conn != null) {
+	           try {   
+	            	 conn.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	      }
+	}
+
+	private String calculateStoreResult(int projectType, List<String> aggUPCs, List<String> skuType2UPCsInProject, List<String> skuType1UPCsInProject) {
+		String resultCode = null;
+		switch(projectType) {
+			case 1 : //Display
+				//if any UPCs of sku type 2 is present in aggUPCs and all UPCs of sku type 1 is present in aggUPCs --> Success
+				if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && aggUPCs.containsAll(skuType1UPCsInProject)){
+					resultCode = "1";
+				} //if any UPCs of sku type 2 is present and if any UPCs of sku type1 is present --> Partial
+				else if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && ifAnyPresentInList(skuType1UPCsInProject, aggUPCs)) {
+					resultCode = "2";
+				} else { //failed
+					resultCode = "3";
+				}
+				break;
+			case 2 : //OSA Check
+			case 3 : //New product cut-in
+			case 5 : //Distribution Check
+				//if all UPCs of skutype 1 is present --> Success
+				if ( aggUPCs.containsAll(skuType1UPCsInProject) ) {
+					resultCode = "1";
+				} 	//if any UPCs of skutype 1 is present --> Partial
+				else if ( ifAnyPresentInList(skuType1UPCsInProject, aggUPCs) ) {
+					resultCode = "2";
+				} else { //failed
+					resultCode = "3";
+				}
+				break;
+			case 11 :
+				// if any UPCs of skutype 2 is present and any UPCs of skutype 1 is present --> Success
+				if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && ifAnyPresentInList(skuType1UPCsInProject,aggUPCs)) {
+					resultCode = "1";
+				} 	// if any UPCs of skutype 2 is present and NO UPCs of skutype 1 is present --> Partial
+				else if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) &&  !ifAnyPresentInList(skuType1UPCsInProject,aggUPCs)) {
+					resultCode = "2";
+				} else {//failed
+					resultCode = "3";
+				}
+				break;
+		}
+		return resultCode;
+	}
+	
+	private boolean ifAnyPresentInList(List<String> skuUPCsInProject,List<String> aggUPCs) {
+		boolean isPresent = false;
+		for( String upc : skuUPCsInProject ) {
+			if ( aggUPCs.contains(upc) ) {
+				isPresent = true;
+				break;
+			}
+		}
+		return isPresent;
+	}
+
+	private List<String> getDistinctUPCsForProject(String customerCode, String customerProjectId, String storeId) {
+		List<String> upcList = new ArrayList<String>();
+		String distinctUPCSql = "select distinct(UPC) as UPC from ProjectStoreData where customerCode=? and customerProjectId=? and storeId=? and upc !=\"999999999999\"";
+		
+		Connection conn = null;
+	    try {
+	        conn = dataSource.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(distinctUPCSql);
+	        ps.setString(1, customerCode);
+	        ps.setString(2, customerProjectId);
+	        ps.setString(3, storeId);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        while (rs.next()) {
+	        	upcList.add(rs.getString("UPC"));
+	        }
+	        rs.close();
+	        ps.close();
+	        LOGGER.info("---------------ProcessImageDaoImpl Ends getDistinctUPCsForProject ----------------\n");
+
+	        return upcList;
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (conn != null) {
+	           try {   
+	            	 conn.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	      }
+	}
+
+	@Override
+	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(String customerCode, String customerProjectId) {
+		 LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectAllStoreResults::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
+	        String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence "
+	        		+ "FROM ProjectStoreResult result, StoreMaster store, ResultsMaster resultsMaster WHERE result.customerCode = ? and result.customerProjectId = ? and result.storeId = store.storeId and result.resultCode = resultsMaster.resultCode order by result.resultCode asc, result.countDistinctUpc desc, result.sumFacing desc, result.sumUpcConfidence desc ";
+	        Connection conn = null;
+	        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+
+	        try {
+	            conn = dataSource.getConnection();
+	            PreparedStatement ps = conn.prepareStatement(sql);
+	            ps.setString(1, customerCode);
+	            ps.setString(2, customerProjectId);
+	            ResultSet rs = ps.executeQuery();
+	            while (rs.next()) {
+	                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+	                map.put("storeId", rs.getString("storeId"));
+	                map.put("retailerStoreId", rs.getString("retailerStoreId") );
+	                map.put("retailerChainCode", rs.getString("retailerChainCode") );
+	                map.put("retailer", rs.getString("retailer") );
+	                map.put("street", rs.getString("street") );
+	                map.put("city",  rs.getString("city"));
+	                map.put("stateCode", rs.getString("stateCode") );
+	                map.put("state", rs.getString("state") );
+	                map.put("zip", rs.getString("zip") );
+	                map.put("resultCode", rs.getString("resultCode") );
+	                map.put("result", rs.getString("description"));
+	                map.put("countDistinctUpc", rs.getString("countDistinctUpc"));
+	                map.put("sumFacing", rs.getString("sumFacing"));
+	                map.put("sumUpcConfidence", rs.getString("sumUpcConfidence"));
+	                result.add(map);
+	            }
+	            rs.close();
+	            ps.close();
+	            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectAllStoreResults----------------\n");
+	            return result;
+	        } catch (SQLException e) {
+	            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	            LOGGER.error("exception", e);
+	            throw new RuntimeException(e);
+	        } finally {
+	            if (conn != null) {
+	                try {
+	                    conn.close();
+	                } catch (SQLException e) {
+	                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                    LOGGER.error("exception", e);
+	                }
+	            }
+	        }
 	}
 }

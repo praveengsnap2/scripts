@@ -33,4 +33,6 @@ public interface ProcessImageService {
 	public List<StoreWithImages> getProjectStoresWithNoUPCs(InputObject inputObject);
 	public List<StoreWithImages> getProjectAllStoreImages(InputObject inputObject);
 	public List<DuplicateImages> getProjectStoresWithDuplicateImages(InputObject inputObject);
+	public List<LinkedHashMap<String, String>> generateStoreResults(InputObject inputObject);
+	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(InputObject inputObject);
 }
