@@ -370,7 +370,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
-        } else if (status.equalsIgnoreCase("error") && status.equalsIgnoreCase("paused")) { // if status in error or paused, all retries are completed. No more processing for this imageUUID.
+        } else if (status.equalsIgnoreCase("error") || status.equalsIgnoreCase("paused")) { // if status in error or paused, all retries are completed. No more processing for this imageUUID.
             LOGGER.error("--------------ProcessImageServiceImpl -- imageUUID " + imageUUID + " -- has exhausted allowed retries.--------\n");
             //dummy call for output format
             List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
