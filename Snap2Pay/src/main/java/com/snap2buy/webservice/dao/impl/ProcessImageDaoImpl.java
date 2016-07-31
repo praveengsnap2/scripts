@@ -1363,6 +1363,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		}
 		// get data from ProjectStoreData table for this customer code, project id and store combination
 		List<String> aggUPCs = getDistinctUPCsForProject(customerCode, customerProjectId, storeId);
+		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::UPCs in agg table :: " + aggUPCs + " ------------------");
+		
 		Map<String,String> projectStoreData =getProjectStoreData(customerCode, customerProjectId, storeId);
 		String countDistinctUpc = projectStoreData.get("count");
 		String sumFacing = projectStoreData.get("facing");
@@ -1371,6 +1373,14 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		
 		List<String> skuType2UPCsInProject = skuTypeUPCMap.get("2");
 		List<String> skuType1UPCsInProject = skuTypeUPCMap.get("1");
+		
+		if ( skuType2UPCsInProject == null ) {
+			skuType2UPCsInProject = new ArrayList<String>();
+		}
+		
+		if ( skuType1UPCsInProject == null ) {
+			skuType1UPCsInProject = new ArrayList<String>();
+		}
 		
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::skuType2UPCs :: " + skuType2UPCsInProject + " ------------------");
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::skuType1UPCs :: " + skuType1UPCsInProject + " ------------------");
