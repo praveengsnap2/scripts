@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1372,6 +1373,16 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		String sumFacing = projectStoreData.get("facing");
 		String sumUpcConfidence = projectStoreData.get("confidence");
 		
+		//Set value to 0 if null or empty.. Set precision to 10 digits in case of decimals
+		countDistinctUpc = (null==countDistinctUpc || "".equals(countDistinctUpc)) ? "0" : countDistinctUpc;
+		sumFacing = (null==sumFacing || "".equals(sumFacing)) ? "0" : sumFacing;
+		sumUpcConfidence = (null==sumUpcConfidence || "".equals(sumUpcConfidence)) ? "0" : sumUpcConfidence;
+    	if ( sumUpcConfidence != "0" && sumUpcConfidence.contains(".") ) {
+    		String[] confidenceParts = sumUpcConfidence.split("\\.");
+    		if ( confidenceParts[1].length() > 9 ) {
+    			sumUpcConfidence = confidenceParts[0] + "." + confidenceParts[1].substring(0,10);
+    		}
+    	}
 		
 		List<String> skuType2UPCsInProject = skuTypeUPCMap.get("2");
 		List<String> skuType1UPCsInProject = skuTypeUPCMap.get("1");
@@ -1416,9 +1427,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        if ( count > 0 ) {
 	        	PreparedStatement updatePs = conn.prepareStatement(updateStoreResultSql);
 	        	updatePs.setString(1, resultCode);
-	        	updatePs.setString(2, countDistinctUpc);
-	        	updatePs.setString(3, sumFacing);
-	        	updatePs.setString(4, sumUpcConfidence);
+	        	updatePs.setInt(2, Integer.parseInt(countDistinctUpc));
+	        	updatePs.setInt(3, Integer.parseInt(sumFacing));
+	        	updatePs.setBigDecimal(4, new BigDecimal(sumUpcConfidence));
 	        	updatePs.setString(5, customerCode);
 	        	updatePs.setString(6, customerProjectId);
 	        	updatePs.setString(7, storeId);
@@ -1431,9 +1442,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        	insertPs.setString(2, customerProjectId);
 	        	insertPs.setString(3, storeId);
 	        	insertPs.setString(4, resultCode);
-	        	insertPs.setString(5, countDistinctUpc);
-	        	insertPs.setString(6, sumFacing);
-	        	insertPs.setString(7, sumUpcConfidence);
+	        	insertPs.setInt(5, Integer.parseInt(countDistinctUpc));
+	        	insertPs.setInt(6, Integer.parseInt(sumFacing));
+	        	insertPs.setBigDecimal(7, new BigDecimal(sumUpcConfidence));
 	        	insertPs.executeUpdate();
 	        	insertPs.close();
 	        }
@@ -1511,10 +1522,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        ps.setString(3, storeId);
 	        ResultSet rs = ps.executeQuery();
 	        
-	        while (rs.next()) {
+	        if (rs.next()) {
 	        	projectStoreData.put("count", rs.getString("count"));
-	        	projectStoreData.put("facing", rs.getString("facing"));
-	        	projectStoreData.put("confidence", rs.getString("confidence"));
+	        	projectStoreData.put("facing",rs.getString("facing") );
+	        	projectStoreData.put("confidence", rs.getString("confidence") );
 	        }
 	        rs.close();
 	        ps.close();
@@ -1654,9 +1665,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                map.put("zip", rs.getString("zip") );
 	                map.put("resultCode", rs.getString("resultCode") );
 	                map.put("result", rs.getString("description"));
-	                map.put("countDistinctUpc", rs.getString("countDistinctUpc"));
-	                map.put("sumFacing", rs.getString("sumFacing"));
-	                map.put("sumUpcConfidence", rs.getString("sumUpcConfidence"));
+	                map.put("countDistinctUpc", String.valueOf(rs.getInt("countDistinctUpc")));
+	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
+	                map.put("sumUpcConfidence", String.valueOf(rs.getBigDecimal("sumUpcConfidence")));
 	                result.add(map);
 	            }
 	            rs.close();
