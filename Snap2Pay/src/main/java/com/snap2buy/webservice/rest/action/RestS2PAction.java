@@ -10,6 +10,7 @@ package com.snap2buy.webservice.rest.action;
 import com.google.gson.Gson;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
+import com.snap2buy.webservice.service.AuthenticationService;
 import com.snap2buy.webservice.service.MetaService;
 import com.snap2buy.webservice.service.ProcessImageService;
 import com.snap2buy.webservice.service.ProductMasterService;
@@ -51,6 +52,10 @@ public class RestS2PAction {
     @Autowired
     @Qualifier(BeanMapper.BEAN_META_SERVICE)
     private MetaService metaService;
+    
+    @Autowired
+    @Qualifier(BeanMapper.BEAN_AUTH_SERVICE)
+    private AuthenticationService authService;
 
 //    @Autowired
 //    @Qualifier(BeanMapper.BEAN_QUERY_GENERATION_SERVICE)
@@ -1119,6 +1124,164 @@ public class RestS2PAction {
         Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends getProjectAllStoreResults----------------\n");
 
+        return reportIO;
+	}
+	
+
+	public Snap2PayOutput createUser(User userInput) {
+		 LOGGER.info("---------------RestAction Starts createUser----------------\n");
+
+	        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+	        LOGGER.info("Check if userId exists for userId : " + userInput.getUserId());
+	        List<LinkedHashMap<String,String>> userList = authService.getUserDetail(userInput.getUserId());
+	        boolean isSuccess = false;
+	        if (null == userList || userList.isEmpty() ) {
+	        	LOGGER.info("No existing record found for userId : " + userInput.getUserId());
+	        	authService.createUser(userInput);
+		        LOGGER.info("New user created with userId : " + userInput.getUserId());
+		        isSuccess = true;
+	        } else {
+	        	LOGGER.error("User Id " + userInput.getUserId() + " already exists in the system. Rejecting the request.");
+	        	isSuccess = false;
+	        }
+
+	        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+	        if ( isSuccess ) {
+	        	result.put("responseCode", "200");
+	 	        result.put("responseMessage", "User Created Successfully");
+	        } else {
+	        	result.put("responseCode", "200");
+	 	        result.put("responseMessage", "Existing user found. Request Rejected.");
+	        }
+	        resultListToPass.add(result);
+
+	        HashMap<String, String> reportInput = new HashMap<String, String>();
+	        reportInput.put("userId", userInput.getUserId());
+	        reportInput.put("firstName", userInput.getFirstName());
+	        reportInput.put("lastName", userInput.getLastName());
+
+
+	        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+	        LOGGER.info("---------------RestAction Ends createUser----------------\n");
+	        return reportIO;
+	}
+	
+	public Snap2PayOutput getUserDetail(String userId) {
+		LOGGER.info("---------------RestAction Starts getUserDetail --userName : " + userId+"----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = authService.getUserDetail(userId);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("userId", userId);
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getUserDetail -- userId : " + userId +"----------------\n");
+        return reportIO;
+	}
+	
+	public Snap2PayOutput updateUser(User userInput) {
+		 LOGGER.info("---------------RestAction Starts updateteUser----------------\n");
+
+	        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+	        LOGGER.info("userId : " + userInput.getUserId());
+	        authService.updateUser(userInput);
+	        LOGGER.info("udpateUser done");
+
+
+	        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+	        result.put("responseCode", "200");
+	        result.put("responseMessage", "User Updated Successfully");
+	        resultListToPass.add(result);
+
+
+	        HashMap<String, String> reportInput = new HashMap<String, String>();
+	        reportInput.put("userId", userInput.getUserId());
+	        reportInput.put("firstName", userInput.getFirstName());
+	        reportInput.put("lastName", userInput.getLastName());
+
+
+	        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+	        LOGGER.info("---------------RestAction Ends updateUser----------------\n");
+	        return reportIO;
+	}
+	
+	public Snap2PayOutput updateUserPassword(User userInput) {
+		 LOGGER.info("---------------RestAction Starts updateUserPassword----------------\n");
+
+	        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+	        LOGGER.info("userId : " + userInput.getUserId());
+	        authService.updateUserPassword(userInput);
+	        LOGGER.info("updateUserPassword done");
+
+
+	        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+	        result.put("responseCode", "200");
+	        result.put("responseMessage", "User password updated Successfully");
+	        resultListToPass.add(result);
+
+	        HashMap<String, String> reportInput = new HashMap<String, String>();
+	        reportInput.put("userId", userInput.getUserId());
+
+	        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+	        LOGGER.info("---------------RestAction Ends updateUserPassword----------------\n");
+	        return reportIO;
+	}
+	
+	public Snap2PayOutput deleteUser(String userId) {
+		 LOGGER.info("---------------RestAction Starts deleteUser----------------\n");
+
+	        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+	        LOGGER.info("userId : " + userId);
+	        authService.deleteUser(userId);
+	        LOGGER.info("deleteUser done");
+
+
+	        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+	        result.put("responseCode", "200");
+	        result.put("responseMessage", "User Deleted Successfully");
+	        resultListToPass.add(result);
+
+
+	        HashMap<String, String> reportInput = new HashMap<String, String>();
+	        reportInput.put("userId", userId);
+
+	        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+	        LOGGER.info("---------------RestAction Ends deleteUser----------------\n");
+	        return reportIO;
+	}
+
+	public Snap2PayOutput login(String userId, String password) {
+		LOGGER.info("---------------RestAction Starts login for user : " + userId + "----------------\n");
+
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        List<LinkedHashMap<String,String>> userList = authService.getUserForAuth(userId);
+       
+        boolean isAuthenticated = true;
+        if (userList == null || userList.isEmpty() ) {
+        	isAuthenticated = false;
+        } else {
+        	if ( password == null || !password.equals(userList.get(0).get("password"))) {
+        		isAuthenticated = false;
+        	}
+        }
+        
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        if ( isAuthenticated ) {
+        	result.put("status", "success");
+            result.put("customerCode", userList.get(0).get("customerCode"));
+        } else {
+        	result.put("status", "failure");
+        }
+        resultListToPass.add(result);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("userId", userId);
+
+        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends deleteUser----------------\n");
         return reportIO;
 	}
 }

@@ -11,16 +11,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "User")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User {
-    @XmlElement
-    String id;
-    @XmlElement
-    String user;
+   
     @XmlElement
     String firstName;
     @XmlElement
     String lastName;
     @XmlElement
     String customerCode;
+    @XmlElement
+    String userId;
+    @XmlElement
+    String password;
+    @XmlElement
+    String email;
     @XmlElement
     String role;
     @XmlElement
@@ -40,11 +43,12 @@ public class User {
         super();
     }
 
-    public User(String id, String user, String firstName, String lastName, String customerCode, String role, String createdDate, String createdBy, String updatedDate, String updatedBy, String lastLoginDate, String status) {
-        this.id = id;
-        this.user = user;
+    public User(String userId, String password, String firstName, String lastName, String email, String customerCode, String role, String createdDate, String createdBy, String updatedDate, String updatedBy, String lastLoginDate, String status) {
+        this.userId = userId;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.customerCode = customerCode;
         this.role = role;
         this.createdDate = createdDate;
@@ -55,20 +59,28 @@ public class User {
         this.status = status;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+    public String getPassword() {
+        return password;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -154,8 +166,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                ", user='" + user + '\'' +
+                "userId='" + userId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", customerCode='" + customerCode + '\'' +

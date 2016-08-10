@@ -2163,6 +2163,200 @@ public class RestS2PController {
             return rio;
         }
     }
+    
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/createUser")
+    public Snap2PayOutput createUser(
+            JAXBElement<User> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts createUser----------------\n");
+        try {
+
+            User userInput = p.getValue();
+
+            LOGGER.info("---------------Controller  userInput::="+userInput.toString()+"----------------\n");
+
+            return restS2PAction.createUser(userInput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends createUser----------------\n");
+            return rio;
+        }
+    }
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateUser")
+    public Snap2PayOutput updateUser(
+            JAXBElement<User> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateUser----------------\n");
+        try {
+
+            User userInput = p.getValue();
+
+            LOGGER.info("---------------Controller  userInput::="+userInput.toString()+"----------------\n");
+
+            return restS2PAction.updateUser(userInput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateUser----------------\n");
+            return rio;
+        }
+    }
+    
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateUserPassword")
+    public Snap2PayOutput updateUserPassword(
+            JAXBElement<User> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateUserPassword----------------\n");
+        try {
+
+            User userInput = p.getValue();
+
+            LOGGER.info("---------------Controller  userInput::="+userInput.toString()+"----------------\n");
+
+            return restS2PAction.updateUserPassword(userInput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateUserPassword----------------\n");
+            return rio;
+        }
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getUserDetail")
+    public Snap2PayOutput getUserDetail(
+            @QueryParam(ParamMapper.USER_ID) @DefaultValue("-9") String userId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getUserDetail::userId::="+userId+"----------------\n");
+        try {
+            
+            return restS2PAction.getUserDetail(userId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            inputList.put("userId",userId);
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getUserDetail----------------\n");
+            return rio;
+        }
+    }
+    
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/deleteUser")
+    public Snap2PayOutput deleteUser(
+            JAXBElement<User> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts deleteUser----------------\n");
+        try {
+
+            User userInput = p.getValue();
+
+            LOGGER.info("---------------Controller  userInput::="+userInput.toString()+"----------------\n");
+
+            return restS2PAction.deleteUser(userInput.getUserId());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends deleteUser----------------\n");
+            return rio;
+        }
+    }
+    
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/login")
+    public Snap2PayOutput login(
+            JAXBElement<User> p,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts login request----------------\n");
+        try {
+
+            User userInput = p.getValue();
+
+            LOGGER.info("---------------Controller  login request for user ::="+userInput.getUserId()+"----------------\n");
+
+            return restS2PAction.login(userInput.getUserId(), userInput.getPassword());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2PayOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2PayOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends login request----------------\n");
+            return rio;
+        }
+    }
 
 }
 

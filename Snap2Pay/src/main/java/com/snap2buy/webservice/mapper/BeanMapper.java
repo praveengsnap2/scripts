@@ -18,6 +18,8 @@ public interface BeanMapper {
     String BEAN_PRODUCT_MASTER_SERVICE = "ProductMasterServiceImpl";
     String BEAN_QUERY_GENERATION_SERVICE = "QueryGenerationServiceImpl";
     String BEAN_META_SERVICE = "MetaServiceImpl";
+    String BEAN_AUTH_SERVICE = "AuthenticationServiceImpl";
+    String BEAN_SALT_SOURCE_SERVICE = "SaltSourceImpl";
 
 
     String BEAN_IMAGE_STORE_DAO = "ProcessImageDaoImpl";
@@ -25,5 +27,6 @@ public interface BeanMapper {
     String BEAN_STORE_MASTER_DAO = "StoreMasterDaoImpl";
     String BEAN_PRODUCT_MASTER_DAO = "ProductMasterDaoImpl";
     String BEAN_META_SERVICE_DAO = "MetaServiceDaoImpl";
+    String BEAN_AUTH_SERVICE_DAO = "AuthenticationServiceDaoImpl";
 
 }
