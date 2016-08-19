@@ -241,29 +241,29 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends storeThumbnails----------------\n");
     }
 
-    public Snap2PayOutput runImageAnalysis(InputObject inputObject) {
-        LOGGER.info("---------------RestAction Starts runImageAnalysis----------------\n");
-        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
-
-        LOGGER.info("imageUUID : " + inputObject.getImageUUID());
-        resultListToPass = processImageService.runImageAnalysis(inputObject.getImageUUID());
-
-        HashMap<String, String> reportInput = new HashMap<String, String>();
-
-        reportInput.put("imageUUID", inputObject.getImageUUID());
-
-        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
-        LOGGER.info("---------------RestAction Ends runImageAnalysis----------------\n");
-
-        return reportIO;
-    }
+//    public Snap2PayOutput runImageAnalysis(InputObject inputObject) {
+//        LOGGER.info("---------------RestAction Starts runImageAnalysis----------------\n");
+//        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+//
+//        LOGGER.info("imageUUID : " + inputObject.getImageUUID());
+//        resultListToPass = processImageService.runImageAnalysis(inputObject.getImageUUID());
+//
+//        HashMap<String, String> reportInput = new HashMap<String, String>();
+//
+//        reportInput.put("imageUUID", inputObject.getImageUUID());
+//
+//        Snap2PayOutput reportIO = new Snap2PayOutput(resultListToPass, reportInput);
+//        LOGGER.info("---------------RestAction Ends runImageAnalysis----------------\n");
+//
+//        return reportIO;
+//    }
 
     public Snap2PayOutput getImageAnalysis(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getImageAnalysis----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
-
+        String defaultHostId = "52.40.6.184";
         LOGGER.info("imageUUID : " + inputObject.getImageUUID());
-        resultListToPass = processImageService.getImageAnalysis(inputObject.getImageUUID());
+        resultListToPass = processImageService.getImageAnalysis(inputObject.getImageUUID(),defaultHostId);
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
 

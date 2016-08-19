@@ -505,39 +505,39 @@ public class RestS2PController {
         }
     }
 
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("/runImageAnalysis")
-    public Snap2PayOutput runImageAnalysis(
-            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
-            @Context HttpServletRequest request,
-            @Context HttpServletResponse response
-    ) {
-        LOGGER.info("---------------Controller Starts runImageAnalysis::imageUUID="+imageUUID+"----------------\n");
-        try {
-            Snap2PayOutput rio;
-            InputObject inputObject = new InputObject();
-
-            inputObject.setImageUUID(imageUUID);
-
-            return restS2PAction.runImageAnalysis(inputObject);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-            LOGGER.error("exception", e);
-
-            Snap2PayOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
-
-            inputList.put("error in Input","-9");
-            inputList.put("imageUUID", imageUUID);
-
-            rio = new Snap2PayOutput(null, inputList);
-            LOGGER.info("---------------Controller Ends runImageAnalysis----------------\n");
-            return rio;
-        }
-    }
+//    @GET
+//    @Produces({MediaType.APPLICATION_JSON})
+//    @Path("/runImageAnalysis")
+//    public Snap2PayOutput runImageAnalysis(
+//            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
+//            @Context HttpServletRequest request,
+//            @Context HttpServletResponse response
+//    ) {
+//        LOGGER.info("---------------Controller Starts runImageAnalysis::imageUUID="+imageUUID+"----------------\n");
+//        try {
+//            Snap2PayOutput rio;
+//            InputObject inputObject = new InputObject();
+//
+//            inputObject.setImageUUID(imageUUID);
+//
+//            return restS2PAction.runImageAnalysis(inputObject);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+//            LOGGER.error("exception", e);
+//
+//            Snap2PayOutput rio;
+//            HashMap<String, String> inputList = new HashMap<String, String>();
+//
+//            inputList.put("error in Input","-9");
+//            inputList.put("imageUUID", imageUUID);
+//
+//            rio = new Snap2PayOutput(null, inputList);
+//            LOGGER.info("---------------Controller Ends runImageAnalysis----------------\n");
+//            return rio;
+//        }
+//    }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getImageAnalysis")
