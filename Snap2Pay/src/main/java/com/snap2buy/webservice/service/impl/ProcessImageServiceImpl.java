@@ -109,6 +109,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LOGGER.info("--------------runImageAnalysis::projectTypeId=" + projectTypeId + "-----------------\n");
 
 
+            processImageDao.updateImageAnalysisHostId(defaultHostId, imageStore.getImageUUID());
 
             List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore, retailerChainCode, projectTypeId, defaultHostId);
             List<ImageAnalysis> result =null;
@@ -133,7 +134,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 				}
                 
                 if (isThumbNailProcessingSuccess) {
-                	 processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
+                    processImageDao.updateImageAnalysisStatus("done", imageStore.getImageUUID());
                  	LOGGER.info("---------------ProcessImageServiceImpl start updated status to done sync----------------\n");
                 }
 
@@ -339,6 +340,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             	}
 
             	processImageDao.updateImageAnalysisStatus(imageStatus, imageUUID);
+                processImageDao.updateImageAnalysisHostId(hostId, imageStore.getImageUUID());
+
             	LOGGER.info("--------------runImageAnalysis::updateStatus=" + imageStatus + "-----------------\n");
             	imageAnalysisList = new ArrayList<ImageAnalysis>(); //keep the list empty for response.
             	
@@ -356,7 +359,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage----------------\n");
         ImageStore imageStore = processImageDao.getNextImageDetails();
 
-        String imageStatus = "processing"; //if analysis failed after retries, set the status to error to stop retry.
+        String imageStatus = "error"; //if analysis failed after retries, set the status to error to stop retry.
         if ( imageStore.getImageStatus().equalsIgnoreCase("cron") ) { //logic to stop infinite retries, only 2 retries after first attempt failed.
             imageStatus = "processing";
         } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron1")) {
@@ -365,6 +368,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             imageStatus = "processing2";
         }
         processImageDao.updateImageAnalysisStatus(imageStatus, imageStore.getImageUUID());
+        processImageDao.updateImageAnalysisHostId(hostId, imageStore.getImageUUID());
 
         List<LinkedHashMap<String, String>> imageAnalysisList=new ArrayList<LinkedHashMap<String, String>>();
         if (imageStore != null) {

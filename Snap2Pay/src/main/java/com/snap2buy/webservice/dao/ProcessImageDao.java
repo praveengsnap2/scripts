@@ -22,6 +22,7 @@ public interface ProcessImageDao {
     public void storeImageAnalysis(List<ImageAnalysis> ImageAnalysisList,ImageStore imageStore);
     public void updateStatusAndHost(String hostId, String status, String imageUUID);
     public void updateImageAnalysisStatus(String status, String imageUUID);
+    public void updateImageAnalysisHostId(String hostId, String imageUUID);
     public void updateOrientationDetails(ImageStore imageStore);
     public void updateShelfAnalysisStatus(String status, String imageUUID);
     public void updateStoreId(String storeId, String imageUUID);

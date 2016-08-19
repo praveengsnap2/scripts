@@ -356,6 +356,40 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
+    public void updateImageAnalysisHostId(String hostId, String imageUUID) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus::hostId="+hostId+"::imageUUID="+imageUUID+"----------------\n");
+        long currTimestamp = System.currentTimeMillis() / 1000L;
+        String sql = "UPDATE ImageStoreNew SET hostId = ?, lastUpdatedTimestamp = ? WHERE imageUUID = ? ";
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, hostId);
+            ps.setString(2, String.valueOf(currTimestamp));
+            ps.setString(3, imageUUID);
+            ps.executeUpdate();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateImageAnalysisStatus----------------\n");
+
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
     public void updateOrientationDetails(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateOrientationDetails::imageRotation="+imageStore.getImageRotation()+"::imageHashScore="+imageStore.getImageHashScore()+"::orig-height::"+imageStore.getOrigHeight()+"::orig-width::"+imageStore.getOrigWidth()+"::new-height::"+imageStore.getNewHeight()+"::new-width::"+imageStore.getNewWidth()+"----------------\n");
         long currTimestamp = System.currentTimeMillis() / 1000L;
@@ -536,35 +570,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-
-//            LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails second query ::imageUUID="+imageStore.getImageUUID()+"::hostId="+hostId+"----------------\n");
-//            String sql1 = "UPDATE ImageStoreNew SET hostId = ? WHERE imageUUID = ? ";
-//            Connection conn1 = null;
-//            try {
-//
-//                conn1 = dataSource.getConnection();
-//                PreparedStatement ps1 = conn1.prepareStatement(sql1);
-//                ps1.setString(1, hostId);
-//                ps1.setString(2, imageStore.getImageUUID());
-//                ps1.executeUpdate();
-//                ps1.close();
-//                LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails second query----------------\n");
-//
-//            } catch (SQLException e) {
-//                LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-//                LOGGER.error("exception", e);
-//
-//            } finally {
-//                if (conn != null) {
-//                    try {
-//                        conn.close();
-//                    } catch (SQLException e) {
-//                        LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-//                        LOGGER.error("exception", e);
-//                    }
-//                }
-//            }
-//            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails imageStore = "+imageStore+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
