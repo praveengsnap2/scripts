@@ -500,7 +500,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore getNextImageDetails() {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails----------------\n");
-        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\") and hostId is null order by lastUpdatedTimestamp limit 1";
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\") order by lastUpdatedTimestamp limit 1";
         Connection conn = null;
         ImageStore imageStore = null;
         try {
