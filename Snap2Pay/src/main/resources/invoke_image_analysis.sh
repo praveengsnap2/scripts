@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 WS_MACHINE="ec2-52-25-175-37.us-west-2.compute.amazonaws.com"
-GPU_MACHINE="52.40.6.184"
+#hostId="52.40.228.141"
 
-Destination_Dir="/tmp/processImage/"
+Destination_Dir="/data/processImage/"
 
 #Image_File_Path=$2
 #Category=$3
@@ -13,10 +13,10 @@ Destination_Dir="/tmp/processImage/"
 #Project_type_id=$8
 
 
-echo "${Image_File_Path} ${GPU_MACHINE}:${Destination_Dir}/${Uuid}.jpg"
+echo "${Image_File_Path} ${hostId}:${Destination_Dir}/${Uuid}.jpg"
 
-scp ${Image_File_Path} ${GPU_MACHINE}:${Destination_Dir}/${Uuid}.jpg
+scp ${Image_File_Path} ${hostId}:${Destination_Dir}/${Uuid}.jpg
 
-echo "pssh -e err -H ${GPU_MACHINE} -i -t 300 cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"
+echo "pssh -e err -H ${hostId} -i -t 300 cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"
 
-pssh -e err -H ${GPU_MACHINE} -i -t 300 "cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"
+pssh -e err -H ${hostId} -i -t 300 "cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"

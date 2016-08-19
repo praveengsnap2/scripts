@@ -51,7 +51,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Qualifier(BeanMapper.BEAN_META_SERVICE_DAO)
     private MetaServiceDao metaServiceDao;
 
-    String defaultHostId = "52.40.6.184";
+    String defaultHostId = "52.40.228.141";
 
     @Override
     public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {

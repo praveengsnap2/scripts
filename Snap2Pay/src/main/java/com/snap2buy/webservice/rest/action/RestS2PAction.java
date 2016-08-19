@@ -261,7 +261,7 @@ public class RestS2PAction {
     public Snap2PayOutput getImageAnalysis(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getImageAnalysis----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
-        String defaultHostId = "52.40.6.184";
+        String defaultHostId = "52.40.228.141";
         LOGGER.info("imageUUID : " + inputObject.getImageUUID());
         resultListToPass = processImageService.getImageAnalysis(inputObject.getImageUUID(),defaultHostId);
 
