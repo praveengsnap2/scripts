@@ -500,7 +500,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     @Override
     public ImageStore getNextImageDetails() {
         LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails----------------\n");
-        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\") order by lastUpdatedTimestamp limit 1";
+        String sql = "SELECT * FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\") and hostId is null order by lastUpdatedTimestamp limit 1";
         Connection conn = null;
         ImageStore imageStore = null;
         try {
@@ -536,7 +536,35 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails imageStore = "+imageStore+"----------------\n");
+
+//            LOGGER.info("---------------ProcessImageDaoImpl Starts getNextImageDetails second query ::imageUUID="+imageStore.getImageUUID()+"::hostId="+hostId+"----------------\n");
+//            String sql1 = "UPDATE ImageStoreNew SET hostId = ? WHERE imageUUID = ? ";
+//            Connection conn1 = null;
+//            try {
+//
+//                conn1 = dataSource.getConnection();
+//                PreparedStatement ps1 = conn1.prepareStatement(sql1);
+//                ps1.setString(1, hostId);
+//                ps1.setString(2, imageStore.getImageUUID());
+//                ps1.executeUpdate();
+//                ps1.close();
+//                LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails second query----------------\n");
+//
+//            } catch (SQLException e) {
+//                LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+//                LOGGER.error("exception", e);
+//
+//            } finally {
+//                if (conn != null) {
+//                    try {
+//                        conn.close();
+//                    } catch (SQLException e) {
+//                        LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+//                        LOGGER.error("exception", e);
+//                    }
+//                }
+//            }
+//            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails imageStore = "+imageStore+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -1655,15 +1683,15 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	            while (rs.next()) {
 	                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 	                map.put("storeId", rs.getString("storeId"));
-	                map.put("retailerStoreId", rs.getString("retailerStoreId") );
-	                map.put("retailerChainCode", rs.getString("retailerChainCode") );
-	                map.put("retailer", rs.getString("retailer") );
-	                map.put("street", rs.getString("street") );
-	                map.put("city",  rs.getString("city"));
-	                map.put("stateCode", rs.getString("stateCode") );
-	                map.put("state", rs.getString("state") );
-	                map.put("zip", rs.getString("zip") );
-	                map.put("resultCode", rs.getString("resultCode") );
+	                map.put("retailerStoreId", rs.getString("retailerStoreId"));
+	                map.put("retailerChainCode", rs.getString("retailerChainCode"));
+	                map.put("retailer", rs.getString("retailer"));
+	                map.put("street", rs.getString("street"));
+	                map.put("city", rs.getString("city"));
+	                map.put("stateCode", rs.getString("stateCode"));
+	                map.put("state", rs.getString("state"));
+	                map.put("zip", rs.getString("zip"));
+	                map.put("resultCode", rs.getString("resultCode"));
 	                map.put("result", rs.getString("description"));
 	                map.put("countDistinctUpc", String.valueOf(rs.getInt("countDistinctUpc")));
 	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));

@@ -12,10 +12,10 @@ import java.util.List;
 public interface ProcessImageService {
 
     public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getImageAnalysis (String imageUUID);
+    public List<LinkedHashMap<String, String>> getImageAnalysis (String imageUUID,String hostId);
     public List<LinkedHashMap<String, String>> doShareOfShelfAnalysis (InputObject inputObject);
-    public List<LinkedHashMap<String, String>> runImageAnalysis (String imageUUID);
-    public List<LinkedHashMap<String, String>> processNextImage();
+    public List<LinkedHashMap<String, String>> runImageAnalysis (String imageUUID,String hostId);
+    public List<LinkedHashMap<String, String>> processNextImage(String hostId);
     public LinkedHashMap<String, String> getJob(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getStoreOptions();
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject);

@@ -1637,13 +1637,14 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/processNextImage")
     public Snap2PayOutput processNextImage(
+            @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts processNextImage----------------\n");
         try {
 
-            return restS2PAction.processNextImage();
+            return restS2PAction.processNextImage(hostId);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -50,6 +50,9 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     @Autowired
     @Qualifier(BeanMapper.BEAN_META_SERVICE_DAO)
     private MetaServiceDao metaServiceDao;
+
+    String defaultHostId = "52.40.6.184";
+
     @Override
     public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {
 
@@ -106,7 +109,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LOGGER.info("--------------runImageAnalysis::projectTypeId=" + projectTypeId + "-----------------\n");
 
 
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore, retailerChainCode, projectTypeId);
+
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore, retailerChainCode, projectTypeId, defaultHostId);
             List<ImageAnalysis> result =null;
             if ( null != imageAnalysisList ) {
             
@@ -151,7 +155,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 					LOGGER.info("---------------ProcessImageServiceImpl create thumbnail done----------------\n");
 
 					processImageDao.updateOrientationDetails(imageStore);
-					LOGGER.info("---------------ProcessImageServiceImpl all orientation details update done----------------\n");
+					LOGGER.info( "---------------ProcessImageServiceImpl all orientation details update done----------------\n");
 				} catch (Exception e) {
 					LOGGER.error("---------------ProcessImageServiceImpl - createThumbnail and Update Orientation failed----------------\n");
 					LOGGER.error("---------------ProcessImageServiceImpl - Marking imageStatus as puased----------------\n");
@@ -222,15 +226,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
 
-    public List<ImageAnalysis> invokeImageAnalysis(ImageStore imageStore, String retailer, String projectTypeId) {
+    public List<ImageAnalysis> invokeImageAnalysis(ImageStore imageStore, String retailer, String projectTypeId,String hostId) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts invokeImageAnalysis----------------\n");
-        LOGGER.info("---------------ProcessImageServiceImpl imageFilePath=" + imageStore.getImageFilePath() + ", category=" + imageStore.getCategoryId() + ", uuid=" + imageStore.getImageUUID() + ", retailer=" + retailer + ", store=" + imageStore.getStoreId() + "userId= "+imageStore.getUserId()+"projectTypeId"+projectTypeId+"----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl imageFilePath=" + imageStore.getImageFilePath() + ", category=" + imageStore.getCategoryId() + ", uuid=" + imageStore.getImageUUID() + ", retailer=" + retailer + ", store=" + imageStore.getStoreId() + "userId= "+imageStore.getUserId()+"projectTypeId"+projectTypeId+"hostId="+hostId+"----------------\n");
         //initializing to null. If it remains null at the end of exeuction, it is considered as a failure.
         //If it is empty, it is considered as a successful analysis which resulted in no SKUs.
         //If it has one ore more elements, it is considered as a successful analysis which resulted in identification of one ore more SKUs.
         List<ImageAnalysis> imageAnalysisList = null; 
         ShellUtil shellUtil = new ShellUtil();
-        String result = shellUtil.executeCommand(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailer, imageStore.getStoreId(), imageStore.getUserId(), projectTypeId);
+        String result = shellUtil.executeCommand(imageStore.getImageFilePath(), imageStore.getCategoryId(), imageStore.getImageUUID(), retailer, imageStore.getStoreId(), imageStore.getUserId(), projectTypeId, hostId);
         if (result.contains("{")) {
             LOGGER.info("---------------ProcessImageServiceImpl  result=" + result + "----------------");
             result = result.replaceAll("\n", "").replaceAll("\n", "");
@@ -272,11 +276,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> runImageAnalysis(String imageUUID) {
+    public List<LinkedHashMap<String, String>> runImageAnalysis(String imageUUID,String hostId) {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts runImageAnalysis----------------\n");
 
         ImageStore imageStore = processImageDao.findByImageUUId(imageUUID);
+        LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
+
         if (imageStore == null) {
             List<LinkedHashMap<String, String>> result = new ArrayList<LinkedHashMap<String, String>>();
             LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -284,29 +290,27 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             result.add(map);
             return result;
         } else if (imageStore.getImageStatus().equalsIgnoreCase("done")) {
-            return getImageAnalysis(imageStore.getImageUUID());
-
+            List<ImageAnalysis> imageAnalysisList = processImageDao.getImageAnalysis(imageUUID);
+            LOGGER.info("---------------ProcessImageServiceImpl Ends runImageAnalysis ----------------\n");
+            return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
         } else {
-            LOGGER.info("--------------runImageAnalysis::imageStore=" + imageStore + "-----------------\n");
 
             String retailerChainCode = storeMasterDao.getRetailerChainCode(imageStore.getStoreId());
-
             LOGGER.info("--------------runImageAnalysis::retailerChainCode=" + retailerChainCode + "-----------------\n");
 
             List<LinkedHashMap<String, String>> project = metaServiceDao.getProjectDetail(imageStore.getCustomerProjectId(), imageStore.getCustomerCode());
             String projectTypeId = project.get(0).get("projectTypeId");
             LOGGER.info("--------------runImageAnalysis::projectTypeId=" + projectTypeId + "-----------------\n");
-            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore, retailerChainCode,projectTypeId);
 
+            List<ImageAnalysis> imageAnalysisList = invokeImageAnalysis(imageStore, retailerChainCode, projectTypeId, hostId);
             LOGGER.info("--------------runImageAnalysis::imageAnalysisList=" + imageAnalysisList + "-----------------\n");
             
             if ( null != imageAnalysisList ) {
 
-            	LOGGER.info("--------------runImageAnalysis::storeImageAnalysis started-----------------\n");
-
             	processImageDao.storeImageAnalysis(imageAnalysisList, imageStore);
             	LOGGER.info("--------------runImageAnalysis::storeImageAnalysis done-----------------\n");
-            	boolean isThumbNailProcessingSuccess = true;
+
+                boolean isThumbNailProcessingSuccess = true;
                 try {
 					ShellUtil.createThumbnail(imageStore);
 					LOGGER.info("---------------ProcessImageServiceImpl create thumbnail done----------------\n");
@@ -328,9 +332,9 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
             } else {    
             	String imageStatus = "error"; //if analysis failed after retries, set the status to error to stop retry.
-            	if ( imageStore.getImageStatus().equalsIgnoreCase("cron") ) { //logic to stop infinite retries, only 2 retries after first attempt failed.
+            	if ( imageStore.getImageStatus().equalsIgnoreCase("processing") ) { //logic to stop infinite retries, only 2 retries after first attempt failed.
             		imageStatus = "cron1";            		
-            	} else if ( imageStore.getImageStatus().equalsIgnoreCase("cron1")) {
+            	} else if ( imageStore.getImageStatus().equalsIgnoreCase("processing1")) {
             		imageStatus = "cron2";            		
             	}
 
@@ -347,14 +351,25 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> processNextImage() {
+    public List<LinkedHashMap<String, String>> processNextImage(String hostId) {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage----------------\n");
         ImageStore imageStore = processImageDao.getNextImageDetails();
+
+        String imageStatus = "processing"; //if analysis failed after retries, set the status to error to stop retry.
+        if ( imageStore.getImageStatus().equalsIgnoreCase("cron") ) { //logic to stop infinite retries, only 2 retries after first attempt failed.
+            imageStatus = "processing";
+        } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron1")) {
+            imageStatus = "processing1";
+        } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron2")) {
+            imageStatus = "processing2";
+        }
+        processImageDao.updateImageAnalysisStatus(imageStatus, imageStore.getImageUUID());
+
         List<LinkedHashMap<String, String>> imageAnalysisList=new ArrayList<LinkedHashMap<String, String>>();
         if (imageStore != null) {
             LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage imageUUID = " + imageStore.getImageUUID() + "----------------\n");
-            imageAnalysisList = getImageAnalysis(imageStore.getImageUUID());
+            imageAnalysisList = getImageAnalysis(imageStore.getImageUUID(), hostId);
             //call to generate aggs ignore the resuts returned by the api
             processImageDao.generateAggs(imageStore.getCustomerCode(),imageStore.getCustomerProjectId(),imageStore.getStoreId());
             
@@ -371,7 +386,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getImageAnalysis(String imageUUID) {
+    public List<LinkedHashMap<String, String>> getImageAnalysis(String imageUUID,String hostId) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getImageAnalysis----------------\n");
         String status = processImageDao.getImageAnalysisStatus(imageUUID);
         if (status.equalsIgnoreCase("done")) {
@@ -385,7 +400,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(imageAnalysisList);
         } else {
-        	List<LinkedHashMap<String, String>> imageAnalysisList = runImageAnalysis(imageUUID);
+        	List<LinkedHashMap<String, String>> imageAnalysisList = runImageAnalysis(imageUUID, hostId);
             LOGGER.info("---------------ProcessImageServiceImpl Ends getImageAnalysis ----------------\n");
             return imageAnalysisList;
         }
@@ -417,7 +432,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectStoreImages----------------\n");
 
         List<LinkedHashMap<String, String>> imageStoreList = processImageDao.getProjectStoreImages(inputObject.getCustomerCode(),
-        		inputObject.getCustomerProjectId(),inputObject.getStoreId());
+                inputObject.getCustomerProjectId(), inputObject.getStoreId());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectStoreImages ----------------\n");
         return imageStoreList;
@@ -453,7 +468,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         if (imageStatus.equalsIgnoreCase("done")) {
             map = processImageDao.getFacing(inputObject.getImageUUID());
         } else {
-            getImageAnalysis(inputObject.getPrevImageUUID());
+            getImageAnalysis(inputObject.getPrevImageUUID(),defaultHostId);
             map = processImageDao.getFacing(inputObject.getImageUUID());
         }
 
@@ -495,7 +510,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         if (prevImageStatus.equalsIgnoreCase("done")) {
             map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
         } else {
-            getImageAnalysis(inputObject.getPrevImageUUID());
+            getImageAnalysis(inputObject.getPrevImageUUID(),defaultHostId);
             map1 = processImageDao.getFacing(inputObject.getPrevImageUUID());
         }
 
@@ -503,7 +518,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         if (imageStatus.equalsIgnoreCase("done")) {
             map2 = processImageDao.getFacing(inputObject.getImageUUID());
         } else {
-            getImageAnalysis(inputObject.getImageUUID());
+            getImageAnalysis(inputObject.getImageUUID(),defaultHostId);
             map2 = processImageDao.getFacing(inputObject.getImageUUID());
         }
 
@@ -571,7 +586,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         for (String imageUUID: inputObject.getImageUUIDCsvString().split(",")){
             String status = processImageDao.getImageAnalysisStatus(imageUUID);
             if (!status.equalsIgnoreCase("done")) {
-                runImageAnalysis(imageUUID);
+                runImageAnalysis(imageUUID,defaultHostId);
             }
         }
 
@@ -741,7 +756,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 	public List<LinkedHashMap<String, String>> generateStoreResults(InputObject inputObject) {
 		LOGGER.info("---------------ProcessImageServiceImpl Starts generateStoreResults----------------\n");
 
-        List<LinkedHashMap<String, String>> result = processImageDao.generateStoreResults(inputObject.getCustomerCode(),inputObject.getCustomerProjectId(),inputObject.getStoreId());
+        List<LinkedHashMap<String, String>> result = processImageDao.generateStoreResults(inputObject.getCustomerCode(), inputObject.getCustomerProjectId(), inputObject.getStoreId());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends generateStoreResults----------------\n");
 
@@ -752,7 +767,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(InputObject inputObject) {
 		LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectAllStoreResults----------------\n");
 
-        List<LinkedHashMap<String, String>> result = processImageDao.getProjectAllStoreResults(inputObject.getCustomerCode(),inputObject.getCustomerProjectId());
+        List<LinkedHashMap<String, String>> result = processImageDao.getProjectAllStoreResults(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
 
         LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectAllStoreResults----------------\n");
 

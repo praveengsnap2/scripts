@@ -11,12 +11,12 @@ import java.io.*;
 public class ShellUtil {
     private static Logger LOGGER = Logger.getLogger("s2b");
 
-    public static String executeCommand(String imageFilePath, String category, String uuid, String retailer, String store, String userId, String projectTypeId) {
+    public static String executeCommand(String imageFilePath, String category, String uuid, String retailer, String store, String userId, String projectTypeId, String hostId) {
         String response = "";
         Boolean waitForResponse = true;
         String command = "invoke_image_analysis.sh";
         File f = new File("/root");
-        LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "userId= "+userId+"projectTypeId= "+projectTypeId+"----------------\n");
+        LOGGER.info("---------------ShellUtil imageFilePath=" + imageFilePath + ", category=" + category + ", uuid=" + uuid + ", retailer=" + retailer + ", store=" + store + "userId= "+userId+"projectTypeId= "+projectTypeId+"hostId="+hostId+"----------------\n");
 
         ProcessBuilder pb = new ProcessBuilder("/bin/bash", command);
         pb.environment().put("Image_File_Path", imageFilePath);
@@ -26,6 +26,7 @@ public class ShellUtil {
         pb.environment().put("Store_Id", store);
         pb.environment().put("User_Id", userId);
         pb.environment().put("Project_type_id", projectTypeId);
+        pb.environment().put("hostId", hostId);
         pb.directory(f);
         pb.redirectErrorStream(true);
 
