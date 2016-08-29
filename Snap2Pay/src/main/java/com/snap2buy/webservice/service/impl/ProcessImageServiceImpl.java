@@ -359,19 +359,21 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage----------------\n");
         ImageStore imageStore = processImageDao.getNextImageDetails();
 
-        String imageStatus = "error"; //if analysis failed after retries, set the status to error to stop retry.
-        if ( imageStore.getImageStatus().equalsIgnoreCase("cron") ) { //logic to stop infinite retries, only 2 retries after first attempt failed.
-            imageStatus = "processing";
-        } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron1")) {
-            imageStatus = "processing1";
-        } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron2")) {
-            imageStatus = "processing2";
-        }
-        processImageDao.updateImageAnalysisStatus(imageStatus, imageStore.getImageUUID());
-        processImageDao.updateImageAnalysisHostId(hostId, imageStore.getImageUUID());
-
         List<LinkedHashMap<String, String>> imageAnalysisList=new ArrayList<LinkedHashMap<String, String>>();
         if (imageStore != null) {
+
+            String imageStatus = "error"; //if analysis failed after retries, set the status to error to stop retry.
+            if ( imageStore.getImageStatus().equalsIgnoreCase("cron") ) { //logic to stop infinite retries, only 2 retries after first attempt failed.
+                imageStatus = "processing";
+            } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron1")) {
+                imageStatus = "processing1";
+            } else if ( imageStore.getImageStatus().equalsIgnoreCase("cron2")) {
+                imageStatus = "processing2";
+            }
+            processImageDao.updateImageAnalysisStatus(imageStatus, imageStore.getImageUUID());
+            processImageDao.updateImageAnalysisHostId(hostId, imageStore.getImageUUID());
+
+
             LOGGER.info("---------------ProcessImageServiceImpl Starts processNextImage imageUUID = " + imageStore.getImageUUID() + "----------------\n");
             imageAnalysisList = getImageAnalysis(imageStore.getImageUUID(), hostId);
             //call to generate aggs ignore the resuts returned by the api
