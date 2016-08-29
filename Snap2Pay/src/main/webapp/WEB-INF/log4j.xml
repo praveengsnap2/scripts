@@ -18,7 +18,7 @@
         <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Pay.log"/>-->
         <param name="DatePattern" value="'.' yyyy-MM-dd"/>
         <!-- Keep one backup file -->
-        <param name="MaxBackupIndex" value="5"/>
+        <param name="MaxBackupIndex" value="1"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d] [%p] [%t] [%c:%F:%L] - %m%n"/>
         </layout>

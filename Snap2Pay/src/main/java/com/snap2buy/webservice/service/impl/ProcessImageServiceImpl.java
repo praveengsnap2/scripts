@@ -386,6 +386,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LinkedHashMap<String, String> temp = new LinkedHashMap<String, String>();
             temp.put("message", "no more job left to process");
             imageAnalysisList.add(temp);
+            LOGGER.info("---------------"+"no more job left to process"+"----------------\n");
+
         }
 
         return imageAnalysisList;
