@@ -281,6 +281,7 @@ public class RestS2PAction {
         resultListToPass = processImageService.processNextImage(hostId);
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("hostId",hostId);
 
         Snap2BuyOutput reportIO = new Snap2BuyOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends processNextImage----------------\n");

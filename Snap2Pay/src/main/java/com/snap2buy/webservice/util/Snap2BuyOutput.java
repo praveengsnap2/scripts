@@ -23,7 +23,7 @@ public class Snap2BuyOutput {
     private List<MyHashMapType> row = new ArrayList<MyHashMapType>();
 
     public Snap2BuyOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList) {
-        LOGGER.error("Inside Snap2BuyOutput");
+        LOGGER.info("Inside Snap2BuyOutput");
 
         this.setRow(resultSet);
         this.setMetaDetail(inputList);

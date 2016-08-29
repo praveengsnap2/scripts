@@ -1654,7 +1654,7 @@ public class RestS2PController {
             Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
-            inputList.put("error in Input","-9");
+            inputList.put("hostId",hostId);
 
             rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends processNextImage----------------\n");
