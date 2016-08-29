@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CustomSnap2PayOutput {
+public class CustomSnap2BuyOutput {
 
     private List<Map<String,String>> MetaInfo = new ArrayList<Map<String,String>>();
     private ResultSet ResultSet = new ResultSet();
     
-    public CustomSnap2PayOutput(List<?> rows, List<Map<String,String>> inputList) {
+    public CustomSnap2BuyOutput(List<?> rows, List<Map<String, String>> inputList) {
         this.getResultSet().setRow(rows);
         this.setMetaInfo(inputList);
     }

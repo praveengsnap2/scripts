@@ -15,15 +15,15 @@ import java.util.List;
 
 @XmlType(propOrder = {"metaDetail", "row"})
 @XmlRootElement(name = "S2PResponse")
-public class Snap2PayOutput {
+public class Snap2BuyOutput {
 
     private static Logger LOGGER = Logger.getLogger("s2b");
     private MyHashMapType metaDetail = new MyHashMapType();
     @XmlElementWrapper(name = "ResultSet")
     private List<MyHashMapType> row = new ArrayList<MyHashMapType>();
 
-    public Snap2PayOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList) {
-        LOGGER.error("Inside Snap2PayOutput");
+    public Snap2BuyOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList) {
+        LOGGER.error("Inside Snap2BuyOutput");
 
         this.setRow(resultSet);
         this.setMetaDetail(inputList);
@@ -52,9 +52,9 @@ public class Snap2PayOutput {
 //    }
 //  }
 
-    public Snap2PayOutput() {
+    public Snap2BuyOutput() {
         super();
-        LOGGER.log(Level.DEBUG, "I reached default no-args constructor of Class Snap2PayOutput.");
+        LOGGER.log(Level.DEBUG, "I reached default no-args constructor of Class Snap2BuyOutput.");
     }
 
     @XmlElement(name = "MetaInfo")
@@ -70,8 +70,8 @@ public class Snap2PayOutput {
         return row;
     }
 
-//  public Snap2PayOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList, List<java.util.LinkedHashMap<String, Object>> dataSet) {
-//    LOGGER.error("Inside Snap2PayOutput");
+//  public Snap2BuyOutput(List<java.util.LinkedHashMap<String, String>> resultSet, HashMap inputList, List<java.util.LinkedHashMap<String, Object>> dataSet) {
+//    LOGGER.error("Inside Snap2BuyOutput");
 //
 //    this.setRow(resultSet);
 //    this.se
@@ -99,7 +99,7 @@ public class Snap2PayOutput {
 
     @Override
     public String toString() {
-        return "Snap2PayOutput{" +
+        return "Snap2BuyOutput{" +
                 "metaDetail=" + metaDetail +
                 ", row=" + row +
                 '}';

@@ -48,12 +48,12 @@ echo "loop = ${loop}"
 
 until [ "${loop}" -eq "1" ]; do
 
-echo "Making call to get jobs api curl http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/getJob?hostId=$HOST_ID"
-RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Pay-1.0/service/S2P/getJob?hostId="${HOST_ID}"`
+echo "Making call to get jobs api curl http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/getJob?hostId=$HOST_ID"
+RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Buy-1.0/service/S2P/getJob?hostId="${HOST_ID}"`
 if [ $? -ne 0 ]; then
    echo "RESULT=${RESULT}"
-   echo "Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/getJob?hostId=${HOST_ID}"
-   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/getJob?hostId=${HOST_ID}"
+   echo "Failed: http://${WS_MACHINE}:8080/Snap2Buy-1.0/service/S2P/getJob?hostId=${HOST_ID}"
+   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Buy-1.0/service/S2P/getJob?hostId=${HOST_ID}"
    #send_mail "$MSG"
    exit 1
 fi
@@ -103,11 +103,11 @@ fi
 #   exit 1
 #fi
 
-echo "Making call to get Image api   http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/getImage?userId=$userId&imageUUID=$imageUUID"
-curl -O -J "http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/getImage?userId=$userId&imageUUID=$imageUUID"
+echo "Making call to get Image api   http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/getImage?userId=$userId&imageUUID=$imageUUID"
+curl -O -J "http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/getImage?userId=$userId&imageUUID=$imageUUID"
 if [ $? -ne 0 ]; then
-   echo "Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/getImage?userId=${userId}&imageUUID=${imageUUID}"
-   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Pay-1.0/service/S2P/getImage?userId=${userId}&imageUUID=${imageUUID}"
+   echo "Failed: http://${WS_MACHINE}:8080/Snap2Buy-1.0/service/S2P/getImage?userId=${userId}&imageUUID=${imageUUID}"
+   #MSG="Failed: http://${WS_MACHINE}:8080/Snap2Buy-1.0/service/S2P/getImage?userId=${userId}&imageUUID=${imageUUID}"
    #send_mail  "$MSG"
    exit 1
 fi
@@ -138,11 +138,11 @@ fi
 
 dataFile=Result/${imageUUID}
 
-echo "Making call to store result api   curl -d @$dataFile  -H 'Content-Type: Application/Json' -X POST 'http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/storeShelfAnalysis?'"
-StoreResult=`curl -d @$dataFile  -H 'Content-Type: Application/Json' -X POST "http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/storeShelfAnalysis?"`
+echo "Making call to store result api   curl -d @$dataFile  -H 'Content-Type: Application/Json' -X POST 'http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/storeShelfAnalysis?'"
+StoreResult=`curl -d @$dataFile  -H 'Content-Type: Application/Json' -X POST "http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/storeShelfAnalysis?"`
 if [ $? -ne 0 ]; then
-   echo "Failed: curl   -d @$dataFile  -H "Content-Type: Application/Json" -X POST 'http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/storeShelfAnalysis?"
-   #MSG="Failed: curl   -d @$dataFile  -H "Content-Type: Application/Json" -X POST 'http://$WS_MACHINE:8080/Snap2Pay-1.0/service/S2P/storeShelfAnalysis?"
+   echo "Failed: curl   -d @$dataFile  -H "Content-Type: Application/Json" -X POST 'http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/storeShelfAnalysis?"
+   #MSG="Failed: curl   -d @$dataFile  -H "Content-Type: Application/Json" -X POST 'http://$WS_MACHINE:8080/Snap2Buy-1.0/service/S2P/storeShelfAnalysis?"
    #send_mail "$MSG"
    exit 1
 fi

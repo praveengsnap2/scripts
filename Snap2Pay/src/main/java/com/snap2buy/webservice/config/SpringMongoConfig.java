@@ -21,7 +21,7 @@ public class SpringMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public String getDatabaseName() {
-        return "Snap2Pay";
+        return "Snap2Buy";
     }
 
     @Override

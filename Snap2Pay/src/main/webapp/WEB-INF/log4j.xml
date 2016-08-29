@@ -1,8 +1,8 @@
 <log4j:configuration>
-    <appender name="Snap2BuyNew" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/tmp/logs/Snap2BuyNew.log"/>
+    <appender name="Snap2Buy" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/tmp/logs/Snap2Buy.log"/>
 
-        <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Pay.log"/>-->
+        <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Buy.log"/>-->
         <param name="DatePattern" value="'.' yyyy-MM-dd"/>
         <!-- Keep one backup file -->
         <param name="MaxBackupIndex" value="100"/>
@@ -12,10 +12,10 @@
     </appender>
 
 
-    <appender name="Snap2BuyNewRoot" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/tmp/logs/Snap2BuyNew_root.log"/>
+    <appender name="Snap2BuyRoot" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/tmp/logs/Snap2Buy_root.log"/>
 
-        <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Pay.log"/>-->
+        <!--<param name="file" value="/usr/share/apache-tomcat-8.0.26/logs/Snap2Buy.log"/>-->
         <param name="DatePattern" value="'.' yyyy-MM-dd"/>
         <!-- Keep one backup file -->
         <param name="MaxBackupIndex" value="1"/>
@@ -27,12 +27,12 @@
 
     <category name="s2b">
         <priority value="debug"/>
-        <appender-ref ref="Snap2BuyNew"/>
+        <appender-ref ref="Snap2Buy"/>
     </category>
 
     <root>
         <level value="info"/>
-        <appender-ref ref="Snap2BuyNewRoot"/>
+        <appender-ref ref="Snap2BuyRoot"/>
     </root>
 
 </log4j:configuration>

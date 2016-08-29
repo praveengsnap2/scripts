@@ -11,8 +11,8 @@ import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.mapper.ParamMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
-import com.snap2buy.webservice.util.CustomSnap2PayOutput;
-import com.snap2buy.webservice.util.Snap2PayOutput;
+import com.snap2buy.webservice.util.CustomSnap2BuyOutput;
+import com.snap2buy.webservice.util.Snap2BuyOutput;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -62,7 +62,7 @@ public class RestS2PController {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/saveImage")
-    public Snap2PayOutput saveImage(
+    public Snap2BuyOutput saveImage(
             @QueryParam(ParamMapper.CATEGORY_ID) @DefaultValue("-9") String categoryId,
             @QueryParam(ParamMapper.LATITUDE) @DefaultValue("-9") String latitude,
             @QueryParam(ParamMapper.LONGITUDE) @DefaultValue("-9") String longitude,
@@ -174,13 +174,13 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("userId", userId);
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends----------------\n");
             return rio;
         }
@@ -189,7 +189,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getJob")
-    public Snap2PayOutput getJob(
+    public Snap2BuyOutput getJob(
             @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -206,12 +206,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("hostId", hostId);
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getJob----------------\n");
             return rio;
         }
@@ -239,12 +239,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("imageUUID", imageUUID);
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getImage----------------\n");
             return Response.serverError().build();
         }
@@ -253,7 +253,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/storeShelfAnalysis")
-    public Snap2PayOutput storeShelfAnalysis(
+    public Snap2BuyOutput storeShelfAnalysis(
 
             JAXBElement<ShelfAnalysisInput> p,
             @Context HttpServletRequest request,
@@ -273,12 +273,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
             return rio;
         }
@@ -288,14 +288,14 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getShelfAnalysis")
-    public Snap2PayOutput getShelfAnalysis(
+    public Snap2BuyOutput getShelfAnalysis(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts getShelfAnalysis::imageUUID::="+imageUUID+"----------------\n");
         try {
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             InputObject inputObject = new InputObject();
 
             inputObject.setImageUUID(imageUUID);
@@ -307,13 +307,13 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("imageUUID", imageUUID);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getShelfAnalysis----------------\n");
             return rio;
         }
@@ -323,7 +323,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getUpcDetails")
-    public Snap2PayOutput getUpcDetails(
+    public Snap2BuyOutput getUpcDetails(
             @QueryParam(ParamMapper.UPC) @DefaultValue("-9") String upc,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -341,13 +341,13 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("upc", upc);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getUpcDetails----------------\n");
             return rio;
         }
@@ -376,12 +376,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("upc", upc);
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getUpcImage----------------\n");
             return Response.serverError().build();
         }
@@ -390,30 +390,30 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/checkS2P")
-    public Snap2PayOutput checkS2P(
+    public Snap2BuyOutput checkS2P(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts checkS2P----------------\n");
         try {
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("success", "Success");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             return rio;
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends checkS2P----------------\n");
             return rio;
         }
@@ -422,32 +422,32 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/storeThumbnails")
-    public Snap2PayOutput storeThumbnails(
+    public Snap2BuyOutput storeThumbnails(
             @QueryParam(ParamMapper.IMAGE_FOLDER_PATH) @DefaultValue("-9") String imageFolderPath,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts storeThumbnails----------------\n");
         try {
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             restS2PAction.storeThumbnails(imageFolderPath);
             inputList.put("success", "Success");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             return rio;
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends checkS2P----------------\n");
             return rio;
         }
@@ -457,7 +457,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getReport")
-    public Snap2PayOutput getReport(
+    public Snap2BuyOutput getReport(
             @QueryParam(ParamMapper.FREQUENCY) @DefaultValue("-9") String frequency,
             @QueryParam(ParamMapper.DATE_ID) @DefaultValue("-9") String dateId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
@@ -488,7 +488,7 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("brandId",brandId);
@@ -499,7 +499,7 @@ public class RestS2PController {
             inputList.put("marketId", marketId);
             inputList.put("brandId", brandId);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getReport----------------\n");
             return rio;
         }
@@ -508,14 +508,14 @@ public class RestS2PController {
 //    @GET
 //    @Produces({MediaType.APPLICATION_JSON})
 //    @Path("/runImageAnalysis")
-//    public Snap2PayOutput runImageAnalysis(
+//    public Snap2BuyOutput runImageAnalysis(
 //            @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
 //            @Context HttpServletRequest request,
 //            @Context HttpServletResponse response
 //    ) {
 //        LOGGER.info("---------------Controller Starts runImageAnalysis::imageUUID="+imageUUID+"----------------\n");
 //        try {
-//            Snap2PayOutput rio;
+//            Snap2BuyOutput rio;
 //            InputObject inputObject = new InputObject();
 //
 //            inputObject.setImageUUID(imageUUID);
@@ -527,13 +527,13 @@ public class RestS2PController {
 //            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
 //            LOGGER.error("exception", e);
 //
-//            Snap2PayOutput rio;
+//            Snap2BuyOutput rio;
 //            HashMap<String, String> inputList = new HashMap<String, String>();
 //
 //            inputList.put("error in Input","-9");
 //            inputList.put("imageUUID", imageUUID);
 //
-//            rio = new Snap2PayOutput(null, inputList);
+//            rio = new Snap2BuyOutput(null, inputList);
 //            LOGGER.info("---------------Controller Ends runImageAnalysis----------------\n");
 //            return rio;
 //        }
@@ -541,7 +541,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getImageAnalysis")
-    public Snap2PayOutput getImageAnalysis(
+    public Snap2BuyOutput getImageAnalysis(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -560,13 +560,13 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("imageUUID", imageUUID);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getImageAnalysis----------------\n");
             return rio;
         }
@@ -575,13 +575,13 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getStoreOptions")
-    public Snap2PayOutput getStoreOptions(
+    public Snap2BuyOutput getStoreOptions(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
         LOGGER.info("---------------Controller Starts getStoreOptions----------------\n");
         try {
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
 
             return restS2PAction.getStoreOptions();
 
@@ -590,12 +590,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getStoreOptions----------------\n");
             return rio;
         }
@@ -605,7 +605,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getImages")
-    public Snap2PayOutput getImages(
+    public Snap2BuyOutput getImages(
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
             @QueryParam(ParamMapper.DATE_ID) @DefaultValue("-9") String dateId,
             @Context HttpServletRequest request,
@@ -624,12 +624,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getImages----------------\n");
             return rio;
         }
@@ -638,7 +638,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectStoreImages")
-    public Snap2PayOutput getProjectStoreImages(
+    public Snap2BuyOutput getProjectStoreImages(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
@@ -660,12 +660,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectStoreImages----------------\n");
             return rio;
         }
@@ -674,7 +674,7 @@ public class RestS2PController {
     @GET
       @Produces({MediaType.APPLICATION_JSON})
       @Path("/getStores")
-      public Snap2PayOutput getStores(
+      public Snap2BuyOutput getStores(
             @QueryParam(ParamMapper.RETAILER_CHAIN_CODE) @DefaultValue("-9") String retailerChainCode,
             @QueryParam(ParamMapper.STATE_CODE) @DefaultValue("-9") String stateCode,
             @QueryParam(ParamMapper.CITY) @DefaultValue("-9") String city,
@@ -695,7 +695,7 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
@@ -703,7 +703,7 @@ public class RestS2PController {
             inputList.put("stateCode",stateCode);
             inputList.put("city",city);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getStores----------------\n");
             return rio;
         }
@@ -711,7 +711,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getDistributionLists")
-    public Snap2PayOutput getDistributionLists(
+    public Snap2BuyOutput getDistributionLists(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -724,12 +724,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getDistributionLists----------------\n");
             return rio;
         }
@@ -737,7 +737,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/doDistributionCheck")
-    public Snap2PayOutput doDistributionCheck(
+    public Snap2BuyOutput doDistributionCheck(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @QueryParam(ParamMapper.LIST_ID) @DefaultValue("-9") String listId,
             @Context HttpServletRequest request,
@@ -755,12 +755,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("listId",listId);
             inputList.put("imageUUID",imageUUID);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doDistributionCheck----------------\n");
             return rio;
         }
@@ -769,7 +769,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/doBeforeAfterCheck")
-    public Snap2PayOutput doBeforeAfterCheck(
+    public Snap2BuyOutput doBeforeAfterCheck(
             @QueryParam(ParamMapper.PREV_IMAGE_UUID) @DefaultValue("-9") String prevImageUUID,
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @Context HttpServletRequest request,
@@ -787,12 +787,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("prevImageUUID",prevImageUUID);
             inputList.put("imageUUID",imageUUID);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doBeforeAfterCheck----------------\n");
             return rio;
         }
@@ -800,7 +800,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getImageMetaData")
-    public Snap2PayOutput getImageMetaData(
+    public Snap2BuyOutput getImageMetaData(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -816,11 +816,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("imageUUID",imageUUID);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getImageMetaData----------------\n");
             return rio;
         }
@@ -829,7 +829,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/doShareOfShelfAnalysis")
-    public Snap2PayOutput doShareOfShelfAnalysis(
+    public Snap2BuyOutput doShareOfShelfAnalysis(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUIDCsvString,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -846,13 +846,13 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("imageUUIDCsvString", imageUUIDCsvString);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doShareOfShelfAnalysis----------------\n");
             return rio;
         }
@@ -860,7 +860,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updateLatLong")
-    public Snap2PayOutput updateLatLong(
+    public Snap2BuyOutput updateLatLong(
             @QueryParam(ParamMapper.IMAGE_UUID) @DefaultValue("-9") String imageUUID,
             @QueryParam(ParamMapper.LATITUDE) @DefaultValue("-9") String latitude,
             @QueryParam(ParamMapper.LONGITUDE) @DefaultValue("-9") String longitude,
@@ -881,7 +881,7 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
@@ -889,7 +889,7 @@ public class RestS2PController {
             inputList.put("stateCode",latitude);
             inputList.put("city",longitude);
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends updateLatLong----------------\n");
             return rio;
         }
@@ -945,10 +945,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getShelfAnalysisCsv----------------\n");
             return Response.serverError().build();
         }
@@ -986,10 +986,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends doShareOfShelfAnalysisCsv----------------\n");
             return Response.serverError().build();
         }
@@ -998,7 +998,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listProjectType")
-    public Snap2PayOutput listProjectType(
+    public Snap2BuyOutput listProjectType(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1011,10 +1011,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listProjectType----------------\n");
             return rio;
         }
@@ -1022,7 +1022,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listSkuType")
-    public Snap2PayOutput listSkuType(
+    public Snap2BuyOutput listSkuType(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1035,10 +1035,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listSkuType----------------\n");
             return rio;
         }
@@ -1046,7 +1046,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listProject")
-    public Snap2PayOutput listProject(
+    public Snap2BuyOutput listProject(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1062,10 +1062,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listProject----------------\n");
             return rio;
         }
@@ -1074,7 +1074,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listCategory")
-    public Snap2PayOutput listCategory(
+    public Snap2BuyOutput listCategory(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1087,10 +1087,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listCategory----------------\n");
             return rio;
         }
@@ -1099,7 +1099,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listCustomer")
-    public Snap2PayOutput listCustomer(
+    public Snap2BuyOutput listCustomer(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1112,10 +1112,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listCustomer----------------\n");
             return rio;
         }
@@ -1124,7 +1124,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listRetailer")
-    public Snap2PayOutput listRetailer(
+    public Snap2BuyOutput listRetailer(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1137,10 +1137,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listRetailer----------------\n");
             return rio;
         }
@@ -1149,7 +1149,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listProjectUpc")
-    public Snap2PayOutput listProjectUpc(
+    public Snap2BuyOutput listProjectUpc(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
@@ -1167,10 +1167,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listProjectUpc----------------\n");
             return rio;
         }
@@ -1179,7 +1179,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getCategoryDetail")
-    public Snap2PayOutput getCategoryDetail(
+    public Snap2BuyOutput getCategoryDetail(
             @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1195,11 +1195,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("id",id);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getCategoryDetail----------------\n");
             return rio;
         }
@@ -1207,7 +1207,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getCustomerDetail")
-    public Snap2PayOutput getCustomerDetail(
+    public Snap2BuyOutput getCustomerDetail(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1223,11 +1223,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getCustomerDetail----------------\n");
             return rio;
         }
@@ -1235,7 +1235,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectDetail")
-    public Snap2PayOutput getProjectDetail(
+    public Snap2BuyOutput getProjectDetail(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
@@ -1253,12 +1253,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("customerCode",customerCode);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectDetail----------------\n");
             return rio;
         }
@@ -1266,7 +1266,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectTypeDetail")
-    public Snap2PayOutput getProjectTypeDetail(
+    public Snap2BuyOutput getProjectTypeDetail(
             @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1282,11 +1282,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("id",id);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectTypeDetail----------------\n");
             return rio;
         }
@@ -1294,7 +1294,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getSkuTypeDetail")
-    public Snap2PayOutput getSkuTypeDetail(
+    public Snap2BuyOutput getSkuTypeDetail(
             @QueryParam(ParamMapper.ID) @DefaultValue("-9") String id,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1310,11 +1310,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("id",id);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getSkuTypeDetail----------------\n");
             return rio;
         }
@@ -1322,7 +1322,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectUpcDetail")
-    public Snap2PayOutput getProjectUpcDetail(
+    public Snap2BuyOutput getProjectUpcDetail(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
@@ -1340,12 +1340,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("customerCode",customerCode);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectUpcDetail----------------\n");
             return rio;
         }
@@ -1353,7 +1353,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getRetailerDetail")
-    public Snap2PayOutput getRetailerDetail(
+    public Snap2BuyOutput getRetailerDetail(
             @QueryParam(ParamMapper.RETAILER_CODE) @DefaultValue("-9") String retailerCode,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1369,11 +1369,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("retailerCode",retailerCode);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getRetailerDetail----------------\n");
             return rio;
         }
@@ -1382,7 +1382,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createCustomer")
-    public Snap2PayOutput createCustomer(
+    public Snap2BuyOutput createCustomer(
             JAXBElement<Customer> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1401,12 +1401,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createCustomer----------------\n");
             return rio;
         }
@@ -1414,7 +1414,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createCategory")
-    public Snap2PayOutput createCategory(
+    public Snap2BuyOutput createCategory(
             JAXBElement<Category> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1433,12 +1433,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createCategory----------------\n");
             return rio;
         }
@@ -1446,7 +1446,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createRetailer")
-    public Snap2PayOutput createRetailer(
+    public Snap2BuyOutput createRetailer(
             JAXBElement<Retailer> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1465,12 +1465,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createRetailer----------------\n");
             return rio;
         }
@@ -1478,7 +1478,7 @@ public class RestS2PController {
     @POST
      @Produces({MediaType.APPLICATION_JSON})
      @Path("/createProjectType")
-     public Snap2PayOutput createProjectType(
+     public Snap2BuyOutput createProjectType(
             JAXBElement<ProjectType> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1497,12 +1497,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createProjectType----------------\n");
             return rio;
         }
@@ -1510,7 +1510,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createSkuType")
-    public Snap2PayOutput createSkuType(
+    public Snap2BuyOutput createSkuType(
             JAXBElement<SkuType> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1529,12 +1529,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createSkuType----------------\n");
             return rio;
         }
@@ -1542,7 +1542,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createProject")
-    public Snap2PayOutput createProject(
+    public Snap2BuyOutput createProject(
             JAXBElement<Project> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1561,12 +1561,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createProject----------------\n");
             return rio;
         }
@@ -1574,7 +1574,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createUpc")
-    public Snap2PayOutput createUpc(
+    public Snap2BuyOutput createUpc(
             JAXBElement<ProductMaster> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1593,12 +1593,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createUpc----------------\n");
             return rio;
         }
@@ -1607,7 +1607,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/addUpcToProjectId")
-    public Snap2PayOutput addUpcToProjectId(
+    public Snap2BuyOutput addUpcToProjectId(
             JAXBElement<ProjectUpc> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1623,12 +1623,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends addUpcToProjectId----------------\n");
             return rio;
         }
@@ -1636,7 +1636,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/processNextImage")
-    public Snap2PayOutput processNextImage(
+    public Snap2BuyOutput processNextImage(
             @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1651,12 +1651,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends processNextImage----------------\n");
             return rio;
         }
@@ -1664,7 +1664,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/generateAggs")
-    public Snap2PayOutput generateAggs(
+    public Snap2BuyOutput generateAggs(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
@@ -1684,14 +1684,14 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("storeId",storeId);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends generateAggs----------------\n");
             return rio;
         }
@@ -1699,7 +1699,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectStoreResults")
-    public Snap2PayOutput getProjectStoreResults(
+    public Snap2BuyOutput getProjectStoreResults(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
@@ -1719,14 +1719,14 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("storeId",storeId);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectStoreResults----------------\n");
             return rio;
         }
@@ -1734,7 +1734,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectTopStores")
-    public Snap2PayOutput getProjectTopStores(
+    public Snap2BuyOutput getProjectTopStores(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.LIMIT) @DefaultValue("-9") String limit,
@@ -1754,14 +1754,14 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("storeId",limit);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectTopStores----------------\n");
             return rio;
         }
@@ -1773,7 +1773,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectBottomStores")
-    public Snap2PayOutput getProjectBottomStores(
+    public Snap2BuyOutput getProjectBottomStores(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.LIMIT) @DefaultValue("-9") String limit,
@@ -1793,14 +1793,14 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("storeId",limit);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectBottomStores----------------\n");
             return rio;
         }
@@ -1808,7 +1808,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/listStores")
-    public Snap2PayOutput listStores(
+    public Snap2BuyOutput listStores(
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -1821,10 +1821,10 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends listStores----------------\n");
             return rio;
         }
@@ -1832,7 +1832,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createStore")
-    public Snap2PayOutput createStore(
+    public Snap2BuyOutput createStore(
             JAXBElement<StoreMaster> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1847,12 +1847,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createStore----------------\n");
             return rio;
         }
@@ -1860,7 +1860,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updateStore")
-    public Snap2PayOutput updateStore(
+    public Snap2BuyOutput updateStore(
             JAXBElement<StoreMaster> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1875,12 +1875,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends updateStore----------------\n");
             return rio;
         }
@@ -1888,7 +1888,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updateProject")
-    public Snap2PayOutput updateProject(
+    public Snap2BuyOutput updateProject(
             JAXBElement<Project> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1907,12 +1907,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends updateProject----------------\n");
             return rio;
         }
@@ -1920,7 +1920,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectSummary")
-    public Snap2PayOutput getProjectSummary(
+    public Snap2BuyOutput getProjectSummary(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
@@ -1938,12 +1938,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("customerCode",customerCode);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectSummary----------------\n");
             return rio;
         }
@@ -1952,7 +1952,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getStoreDetail")
-    public Snap2PayOutput getStoreDetail(
+    public Snap2BuyOutput getStoreDetail(
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -1968,11 +1968,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("storeId",storeId);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getStoreDetail----------------\n");
             return rio;
         }
@@ -2008,7 +2008,7 @@ public class RestS2PController {
         	emptyOutput.put("Message", "No Data Returned");
         	List<Map<String,String>> emptyOutputList = new ArrayList<>();
         	emptyOutputList.add(emptyOutput);
-        	CustomSnap2PayOutput reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+        	CustomSnap2BuyOutput reportIO = new CustomSnap2BuyOutput(emptyOutputList, metaList);
         	//convert to json here
             Gson gson = new Gson();
             String output = gson.toJson(reportIO);
@@ -2047,7 +2047,7 @@ public class RestS2PController {
          	emptyOutput.put("Message", "No Data Returned");
          	List<Map<String,String>> emptyOutputList = new ArrayList<>();
          	emptyOutputList.add(emptyOutput);
-         	CustomSnap2PayOutput reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+         	CustomSnap2BuyOutput reportIO = new CustomSnap2BuyOutput(emptyOutputList, metaList);
          	//convert to json here
              Gson gson = new Gson();
              String output = gson.toJson(reportIO);
@@ -2087,7 +2087,7 @@ public class RestS2PController {
          	emptyOutput.put("Message", "No Data Returned");
          	List<Map<String,String>> emptyOutputList = new ArrayList<>();
          	emptyOutputList.add(emptyOutput);
-         	CustomSnap2PayOutput reportIO = new CustomSnap2PayOutput(emptyOutputList, metaList);
+         	CustomSnap2BuyOutput reportIO = new CustomSnap2BuyOutput(emptyOutputList, metaList);
          	//convert to json here
              Gson gson = new Gson();
              String output = gson.toJson(reportIO);
@@ -2099,7 +2099,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/generateStoreResults")
-    public Snap2PayOutput generateStoreResults(
+    public Snap2BuyOutput generateStoreResults(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
@@ -2119,14 +2119,14 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
             inputList.put("storeId",storeId);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends generateStoreResults----------------\n");
             return rio;
         }
@@ -2135,7 +2135,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectAllStoreResults")
-    public Snap2PayOutput getProjectAllStoreResults(
+    public Snap2BuyOutput getProjectAllStoreResults(
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @Context HttpServletRequest request,
@@ -2153,13 +2153,13 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
             inputList.put("customerCode",customerCode);
             inputList.put("customerProjectId",customerProjectId);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getProjectAllStoreResults----------------\n");
             return rio;
         }
@@ -2169,7 +2169,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/createUser")
-    public Snap2PayOutput createUser(
+    public Snap2BuyOutput createUser(
             JAXBElement<User> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -2188,12 +2188,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends createUser----------------\n");
             return rio;
         }
@@ -2202,7 +2202,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updateUser")
-    public Snap2PayOutput updateUser(
+    public Snap2BuyOutput updateUser(
             JAXBElement<User> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -2221,12 +2221,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends updateUser----------------\n");
             return rio;
         }
@@ -2235,7 +2235,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/updateUserPassword")
-    public Snap2PayOutput updateUserPassword(
+    public Snap2BuyOutput updateUserPassword(
             JAXBElement<User> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -2254,12 +2254,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends updateUserPassword----------------\n");
             return rio;
         }
@@ -2268,7 +2268,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getUserDetail")
-    public Snap2PayOutput getUserDetail(
+    public Snap2BuyOutput getUserDetail(
             @QueryParam(ParamMapper.USER_ID) @DefaultValue("-9") String userId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -2283,11 +2283,11 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
             inputList.put("error in Input","-9");
             inputList.put("userId",userId);
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getUserDetail----------------\n");
             return rio;
         }
@@ -2296,7 +2296,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/deleteUser")
-    public Snap2PayOutput deleteUser(
+    public Snap2BuyOutput deleteUser(
             JAXBElement<User> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -2315,12 +2315,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends deleteUser----------------\n");
             return rio;
         }
@@ -2329,7 +2329,7 @@ public class RestS2PController {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/login")
-    public Snap2PayOutput login(
+    public Snap2BuyOutput login(
             JAXBElement<User> p,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -2348,12 +2348,12 @@ public class RestS2PController {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
 
-            Snap2PayOutput rio;
+            Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
 
             inputList.put("error in Input","-9");
 
-            rio = new Snap2PayOutput(null, inputList);
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends login request----------------\n");
             return rio;
         }

@@ -17,7 +17,7 @@ import java.util.Map;
 public final class JAXBContextResolver implements ContextResolver<JAXBContext> {
     private JAXBContext context;
 
-    private Class[] types = {Snap2PayOutput.class, MyHashMapType.class};
+    private Class[] types = {Snap2BuyOutput.class, MyHashMapType.class};
 
     public JAXBContextResolver() throws Exception {
         Map props = new HashMap<String, Object>();
