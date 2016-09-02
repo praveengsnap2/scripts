@@ -356,6 +356,40 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
+    public void updateImageAnalysisHostId(String hostId, String imageUUID) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts updateImageAnalysisStatus::hostId="+hostId+"::imageUUID="+imageUUID+"----------------\n");
+        long currTimestamp = System.currentTimeMillis() / 1000L;
+        String sql = "UPDATE ImageStoreNew SET hostId = ?, lastUpdatedTimestamp = ? WHERE imageUUID = ? ";
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, hostId);
+            ps.setString(2, String.valueOf(currTimestamp));
+            ps.setString(3, imageUUID);
+            ps.executeUpdate();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends updateImageAnalysisStatus----------------\n");
+
+
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
     public void updateOrientationDetails(ImageStore imageStore) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateOrientationDetails::imageRotation="+imageStore.getImageRotation()+"::imageHashScore="+imageStore.getImageHashScore()+"::orig-height::"+imageStore.getOrigHeight()+"::orig-width::"+imageStore.getOrigWidth()+"::new-height::"+imageStore.getNewHeight()+"::new-width::"+imageStore.getNewWidth()+"----------------\n");
         long currTimestamp = System.currentTimeMillis() / 1000L;
@@ -536,7 +570,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
             rs.close();
             ps.close();
-            LOGGER.info("---------------ProcessImageDaoImpl Ends getNextImageDetails imageStore = "+imageStore+"----------------\n");
 
             return imageStore;
         } catch (SQLException e) {
@@ -1655,15 +1688,15 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	            while (rs.next()) {
 	                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 	                map.put("storeId", rs.getString("storeId"));
-	                map.put("retailerStoreId", rs.getString("retailerStoreId") );
-	                map.put("retailerChainCode", rs.getString("retailerChainCode") );
-	                map.put("retailer", rs.getString("retailer") );
-	                map.put("street", rs.getString("street") );
-	                map.put("city",  rs.getString("city"));
-	                map.put("stateCode", rs.getString("stateCode") );
-	                map.put("state", rs.getString("state") );
-	                map.put("zip", rs.getString("zip") );
-	                map.put("resultCode", rs.getString("resultCode") );
+	                map.put("retailerStoreId", rs.getString("retailerStoreId"));
+	                map.put("retailerChainCode", rs.getString("retailerChainCode"));
+	                map.put("retailer", rs.getString("retailer"));
+	                map.put("street", rs.getString("street"));
+	                map.put("city", rs.getString("city"));
+	                map.put("stateCode", rs.getString("stateCode"));
+	                map.put("state", rs.getString("state"));
+	                map.put("zip", rs.getString("zip"));
+	                map.put("resultCode", rs.getString("resultCode"));
 	                map.put("result", rs.getString("description"));
 	                map.put("countDistinctUpc", String.valueOf(rs.getInt("countDistinctUpc")));
 	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
