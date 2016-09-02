@@ -1330,7 +1330,18 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             	String hashScore = rs.getString("imageHashScore");
             	if ( !hashScore.equalsIgnoreCase(previousHashScore) ) {
             		if ( null !=  dupImages ) {
-            			duplicateImagesList.add(dupImages);
+            			//Logic to exclude duplicate images from same store
+            			Map<String,DuplicateImageInfo> uniqueDupMap = new LinkedHashMap<String,DuplicateImageInfo>();
+            			for ( DuplicateImageInfo duplicate : dupImages.getStoreIds() ) {
+            				uniqueDupMap.put(duplicate.getStoreId(),duplicate);
+            			}
+            			if ( uniqueDupMap.size() > 1 ) {
+            				dupImages.getStoreIds().clear();
+            				dupImages.getStoreIds().addAll(uniqueDupMap.values());
+            				duplicateImagesList.add(dupImages);	
+            			} else {
+            				count--; //Discard this group of images as it is from the same store, and reset count to previous value
+            			}
             		}
             		dupImages = new DuplicateImages();
             		dupImages.setImageHashScore(hashScore);
@@ -1355,7 +1366,18 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             	dupImages.getStoreIds().add(dup);
             }
             if (  null != dupImages ) {
-    			duplicateImagesList.add(dupImages);
+            	//Logic to exclude duplicate images from same store
+    			Map<String,DuplicateImageInfo> uniqueDupMap = new LinkedHashMap<String,DuplicateImageInfo>();
+    			for ( DuplicateImageInfo duplicate : dupImages.getStoreIds() ) {
+    				uniqueDupMap.put(duplicate.getStoreId(),duplicate);
+    			}
+    			if ( uniqueDupMap.size() > 1 ) {
+    				dupImages.getStoreIds().clear();
+    				dupImages.getStoreIds().addAll(uniqueDupMap.values());
+    				duplicateImagesList.add(dupImages);	
+    			} else {
+    				//do nothing - Discard this group of images as it is from the same store
+    			}
             }
             rs.close();
             ps.close();
