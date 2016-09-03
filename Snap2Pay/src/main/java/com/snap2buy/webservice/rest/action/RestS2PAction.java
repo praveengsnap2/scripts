@@ -1285,4 +1285,32 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends deleteUser----------------\n");
         return reportIO;
 	}
+
+	public Snap2BuyOutput recomputeProjectByStore(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts recomputeProjectByStore----------------\n");
+        processImageService.recomputeProjectByStore(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+        Snap2BuyOutput reportIO = new Snap2BuyOutput(null, reportInput);
+        LOGGER.info("---------------RestAction Ends recomputeProjectByStore----------------\n");
+
+        return reportIO;
+	}
+
+	public Snap2BuyOutput reprocessProjectByStore(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts reprocessProjectByStore----------------\n");
+        processImageService.reprocessProjectByStore(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+        Snap2BuyOutput reportIO = new Snap2BuyOutput(null, reportInput);
+        LOGGER.info("---------------RestAction Ends reprocessProjectByStore----------------\n");
+
+        return reportIO;
+	}
 }

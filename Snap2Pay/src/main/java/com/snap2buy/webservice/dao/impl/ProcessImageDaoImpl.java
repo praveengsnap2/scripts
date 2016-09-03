@@ -1744,4 +1744,146 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	            }
 	        }
 	}
+
+	@Override
+	public void reprocessProjectByStore(String customerCode, String customerProjectId, List<String> storeIdsToReprocess) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts reprocessProjectByStore ----------------\n");
+
+		String deleteImageAnalysisSql = "DELETE FROM ImageAnalysisNew WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		String deleteProjectStoreResultsSql = "DELETE FROM ProjectStoreResult WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		String deleteProjectStoreDataSql = "DELETE FROM ProjectStoreData WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		String updateImageStatusSql = "UPDATE ImageStoreNew SET imageStatus=? WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		
+		Connection conn = null;
+		PreparedStatement deleteImageAnalysisPs = null;
+	    PreparedStatement deleteProjectStoreResultsPs = null;
+	    PreparedStatement deleteProjectStoreDataPs = null;
+	    PreparedStatement updateImageStatusPs = null;
+		
+	    try {
+	        conn = dataSource.getConnection();
+	        conn.setAutoCommit(false);
+	        
+	        deleteImageAnalysisPs = conn.prepareStatement(deleteImageAnalysisSql);
+	        deleteProjectStoreResultsPs = conn.prepareStatement(deleteProjectStoreResultsSql);
+	        deleteProjectStoreDataPs = conn.prepareStatement(deleteProjectStoreDataSql);
+	        updateImageStatusPs = conn.prepareStatement(updateImageStatusSql);
+	        
+	        for ( String storeId : storeIdsToReprocess ) {
+	        	deleteImageAnalysisPs.setString(1, customerCode);
+		        deleteImageAnalysisPs.setString(2, customerProjectId);
+		        deleteImageAnalysisPs.setString(3, storeId);
+		        deleteImageAnalysisPs.addBatch();
+		        
+		        deleteProjectStoreResultsPs.setString(1, customerCode);
+		        deleteProjectStoreResultsPs.setString(2, customerProjectId);
+		        deleteProjectStoreResultsPs.setString(3, storeId);
+		        deleteProjectStoreResultsPs.addBatch();
+		        
+		        deleteProjectStoreDataPs.setString(1, customerCode);
+		        deleteProjectStoreDataPs.setString(2, customerProjectId);
+		        deleteProjectStoreDataPs.setString(3, storeId);
+		        deleteProjectStoreDataPs.addBatch();
+		        
+		        updateImageStatusPs.setString(1, "cron");
+		        updateImageStatusPs.setString(2, customerCode);
+		        updateImageStatusPs.setString(3, customerProjectId);
+		        updateImageStatusPs.setString(4, storeId);
+		        updateImageStatusPs.addBatch();
+	        }
+	        
+	        deleteImageAnalysisPs.executeBatch();
+	        deleteProjectStoreResultsPs.executeBatch();
+	        deleteProjectStoreDataPs.executeBatch();
+	        updateImageStatusPs.executeBatch();
+	        
+	        conn.commit();
+	        
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (deleteImageAnalysisPs != null) {
+	           try {   
+	        	   deleteImageAnalysisPs.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	         if (deleteProjectStoreResultsPs != null) {
+		           try {   
+		        	   deleteProjectStoreResultsPs.close();
+	                } catch (SQLException e) {
+		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+		                 LOGGER.error("exception", e);
+		            }
+		         }
+	         if (deleteProjectStoreDataPs != null) {
+		           try {   
+		        	   deleteProjectStoreDataPs.close();
+	                } catch (SQLException e) {
+		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+		                 LOGGER.error("exception", e);
+		            }
+		         }
+	         if (updateImageStatusPs != null) {
+		           try {   
+		        	   updateImageStatusPs.close();
+	                } catch (SQLException e) {
+		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+		                 LOGGER.error("exception", e);
+		            }
+		         }
+	         if (conn != null) {
+		           try {   
+		            	 conn.close();
+	                } catch (SQLException e) {
+		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+		                 LOGGER.error("exception", e);
+		            }
+		         }
+	         LOGGER.info("---------------ProcessImageDaoImpl Ends reprocessProjectByStore ----------------\n");
+	      }
+	}
+
+	@Override
+	public List<String> getProjectStoreIds(String customerCode, String customerProjectId, boolean onlyDone) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreIds ----------------\n");
+		List<String> storeIdsForProject = new ArrayList<String>();
+		StringBuilder getAllStoresForProjectSqlBuilder = new StringBuilder("SELECT DISTINCT(storeId) FROM ImageStoreNew WHERE customerCode=? AND customerProjectId=?");
+		if (onlyDone) {
+			getAllStoresForProjectSqlBuilder.append(" AND imageStatus=\"done\"");
+		}
+		Connection conn = null;
+	    try {
+	        conn = dataSource.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(getAllStoresForProjectSqlBuilder.toString());
+	        ps.setString(1, customerCode);
+	        ps.setString(2, customerProjectId);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        while (rs.next()) {
+	        	storeIdsForProject.add(rs.getString("storeId"));
+	        }
+	        rs.close();
+	        ps.close();
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (conn != null) {
+	           try {   
+	            	 conn.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	         LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreIds ----------------\n");
+	      }
+		return storeIdsForProject;
+	}
 }

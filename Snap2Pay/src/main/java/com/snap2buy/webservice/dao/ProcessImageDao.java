@@ -43,5 +43,7 @@ public interface ProcessImageDao {
 	public List<DuplicateImages> getProjectStoresWithDuplicateImages(String customerCode, String customerProjectId);
 	public List<LinkedHashMap<String, String>> generateStoreResults(String customerCode, String customerProjectId, String storeId);
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(String customerCode, String customerProjectId);
+	public void reprocessProjectByStore(String customerCode, String customerProjectId,List<String> storeIdsToReprocess);
+	public List<String> getProjectStoreIds(String customerCode, String customerProjectId, boolean onlyDone);
 
 }

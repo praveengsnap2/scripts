@@ -2358,6 +2358,78 @@ public class RestS2PController {
             return rio;
         }
     }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/recomputeProjectByStore")
+    public Snap2BuyOutput recomputeProjectByStore(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts recomputeProjectByStore----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setStoreId(storeId);
+            return restS2PAction.recomputeProjectByStore(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            inputList.put("storeId",storeId);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends recomputeProjectByStore----------------\n");
+            return rio;
+        }
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/reprocessProjectByStore")
+    public Snap2BuyOutput reprocessProjectByStore(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts reprocessProjectByStore----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setStoreId(storeId);
+            return restS2PAction.reprocessProjectByStore(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            inputList.put("storeId",storeId);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends reprocessProjectByStore----------------\n");
+            return rio;
+        }
+    }
 
 }
 
