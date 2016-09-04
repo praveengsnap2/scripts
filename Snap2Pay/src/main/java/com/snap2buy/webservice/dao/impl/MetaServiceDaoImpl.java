@@ -144,6 +144,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 map.put("createdBy", rs.getString("createdBy"));
                 map.put("updatedDate", rs.getString("updatedDate"));
                 map.put("status", rs.getString("status"));
+                map.put("description", rs.getString("description"));
+                map.put("owner", rs.getString("owner"));
+                map.put("endDate", rs.getString("endDate"));
                 resultList.add(map);
             }
             rs.close();
@@ -896,8 +899,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 
     @Override
     public void createProject(Project projectInput) {
-        LOGGER.info("---------------MetaServiceDaoImpl Starts createProject::customerInput=" + projectInput + "----------------\n");
-        String sql = "INSERT INTO Project ( projectName, customerProjectId, customerCode, projectTypeId, categoryId, retailerCode, storeCount, startDate, createdDate, createdBy, updatedDate, updatedBy, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        LOGGER.info("---------------MetaServiceDaoImpl Starts createProject::projectInput=" + projectInput + "----------------\n");
+        String sql = "INSERT INTO Project ( projectName, customerProjectId, customerCode, projectTypeId, categoryId, retailerCode, storeCount, startDate, createdDate, createdBy, updatedDate, updatedBy, status, description, owner, endDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         Integer id = -1;
         try {
@@ -917,17 +920,20 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(11, projectInput.getUpdatedDate());
             ps.setString(12, projectInput.getUpdatedBy());
             ps.setString(13, projectInput.getStatus());
+            ps.setString(14, projectInput.getDescription());
+            ps.setString(15, projectInput.getOwner());
+            ps.setString(16, projectInput.getEndDate());
             id = ps.executeUpdate();
 
             if ((id == 0)||(id == null)) {
-                throw new SQLException("Creating user failed, no rows affected.");
+                throw new SQLException("Creating project failed, no rows affected.");
             }
 
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     projectInput.setId(generatedKeys.getString(1));
                 } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
+                    throw new SQLException("Creating project failed, no ID obtained.");
                 }
             }
             ps.close();
@@ -1276,6 +1282,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 ", updatedDate=\"" + projectInput.getUpdatedDate() + "\"  " +
                 ", updatedBy=\"" + projectInput.getUpdatedBy() + "\"  " +
                 ", status=\"" + projectInput.getStatus() + "\"  " +
+                ", description=\"" + projectInput.getDescription() + "\"  " +
+                ", owner=\"" + projectInput.getOwner() + "\"  " +
+                ", endDate=\"" + projectInput.getEndDate() + "\"  " +
                 "where customerCode = \""+projectInput.getCustomerCode()+"\" and customerProjectId= \""+projectInput.getCustomerProjectId() +"\" ";
 
         Connection conn = null;

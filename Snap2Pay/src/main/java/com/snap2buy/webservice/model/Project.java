@@ -38,14 +38,20 @@ public class Project {
     String updatedBy;
     @XmlElement
     String status;
-    @XmlElement(name = "projectUpcList")
+    @XmlElement
+    String description;
+    @XmlElement
+    String owner;
+    @XmlElement
+    String endDate;
+	@XmlElement(name = "projectUpcList")
     List<ProjectUpc> projectUpcList = new ArrayList<>();
 
     public Project() {
         super();
     }
 
-    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, List<ProjectUpc> projectUpcList) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, String description, String owner, String endDate, List<ProjectUpc> projectUpcList) {
         this.id = id;
         this.projectName = projectName;
         this.customerProjectId = customerProjectId;
@@ -60,10 +66,13 @@ public class Project {
         this.updatedDate = updatedDate;
         this.updatedBy = updatedBy;
         this.status = status;
+        this.description = description;
+        this.owner = owner;
+        this.endDate = endDate;
         this.projectUpcList = projectUpcList;
     }
 
-    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, String description, String owner, String endDate) {
         this.id = id;
         this.projectName = projectName;
         this.customerProjectId = customerProjectId;
@@ -78,6 +87,9 @@ public class Project {
         this.updatedDate = updatedDate;
         this.updatedBy = updatedBy;
         this.status = status;
+        this.description = description;
+        this.owner = owner;
+        this.endDate = endDate;
     }
 
     public List<ProjectUpc> getProjectUpcList() {
@@ -199,6 +211,30 @@ public class Project {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 
     @Override
     public String toString() {
@@ -217,6 +253,9 @@ public class Project {
                 ", updatedDate='" + updatedDate + '\'' +
                 ", updatedBy='" + updatedBy + '\'' +
                 ", status='" + status + '\'' +
+                ", description='" + description + '\'' +
+                ", owner='" + owner + '\'' +
+                ", endDate='" + endDate + '\'' +
                 '}';
     }
 }

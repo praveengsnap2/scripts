@@ -545,6 +545,7 @@ public class RestS2PAction {
         List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.listProject(inputObject);
 
         HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode", inputObject.getCustomerCode());
         Snap2BuyOutput reportIO = new Snap2BuyOutput(resultListToPass, reportInput);
         LOGGER.info("---------------RestAction Ends listProject----------------\n");
         return reportIO;
