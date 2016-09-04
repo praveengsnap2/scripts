@@ -1332,6 +1332,12 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         
         String failedStoresSql = "SELECT COUNT(*) as failedStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"3\"";
         
+        String imagesInErrorStateSql = "select count(distinct(imageUUID)) as imagesInErrorState from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
+        		+ "and imageStatus =\"error\"" ;
+        
+        String imagesInProcessingStateSql = "select count(distinct(imageUUID)) as imagesInProcessingState from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
+        		+ "and imageStatus LIKE \"processing%\"" ;
+        
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
 
@@ -1344,6 +1350,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         String storesToBeProcessedVal = null;
         String imagesReceivedVal = null;
         String imagesProcessedVal = null;
+        String imagesInErrorStateVal = null;
+        String imagesInProcessingStateVal = null;
 
         try {
             conn = dataSource.getConnection();
@@ -1357,7 +1365,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             PreparedStatement successfulStoresPs = conn.prepareStatement(successfulStoresSql);
             PreparedStatement partiallySuccessfulStoresPs = conn.prepareStatement(partiallySuccessfulStoresSql);
             PreparedStatement failedStoresPs = conn.prepareStatement(failedStoresSql);
-
+            PreparedStatement imagesInErrorStatePs = conn.prepareStatement(imagesInErrorStateSql);
+            PreparedStatement imagesInProcessingStatePs = conn.prepareStatement(imagesInProcessingStateSql);
+            
             ResultSet totalStoresRs = totalStoresPs.executeQuery();
             if (totalStoresRs.next()) {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -1463,6 +1473,26 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
             failedStoresRs.close();
             failedStoresPs.close();
+            
+            ResultSet imagesInErrorStateRs = imagesInErrorStatePs.executeQuery();
+            if (imagesInErrorStateRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                imagesInErrorStateVal = imagesInErrorStateRs.getString("imagesInErrorState");
+                map1.put("imagesInErrorState", imagesInErrorStateVal);
+                resultList.add(map1);
+            }
+            imagesInErrorStateRs.close();
+            imagesInErrorStatePs.close();
+            
+            ResultSet imagesInProcessingStateRs = imagesInProcessingStatePs.executeQuery();
+            if (imagesInProcessingStateRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                imagesInProcessingStateVal = imagesInProcessingStateRs.getString("imagesInProcessingState");
+                map1.put("imagesInProcessingState", imagesInProcessingStateVal);
+                resultList.add(map1);
+            }
+            imagesInProcessingStateRs.close();
+            imagesInProcessingStatePs.close();
             
             LOGGER.info("---------------MetaServiceDaoImpl Ends getProjectSummary----------------\n");
 
