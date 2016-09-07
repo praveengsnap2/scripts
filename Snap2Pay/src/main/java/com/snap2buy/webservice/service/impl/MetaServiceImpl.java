@@ -5,12 +5,14 @@ import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.MetaService;
 import com.snap2buy.webservice.util.ConverterUtil;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -138,15 +140,20 @@ public class MetaServiceImpl implements MetaService {
     }
 
     @Override
-    public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject) {
+    public List<Project> getProjectDetail(InputObject inputObject) {
         LOGGER.info("---------------MetaServiceImpl Starts getProjectDetail customerProjectId = " + inputObject.getCustomerProjectId() + "customerCode="+inputObject.getCustomerCode()+"----------------\n");
         List<ProjectUpc> productUpcList = metaServiceDao.getProjectUpcDetail(inputObject.getCustomerProjectId(), inputObject.getCustomerCode());
 
         LOGGER.info("---------------MetaServiceImpl getProjectUpcDetail got size ="+productUpcList.size()+"----------------\n");
         List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectDetail(inputObject.getCustomerProjectId(), inputObject.getCustomerCode());
-        resultList.addAll(ConverterUtil.convertProjectUpcObjectToMap(productUpcList));
+        
+        Project project = new Project(resultList.get(0));
+        project.setProjectUpcList(productUpcList);
+        List<Project> projectList = new ArrayList<Project>();
+        projectList.add(project);
+        
         LOGGER.info("---------------MetaServiceImpl Ends getProjectDetail ----------------\n");
-        return resultList;
+        return projectList;
     }
 
     @Override

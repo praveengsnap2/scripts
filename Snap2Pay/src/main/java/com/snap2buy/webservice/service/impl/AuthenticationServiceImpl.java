@@ -7,6 +7,7 @@ import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.AuthenticationService;
 import com.snap2buy.webservice.service.MetaService;
 import com.snap2buy.webservice.util.ConverterUtil;
+import com.snap2buy.webservice.util.CryptoUtil;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, UserDet
 	
 	 private static Logger LOGGER = Logger.getLogger("s2b");
 	 
-     private ShaPasswordEncoder shaPasswordEncoder = new ShaPasswordEncoder();
-
-
 	 @Autowired
 	 @Qualifier(BeanMapper.BEAN_AUTH_SERVICE_DAO)
 	 private AuthenticationServiceDao authServiceDao;
@@ -50,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, UserDet
 	public void createUser(User userInput) {
 		LOGGER.info("---------------AuthenticationServiceImpl Starts createUser user id = " + userInput.getUserId()+ "----------------\n");
 		
-		userInput.setPassword(shaPasswordEncoder.encodePassword(userInput.getPassword(), "snap2buy_"+userInput.getUserId()));
+		userInput.setPassword(CryptoUtil.encrypt(userInput.getPassword()));
 
 		authServiceDao.createUser(userInput);
 
@@ -83,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, UserDet
 	public void updateUserPassword(User userInput) {
 		LOGGER.info("---------------AuthenticationServiceImpl Starts updateUserPassword user id = " + userInput.getUserId()+ "----------------\n");
 
-		userInput.setPassword(shaPasswordEncoder.encodePassword(userInput.getPassword(), "snap2buy_"+userInput.getUserId()));
+		userInput.setPassword(CryptoUtil.encrypt(userInput.getPassword()));
 		
 		authServiceDao.updateUserPassword(userInput);
 

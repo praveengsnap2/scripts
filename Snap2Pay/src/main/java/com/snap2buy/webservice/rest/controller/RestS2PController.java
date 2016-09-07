@@ -1235,7 +1235,7 @@ public class RestS2PController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectDetail")
-    public Snap2BuyOutput getProjectDetail(
+    public String getProjectDetail(
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
             @Context HttpServletRequest request,
@@ -1249,18 +1249,27 @@ public class RestS2PController {
             return restS2PAction.getProjectDetail(inputObject);
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	
+        	e.printStackTrace();
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
-
-            Snap2BuyOutput rio;
-            HashMap<String, String> inputList = new HashMap<String, String>();
-            inputList.put("error in Input","-9");
-            inputList.put("customerProjectId",customerProjectId);
-            inputList.put("customerCode",customerCode);
-            rio = new Snap2BuyOutput(null, inputList);
+            Map<String, String> input = new HashMap<String, String>();
+            input.put("error in Input","-9");
+            input.put("customerProjectId",customerProjectId);
+            input.put("customerCode",customerCode);
+            List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+            metaList.add(input);
+            
+            Map<String, String> emptyOutput = new HashMap<String, String>();
+        	emptyOutput.put("Message", "No Data Returned");
+        	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+        	emptyOutputList.add(emptyOutput);
+        	CustomSnap2BuyOutput reportIO = new CustomSnap2BuyOutput(emptyOutputList, metaList);
+        	//convert to json here
+            Gson gson = new Gson();
+            String output = gson.toJson(reportIO);
             LOGGER.info("---------------Controller Ends getProjectDetail----------------\n");
-            return rio;
+            return output;
         }
     }
     @GET

@@ -407,9 +407,12 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 projectUpc.setUpc(rs.getString("upc"));
                 projectUpc.setSkuTypeId(rs.getString("skuTypeId"));
                 projectUpc.setExpectedFacingCount(rs.getString("expectedFacingCount"));
-                projectUpc.setImageUrl1(rs.getString("imageUrl1"));
-                projectUpc.setImageUrl2(rs.getString("imageUrl2"));
-                projectUpc.setImageUrl3(rs.getString("imageUrl3"));
+                String url = rs.getString("imageUrl1");
+                projectUpc.setImageUrl1( url == null ? "" : url );
+                url = rs.getString("imageUrl2");
+                projectUpc.setImageUrl2(url == null ? "" : url );
+                url = rs.getString("imageUrl3");
+                projectUpc.setImageUrl3(url == null ? "" : url );
                 resultList.add(projectUpc);
             }
             rs.close();
@@ -543,6 +546,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 map.put("createdBy", rs.getString("createdBy"));
                 map.put("updatedDate", rs.getString("updatedDate"));
                 map.put("status", rs.getString("status"));
+                map.put("description", rs.getString("description"));
+                map.put("owner", rs.getString("owner"));
+                map.put("endDate", rs.getString("endDate"));
                 resultList.add(map);
             }
             rs.close();

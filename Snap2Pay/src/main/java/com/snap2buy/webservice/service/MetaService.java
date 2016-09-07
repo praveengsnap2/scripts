@@ -20,7 +20,7 @@ public interface MetaService {
 
     public List<LinkedHashMap<String, String>> getCategoryDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getCustomerDetail(InputObject inputObject);
-    public List<LinkedHashMap<String, String>> getProjectDetail(InputObject inputObject);
+    public List<Project> getProjectDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getProjectTypeDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getSkuTypeDetail(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getProjectUpcDetail(InputObject inputObject);

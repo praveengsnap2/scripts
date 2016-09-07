@@ -124,7 +124,7 @@ public class AuthenticationServiceDaoImpl implements AuthenticationServiceDao {
 	@Override
 	public List<LinkedHashMap<String, String>> getUserForAuth(String userId) {
 		LOGGER.info("---------------AuthenticationServiceDaoImpl Starts getUserForAuth user Id = " + userId + "----------------\n");
-        String sql = "SELECT userId, password, customerCode FROM User where userId = ?";
+        String sql = "SELECT userId, password, customerCode, firstName, lastName FROM User where userId = ?";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {
@@ -138,6 +138,8 @@ public class AuthenticationServiceDaoImpl implements AuthenticationServiceDao {
                 map.put("userId", rs.getString("userId"));
                 map.put("password", rs.getString("password"));
                 map.put("customerCode", rs.getString("customerCode"));
+                map.put("firstName", rs.getString("firstName"));
+                map.put("lastName", rs.getString("lastName"));
                 resultList.add(map);
             }
             rs.close();

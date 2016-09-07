@@ -612,16 +612,32 @@ public class RestS2PAction {
         return reportIO;
     }
 
-    public Snap2BuyOutput getProjectDetail(InputObject inputObject) {
+    public String getProjectDetail(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getProjectDetail--customerProjectId : " + inputObject.getCustomerProjectId()+"customerCode"+inputObject.getCustomerCode()+"----------------\n");
-        List<java.util.LinkedHashMap<String, String>> resultListToPass = metaService.getProjectDetail(inputObject);
+        List<Project> resultListToPass = metaService.getProjectDetail(inputObject);
 
-        HashMap<String, String> reportInput = new HashMap<String, String>();
-        reportInput.put("customerProjectId", inputObject.getCustomerProjectId());
-        reportInput.put("customerCode", inputObject.getCustomerCode());
-        Snap2BuyOutput reportIO = new Snap2BuyOutput(resultListToPass, reportInput);
+        Map<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        List<Map<String,String>> metaList = new ArrayList<Map<String,String>>();
+        metaList.add(reportInput);
+        
+        CustomSnap2BuyOutput reportIO = null;
+        if ( resultListToPass.isEmpty()) {
+        	Map<String, String> emptyOutput = new HashMap<String, String>();
+        	emptyOutput.put("Message", "No Data Returned");
+        	List<Map<String,String>> emptyOutputList = new ArrayList<>();
+        	emptyOutputList.add(emptyOutput);
+        	reportIO = new CustomSnap2BuyOutput(emptyOutputList, metaList);
+        } else {
+        	reportIO = new CustomSnap2BuyOutput(resultListToPass, metaList);
+        }
+        //convert to json here
+        Gson gson = new Gson();
+        String output = gson.toJson(reportIO);
+        
         LOGGER.info("---------------RestAction Ends getProjectDetail----------------\n");
-        return reportIO;
+        return output;
     }
 
     public Snap2BuyOutput getProjectTypeDetail(InputObject inputObject) {
@@ -1274,6 +1290,8 @@ public class RestS2PAction {
         if ( isAuthenticated ) {
         	result.put("status", "success");
             result.put("customerCode", userList.get(0).get("customerCode"));
+            result.put("firstName", userList.get(0).get("firstName"));
+            result.put("lastName", userList.get(0).get("lastName"));
         } else {
         	result.put("status", "failure");
         }

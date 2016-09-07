@@ -1,8 +1,10 @@
 package com.snap2buy.webservice.model;
 
 import javax.xml.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sachin on 5/29/16.
@@ -90,6 +92,26 @@ public class Project {
         this.description = description;
         this.owner = owner;
         this.endDate = endDate;
+    }
+    
+    public Project(Map<String,String> inputMap) {
+        this.id = inputMap.get("id") == null ? "" : inputMap.get("id");
+        this.projectName = inputMap.get("projectName") == null ? "" : inputMap.get("projectName");
+        this.customerProjectId = inputMap.get("customerProjectId") == null ? "" : inputMap.get("customerProjectId");
+        this.customerCode = inputMap.get("customerCode") == null ? "" : inputMap.get("customerCode");
+        this.projectTypeId = inputMap.get("projectTypeId") == null ? "" : inputMap.get("projectTypeId");
+        this.categoryId = inputMap.get("categoryId") == null ? "" : inputMap.get("categoryId");
+        this.retailerCode = inputMap.get("retailerCode") == null ? "" : inputMap.get("retailerCode");
+        this.storeCount = inputMap.get("storeCount") == null ? "" : inputMap.get("storeCount");
+        this.startDate =inputMap.get("startDate") == null ? "" : inputMap.get("startDate") ;
+        this.createdDate = inputMap.get("createdDate") == null ? "" : inputMap.get("createdDate");
+        this.createdBy = inputMap.get("createdBy") == null ? "" : inputMap.get("createdBy");
+        this.updatedDate = inputMap.get("updatedDate") == null ? "" : inputMap.get("updatedDate");
+        this.updatedBy =inputMap.get("updatedBy") == null ? "" : inputMap.get("updatedBy");
+        this.status = inputMap.get("status") == null ? "" : inputMap.get("status");
+        this.description = inputMap.get("description") == null ? "" : inputMap.get("description");
+        this.owner = inputMap.get("owner") == null ? "" : inputMap.get("owner");
+        this.endDate = inputMap.get("endDate") == null ? "" : inputMap.get("endDate");
     }
 
     public List<ProjectUpc> getProjectUpcList() {
