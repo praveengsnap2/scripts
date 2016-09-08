@@ -1606,7 +1606,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	private String calculateStoreResult(int projectType, List<String> aggUPCs, List<String> skuType2UPCsInProject, List<String> skuType1UPCsInProject) {
 		String resultCode = null;
 		switch(projectType) {
-			case 1 : //Display
+			/*case 1 : //Display
 				//if any UPCs of sku type 2 is present in aggUPCs and all UPCs of sku type 1 is present in aggUPCs --> Success
 				if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && aggUPCs.containsAll(skuType1UPCsInProject)){
 					resultCode = "1";
@@ -1616,7 +1616,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 				} else { //failed
 					resultCode = "3";
 				}
-				break;
+				break;*/
 			case 2 : //OSA Check
 			case 3 : //New product cut-in
 			case 5 : //Distribution Check
@@ -1630,7 +1630,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 					resultCode = "3";
 				}
 				break;
-			case 11 :
+			case 1 : //Display
+			case 11 : //IRC
 				// if any UPCs of skutype 2 is present and any UPCs of skutype 1 is present --> Success
 				if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && ifAnyPresentInList(skuType1UPCsInProject,aggUPCs)) {
 					resultCode = "1";
