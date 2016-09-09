@@ -380,7 +380,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             
             imageStatus = processImageDao.getImageAnalysisStatus(imageStore.getImageUUID());
             
-            if ( imageStatus.equalsIgnoreCase("done") ) {
+            if ( imageStatus.equalsIgnoreCase("done") || imageStatus.equalsIgnoreCase("error") ) {
             	//call to generate aggs ignore the results returned by the api
             	processImageDao.generateAggs(imageStore.getCustomerCode(),imageStore.getCustomerProjectId(),imageStore.getStoreId());
             

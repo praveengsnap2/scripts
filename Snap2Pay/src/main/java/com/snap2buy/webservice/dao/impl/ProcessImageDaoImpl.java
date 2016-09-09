@@ -1855,7 +1855,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		List<String> storeIdsForProject = new ArrayList<String>();
 		StringBuilder getAllStoresForProjectSqlBuilder = new StringBuilder("SELECT DISTINCT(storeId) FROM ImageStoreNew WHERE customerCode=? AND customerProjectId=?");
 		if (onlyDone) {
-			getAllStoresForProjectSqlBuilder.append(" AND imageStatus=\"done\"");
+			getAllStoresForProjectSqlBuilder.append(" AND imageStatus in (\"done\",\"error\")");
 		}
 		Connection conn = null;
 	    try {
