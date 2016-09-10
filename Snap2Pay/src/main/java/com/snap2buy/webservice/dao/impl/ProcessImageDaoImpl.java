@@ -1829,8 +1829,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	         while(rs.next()){
 	        	 storeId = rs.getString("storeId");
 	        	 if (!storeId.equalsIgnoreCase(previousStoreId)){
-	        		 upcFacingPerStoreMap.put(storeId, upcFacingMap);
-	        		 upcFacingMap= new LinkedHashMap<String,String>();
+	        		 if ( previousStoreId.equalsIgnoreCase("dummyStoreId")) {
+	        			 previousStoreId = storeId;
+	        		 }
+	        		 upcFacingPerStoreMap.put(previousStoreId, upcFacingMap);
+	        		 upcFacingMap = new LinkedHashMap<String,String>();
 	        		 previousStoreId = storeId;
 	        	 }
 	    		 upcFacingMap.put(rs.getString("upc"), rs.getString("facing"));
