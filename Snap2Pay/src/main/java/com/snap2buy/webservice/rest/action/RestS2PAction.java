@@ -1145,6 +1145,18 @@ public class RestS2PAction {
         return reportIO;
 	}
 	
+	public Snap2BuyOutput getProjectAllStoreResultsDetail(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts getProjectAllStoreResultsDetail----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getProjectAllStoreResultsDetail(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        Snap2BuyOutput reportIO = new Snap2BuyOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getProjectAllStoreResultsDetail----------------\n");
+
+        return reportIO;
+	}
 
 	public Snap2BuyOutput createUser(User userInput) {
 		 LOGGER.info("---------------RestAction Starts createUser----------------\n");

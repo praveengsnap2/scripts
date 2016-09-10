@@ -37,4 +37,5 @@ public interface ProcessImageService {
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(InputObject inputObject);
 	public void recomputeProjectByStore(InputObject inputObject);
 	public void reprocessProjectByStore(InputObject inputObject);
+	public List<LinkedHashMap<String, String>> getProjectAllStoreResultsDetail(InputObject inputObject);
 }

@@ -788,6 +788,17 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 	}
 
 	@Override
+	public List<LinkedHashMap<String, String>> getProjectAllStoreResultsDetail(InputObject inputObject) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectAllStoreResultsDetail----------------\n");
+
+        List<LinkedHashMap<String, String>> result = processImageDao.getProjectAllStoreResultsDetail(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectAllStoreResultsDetail----------------\n");
+
+        return result;
+	}
+	
+	@Override
 	public void recomputeProjectByStore(InputObject inputObject) {
 		
 		LOGGER.info("---------------ProcessImageServiceImpl Starts recomputeProjectByStore----------------\n");

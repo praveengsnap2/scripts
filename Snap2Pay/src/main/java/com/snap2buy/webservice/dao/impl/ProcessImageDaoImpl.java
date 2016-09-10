@@ -1745,6 +1745,150 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	            }
 	        }
 	}
+	
+	@Override
+	public List<LinkedHashMap<String, String>> getProjectAllStoreResultsDetail(String customerCode, String customerProjectId) {
+		 LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectAllStoreResultsDetail::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
+	     List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
+
+	     //Get all UPCs for this project with facing initialized to 0
+		 Map<String,String> projectUpcFacingMap = getProjectUpcFacingMap(customerCode,customerProjectId);
+		 //Get facing count for each UPC per store for ths project
+		 Map<String,Map<String,String>> upcFacingPerStoreMap = getUpcFacingPerStoreMap(customerCode,customerProjectId);
+		 
+		 String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence "
+	        		+ "FROM ProjectStoreResult result, StoreMaster store, ResultsMaster resultsMaster WHERE result.customerCode = ? and result.customerProjectId = ? and result.storeId = store.storeId and result.resultCode = resultsMaster.resultCode order by result.resultCode asc, result.countDistinctUpc desc, result.sumFacing desc, result.sumUpcConfidence desc ";
+	        Connection conn = null;
+
+	        try {
+	            conn = dataSource.getConnection();
+	            PreparedStatement ps = conn.prepareStatement(sql);
+	            ps.setString(1, customerCode);
+	            ps.setString(2, customerProjectId);
+	            ResultSet rs = ps.executeQuery();
+	            while (rs.next()) {
+	                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+	                String storeId = rs.getString("storeId");
+	                map.put("storeId", storeId);
+	                map.put("retailerStoreId", rs.getString("retailerStoreId"));
+	                map.put("retailerChainCode", rs.getString("retailerChainCode"));
+	                map.put("retailer", rs.getString("retailer"));
+	                map.put("street", rs.getString("street"));
+	                map.put("city", rs.getString("city"));
+	                map.put("stateCode", rs.getString("stateCode"));
+	                map.put("state", rs.getString("state"));
+	                map.put("zip", rs.getString("zip"));
+	                map.put("resultCode", rs.getString("resultCode"));
+	                map.put("result", rs.getString("description"));
+	                map.put("countDistinctUpc", String.valueOf(rs.getInt("countDistinctUpc")));
+	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
+	                map.put("sumUpcConfidence", String.valueOf(rs.getBigDecimal("sumUpcConfidence")));
+	                map.putAll(projectUpcFacingMap);
+	                if ( upcFacingPerStoreMap.containsKey(storeId)){
+		                map.putAll(upcFacingPerStoreMap.get(storeId));
+	                }
+	                result.add(map);
+	            }
+	            rs.close();
+	            ps.close();
+	            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectAllStoreResultsDetail----------------\n");
+	            return result;
+	        } catch (SQLException e) {
+	            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	            LOGGER.error("exception", e);
+	            throw new RuntimeException(e);
+	        } finally {
+	            if (conn != null) {
+	                try {
+	                    conn.close();
+	                } catch (SQLException e) {
+	                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                    LOGGER.error("exception", e);
+	                }
+	            }
+	        }
+	}
+
+	private Map<String, Map<String, String>> getUpcFacingPerStoreMap(
+			String customerCode, String customerProjectId) {
+		String upcForProjectSql = "select t1.storeId,t1.upc,t1.facing from ProjectStoreData t1, (select upc from ProjectUpc where customerCode=? and customerProjectId=?) t2 "
+				+ "	where t1.customerCode=? and t1.customerProjectId=? and t1.upc != \"999999999999\" and t1.upc = t2.upc";
+		Map<String,Map<String,String>> upcFacingPerStoreMap = new LinkedHashMap<String,Map<String,String>>();
+		 Connection conn = null;
+		 try {
+			 conn = dataSource.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(upcForProjectSql);
+	         ps.setString(1, customerCode);
+	         ps.setString(2, customerProjectId);
+	         ps.setString(3, customerCode);
+	         ps.setString(4, customerProjectId);
+	         ResultSet rs = ps.executeQuery();
+	         String previousStoreId = "dummyStoreId";
+	         String storeId = null;
+	         Map<String,String> upcFacingMap = new LinkedHashMap<String,String>();
+	         while(rs.next()){
+	        	 storeId = rs.getString("storeId");
+	        	 if (!storeId.equalsIgnoreCase(previousStoreId)){
+	        		 upcFacingPerStoreMap.put(storeId, upcFacingMap);
+	        		 upcFacingMap= new LinkedHashMap<String,String>();
+	        		 previousStoreId = storeId;
+	        	 }
+	    		 upcFacingMap.put(rs.getString("upc"), rs.getString("facing"));
+	         }
+	         if (storeId != null ) {
+	        	 upcFacingPerStoreMap.put(storeId, upcFacingMap);
+	         }
+	         rs.close();
+	         ps.close();
+		 } catch (SQLException e){
+			 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+			 LOGGER.error("exception", e);
+			 throw new RuntimeException(e);
+		 } finally {
+			 if (conn != null) {
+				 try {
+					 conn.close();
+				 } catch (SQLException e) {
+					 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+					 LOGGER.error("exception", e);
+				 }
+			 }
+        }
+		 return upcFacingPerStoreMap;
+	}
+
+	private Map<String, String> getProjectUpcFacingMap(String customerCode,
+			String customerProjectId) {
+		 String upcForProjectSql = "select upc from ProjectUpc where customerCode=? and customerProjectId=?";
+		 Map<String,String> upcForProjectMap = new LinkedHashMap<String,String>();
+		 Connection conn = null;
+		 try {
+			 conn = dataSource.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(upcForProjectSql);
+	         ps.setString(1, customerCode);
+	         ps.setString(2, customerProjectId);
+	         ResultSet rs = ps.executeQuery();
+	         while(rs.next()){
+	        	 upcForProjectMap.put(rs.getString("upc"), "0");
+	         }
+	         rs.close();
+	         ps.close();
+		 } catch (SQLException e){
+			 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+			 LOGGER.error("exception", e);
+			 throw new RuntimeException(e);
+		 } finally {
+			 if (conn != null) {
+				 try {
+					 conn.close();
+				 } catch (SQLException e) {
+					 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+					 LOGGER.error("exception", e);
+				 }
+			 }
+         }
+		 return upcForProjectMap;
+     }
 
 	@Override
 	public void reprocessProjectByStore(String customerCode, String customerProjectId, List<String> storeIdsToReprocess) {
