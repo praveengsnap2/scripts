@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.sql.DataSource;
 
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1404,21 +1407,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	public List<LinkedHashMap<String, String>> generateStoreResults(String customerCode, String customerProjectId, String storeId) {
 		LOGGER.info("---------------ProcessImageDaoImpl Starts generateStoreResults::customerCode="+customerCode
 				+"::customerProjectId="+customerProjectId+"::storeId="+storeId +"----------------\n");
-		// get project UPCs
-		List<LinkedHashMap<String, String>> projectUPCs = metaServiceDao.listProjectUpc(customerProjectId, customerCode);
-		
-		Map<String,List<String>> skuTypeUPCMap = new LinkedHashMap<String,List<String>>();
-		for(Map<String,String> projectUPC : projectUPCs){
-			List<String> existingUPCs = skuTypeUPCMap.get(projectUPC.get("skuTypeId")); 
-			if (existingUPCs == null ) {
-				existingUPCs = new ArrayList<String>();
-				existingUPCs.add(projectUPC.get("upc"));
-				skuTypeUPCMap.put(projectUPC.get("skuTypeId"),existingUPCs);
-			} else {
-				existingUPCs.add(projectUPC.get("upc"));
-				skuTypeUPCMap.put(projectUPC.get("skuTypeId"),existingUPCs);
-			}
-		}
 		// get data from ProjectStoreData table for this customer code, project id and store combination
 		List<String> aggUPCs = getDistinctUPCsForProject(customerCode, customerProjectId, storeId);
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::UPCs in agg table :: " + aggUPCs + " ------------------");
@@ -1439,24 +1427,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     		}
     	}
 		
-		List<String> skuType2UPCsInProject = skuTypeUPCMap.get("2");
-		List<String> skuType1UPCsInProject = skuTypeUPCMap.get("1");
-		
-		if ( skuType2UPCsInProject == null ) {
-			skuType2UPCsInProject = new ArrayList<String>();
-		}
-		
-		if ( skuType1UPCsInProject == null ) {
-			skuType1UPCsInProject = new ArrayList<String>();
-		}
-		
-		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::skuType2UPCs :: " + skuType2UPCsInProject + " ------------------");
-		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::skuType1UPCs :: " + skuType1UPCsInProject + " ------------------");
-	
-		int projectType = Integer.parseInt( getProjectType(customerCode,customerProjectId) );
-		
 		//calculate resultCode based on UPC findings
-		String resultCode = calculateStoreResult(projectType, aggUPCs, skuType2UPCsInProject, skuType1UPCsInProject);
+		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults:: calculating store results ------------------");
+		List<LinkedHashMap<String,String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);
+		String resultCode = calculateStoreResult(aggUPCs, projectDetail.get(0));
 		
 		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
 		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence  ) VALUES (?,?,?,?,?,?,?)";
@@ -1527,42 +1501,6 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	    }
 	}
 	
-	private String getProjectType(String customerCode, String customerProjectId) {
-		String projectType = null;
-		String pTypeSql = "SELECT projectTypeId FROM Project WHERE customerCode=? and customerProjectId=?";
-		
-		Connection conn = null;
-	    try {
-	        conn = dataSource.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(pTypeSql);
-	        ps.setString(1, customerCode);
-	        ps.setString(2, customerProjectId);
-	        ResultSet rs = ps.executeQuery();
-	        
-	        if (rs.next()) {
-	        	projectType = rs.getString("projectTypeId");
-	        }
-	        rs.close();
-	        ps.close();
-	        LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectType :: projectType = " + projectType + " ----------------\n");
-
-	        return projectType;
-	     } catch (SQLException e) {
-	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-	         LOGGER.error("exception", e);
-	         throw new RuntimeException(e);
-	     } finally {
-	         if (conn != null) {
-	           try {   
-	            	 conn.close();
-                } catch (SQLException e) {
-	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
-	                 LOGGER.error("exception", e);
-	            }
-	         }
-	      }
-	}
-
 	private Map<String, String> getProjectStoreData(String customerCode,String customerProjectId, String storeId) {
 		Map<String,String> projectStoreData = new LinkedHashMap<String,String>();
 		String countFacingConfidenceSql = " select count(distinct(upc)) as count, sum(facing) facing, sum(upcConfidence) confidence from ProjectStoreData "
@@ -1603,47 +1541,89 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	      }
 	}
 
-	private String calculateStoreResult(int projectType, List<String> aggUPCs, List<String> skuType2UPCsInProject, List<String> skuType1UPCsInProject) {
-		String resultCode = null;
-		switch(projectType) {
-			case 10 : //Package Change
-				//if NO UPCs of sku type 2 is present in aggUPCs and any UPCs of sku type 1 is present in aggUPCs --> Success
-				if ( !ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && ifAnyPresentInList(skuType1UPCsInProject,aggUPCs)){
-					resultCode = "1";
-				} //failed
-				else { //failed
-					resultCode = "3";
-				}
-				break;
-			case 2 : //OSA Check
-			case 3 : //New product cut-in
-			case 5 : //Distribution Check
-				//if all UPCs of skutype 1 is present --> Success
-				if ( aggUPCs.containsAll(skuType1UPCsInProject) ) {
-					resultCode = "1";
-				} 	//if any UPCs of skutype 1 is present --> Partial
-				else if ( ifAnyPresentInList(skuType1UPCsInProject, aggUPCs) ) {
-					resultCode = "2";
-				} else { //failed
-					resultCode = "3";
-				}
-				break;
-			case 1 : //Display
-			case 11 : //IRC
-				// if any UPCs of skutype 2 is present and any UPCs of skutype 1 is present --> Success
-				if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) && ifAnyPresentInList(skuType1UPCsInProject,aggUPCs)) {
-					resultCode = "1";
-				} 	// if any UPCs of skutype 2 is present and NO UPCs of skutype 1 is present --> Partial
-				else if ( ifAnyPresentInList(skuType2UPCsInProject,aggUPCs) &&  !ifAnyPresentInList(skuType1UPCsInProject,aggUPCs)) {
-					resultCode = "2";
-				} else {//failed
-					resultCode = "3";
-				}
-				break;
+	private String calculateStoreResult(List<String> aggUPCs, Map<String,String> projectDetail) {
+		String successCriteria = projectDetail.get("successCriteria");
+		String partialCriteria = projectDetail.get("partialCriteria");
+		String failedCriteria = projectDetail.get("failedCriteria");
+		//First evaluate success Criteria
+		if ( null != successCriteria && !successCriteria.isEmpty() ) {
+			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating success Criteria :: " + successCriteria + " ------------------");
+			boolean result = evaluate(successCriteria, aggUPCs);
+			if (result){
+				return "1";
+			}
 		}
-		return resultCode;
+		//Then evaluate partial Criteria
+		if ( null != partialCriteria && !partialCriteria.isEmpty()){
+			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating partial Criteria :: " + partialCriteria + " ------------------");
+			boolean result = evaluate(partialCriteria, aggUPCs);
+			if (result){
+				return "2";
+			}
+		}
+		//Then evaluate failed Criteria
+		if ( null != failedCriteria && !failedCriteria.isEmpty()){
+			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating failed Criteria :: " + failedCriteria + " ------------------");
+			boolean result = evaluate(failedCriteria, aggUPCs);
+			if (result){
+				return "3";
+			}
+		}
+		//if control reaches here, failed.
+		LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: all criteria failed.. Marking store result as failed ------------------");
+		return "3";
 	}
 	
+	private boolean evaluate(String Criteria, List<String> aggUPCs) {
+		boolean evaluateResult = false;
+		String[] CriteriaParts = Criteria.split(" ");
+		StringBuilder CriteriaBuilder = new StringBuilder();
+		for(String part : CriteriaParts ) {
+			if ( part.startsWith("containsAll") ) {
+				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
+				List<String> upcList = Arrays.asList(upcPart.split(","));
+				if ( aggUPCs.containsAll(upcList)){
+					CriteriaBuilder.append("true");
+				} else {
+					CriteriaBuilder.append("false");
+				}
+			} else if ( part.startsWith("containsAny")) {
+				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
+				List<String> upcList = Arrays.asList(upcPart.split(","));
+				if ( ifAnyPresentInList(upcList, aggUPCs)){
+					CriteriaBuilder.append("true");
+				} else {
+					CriteriaBuilder.append("false");
+				}
+			} else if ( part.startsWith("containsNone")) {
+				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
+				List<String> upcList = Arrays.asList(upcPart.split(","));
+				if ( !ifAnyPresentInList(upcList, aggUPCs)){
+					CriteriaBuilder.append("true");
+				} else {
+					CriteriaBuilder.append("false");
+				}
+			} else if ( part.equals("AND")){
+				CriteriaBuilder.append("&&");
+			} else if ( part.equals("OR")) {
+				CriteriaBuilder.append("||");
+			} else {
+				CriteriaBuilder.append(part);
+			}
+		}
+		LOGGER.info("---------------ProcessImageDaoImpl--evaluate:: evaluating processed Criteria :: " + CriteriaBuilder.toString() + " ------------------");
+		try {
+            ScriptEngineManager sem = new ScriptEngineManager();
+            ScriptEngine se = sem.getEngineByName("JavaScript");
+            evaluateResult = (Boolean)se.eval(CriteriaBuilder.toString());
+        } catch (Exception e) {
+           evaluateResult = false;
+           LOGGER.error("---------------ProcessImageDaoImpl--evaluate:: evaluating processed Criteria failed :: " + e.getMessage() + " ------------------");
+        }
+		LOGGER.info("---------------ProcessImageDaoImpl--evaluate:: evaluation result :: " + evaluateResult + " ------------------");
+		return evaluateResult;
+	}
+
 	private boolean ifAnyPresentInList(List<String> skuUPCsInProject,List<String> aggUPCs) {
 		boolean isPresent = false;
 		for( String upc : skuUPCsInProject ) {

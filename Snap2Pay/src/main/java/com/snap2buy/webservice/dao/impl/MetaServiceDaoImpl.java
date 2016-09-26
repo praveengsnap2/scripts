@@ -147,6 +147,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 map.put("description", rs.getString("description"));
                 map.put("owner", rs.getString("owner"));
                 map.put("endDate", rs.getString("endDate"));
+                map.put("successCriteria", rs.getString("successCriteria"));
+                map.put("partialCriteria", rs.getString("partialCriteria"));
+                map.put("failedCriteria", rs.getString("failedCriteria"));
                 resultList.add(map);
             }
             rs.close();
@@ -549,6 +552,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 map.put("description", rs.getString("description"));
                 map.put("owner", rs.getString("owner"));
                 map.put("endDate", rs.getString("endDate"));
+                map.put("successCriteria", rs.getString("successCriteria"));
+                map.put("partialCriteria", rs.getString("partialCriteria"));
+                map.put("failedCriteria", rs.getString("failedCriteria"));
                 resultList.add(map);
             }
             rs.close();
@@ -906,7 +912,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void createProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createProject::projectInput=" + projectInput + "----------------\n");
-        String sql = "INSERT INTO Project ( projectName, customerProjectId, customerCode, projectTypeId, categoryId, retailerCode, storeCount, startDate, createdDate, createdBy, updatedDate, updatedBy, status, description, owner, endDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Project ( projectName, customerProjectId, customerCode, projectTypeId, categoryId, retailerCode, storeCount, startDate, createdDate, createdBy, updatedDate, updatedBy, status, description, owner, endDate, successCriteria, partialCriteria, failedCriteria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         Integer id = -1;
         try {
@@ -929,6 +935,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             ps.setString(14, projectInput.getDescription());
             ps.setString(15, projectInput.getOwner());
             ps.setString(16, projectInput.getEndDate());
+            ps.setString(17, projectInput.getSuccessCriteria());
+            ps.setString(18, projectInput.getPartialCriteria());
+            ps.setString(19, projectInput.getFailedCriteria());
             id = ps.executeUpdate();
 
             if ((id == 0)||(id == null)) {
@@ -1291,6 +1300,9 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
                 ", description=\"" + projectInput.getDescription() + "\"  " +
                 ", owner=\"" + projectInput.getOwner() + "\"  " +
                 ", endDate=\"" + projectInput.getEndDate() + "\"  " +
+                ", successCriteria=\"" + projectInput.getSuccessCriteria() + "\"  " +
+                ", partialCriteria=\"" + projectInput.getPartialCriteria() + "\"  " +
+                ", failedCriteria=\"" + projectInput.getFailedCriteria() + "\"  " +
                 "where customerCode = \""+projectInput.getCustomerCode()+"\" and customerProjectId= \""+projectInput.getCustomerProjectId() +"\" ";
 
         Connection conn = null;

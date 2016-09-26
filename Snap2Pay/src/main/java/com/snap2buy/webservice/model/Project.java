@@ -46,6 +46,12 @@ public class Project {
     String owner;
     @XmlElement
     String endDate;
+	@XmlElement
+    String successCriteria;
+    @XmlElement
+    String partialCriteria;
+    @XmlElement
+    String failedCriteria;
 	@XmlElement(name = "projectUpcList")
     List<ProjectUpc> projectUpcList = new ArrayList<>();
 
@@ -53,7 +59,7 @@ public class Project {
         super();
     }
 
-    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, String description, String owner, String endDate, List<ProjectUpc> projectUpcList) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, String description, String owner, String endDate, String successCriteria, String partialCriteria, String failedCriteria, List<ProjectUpc> projectUpcList) {
         this.id = id;
         this.projectName = projectName;
         this.customerProjectId = customerProjectId;
@@ -71,10 +77,13 @@ public class Project {
         this.description = description;
         this.owner = owner;
         this.endDate = endDate;
+        this.successCriteria = successCriteria;
+        this.partialCriteria = partialCriteria;
+        this.failedCriteria = failedCriteria;
         this.projectUpcList = projectUpcList;
     }
 
-    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, String description, String owner, String endDate) {
+    public Project(String id, String projectName, String customerProjectId, String customerCode, String projectTypeId, String categoryId, String retailerCode, String storeCount, String startDate, String createdDate, String createdBy, String updatedDate, String updatedBy, String status, String description, String owner, String endDate, String successCriteria, String partialCriteria, String failedCriteria) {
         this.id = id;
         this.projectName = projectName;
         this.customerProjectId = customerProjectId;
@@ -92,6 +101,9 @@ public class Project {
         this.description = description;
         this.owner = owner;
         this.endDate = endDate;
+        this.successCriteria = successCriteria;
+        this.partialCriteria = partialCriteria;
+        this.failedCriteria = failedCriteria;
     }
     
     public Project(Map<String,String> inputMap) {
@@ -112,6 +124,9 @@ public class Project {
         this.description = inputMap.get("description") == null ? "" : inputMap.get("description");
         this.owner = inputMap.get("owner") == null ? "" : inputMap.get("owner");
         this.endDate = inputMap.get("endDate") == null ? "" : inputMap.get("endDate");
+        this.successCriteria = inputMap.get("successCriteria") == null ? "" : inputMap.get("successCriteria");
+        this.partialCriteria = inputMap.get("partialCriteria") == null ? "" : inputMap.get("partialCriteria");
+        this.failedCriteria = inputMap.get("failedCriteria") == null ? "" : inputMap.get("failedCriteria");
     }
 
     public List<ProjectUpc> getProjectUpcList() {
@@ -257,6 +272,31 @@ public class Project {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+	
+	 public String getSuccessCriteria() {
+			return successCriteria;
+		}
+
+		public void setSuccessCriteria(String successCriteria) {
+			this.successCriteria = successCriteria;
+		}
+
+		public String getPartialCriteria() {
+			return partialCriteria;
+		}
+
+		public void setPartialCriteria(String partialCriteria) {
+			this.partialCriteria = partialCriteria;
+		}
+
+		public String getFailedCriteria() {
+			return failedCriteria;
+		}
+
+		public void setFailedCriteria(String failedCriteria) {
+			this.failedCriteria = failedCriteria;
+		}
+	
 
     @Override
     public String toString() {
@@ -278,6 +318,9 @@ public class Project {
                 ", description='" + description + '\'' +
                 ", owner='" + owner + '\'' +
                 ", endDate='" + endDate + '\'' +
+                ", successCriteria='" + successCriteria + '\'' +
+                ", partialCriteria='" + partialCriteria + '\'' +
+                ", failedCriteria='" + failedCriteria + '\'' +
                 '}';
     }
 }
