@@ -1313,7 +1313,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		
         String duplicateImagesSql = "SELECT imageStore.imageUUID, imageStore.storeId, imageStore.agentId, imageStore.taskId, imageStore.dateId, imageStore.imageHashScore, "
         		+ "store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip FROM ImageStoreNew imageStore, StoreMaster store"
-        		+ " WHERE imageHashScore IN (SELECT * FROM (SELECT imageHashScore FROM ImageStoreNew  where customerCode=? and customerProjectId=? and imageHashScore is not null and imageHashScore > 0 GROUP BY imageHashScore HAVING COUNT(imageHashScore) > 1) AS a)"
+        		+ " WHERE imageHashScore IN (SELECT * FROM (SELECT imageHashScore FROM ImageStoreNew  where customerCode=? and customerProjectId=? and imageHashScore is not null and imageHashScore > '0' GROUP BY imageHashScore HAVING COUNT(imageHashScore) > 1) AS a)"
         		+ " and imageStore.customerCode= ? and imageStore.customerProjectId = ? and imageStore.storeId = store.storeId order by imageHashScore";
         
         List<DuplicateImages> duplicateImagesList =new ArrayList<DuplicateImages>();
