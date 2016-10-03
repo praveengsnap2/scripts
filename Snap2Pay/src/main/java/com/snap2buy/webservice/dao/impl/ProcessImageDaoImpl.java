@@ -1430,7 +1430,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		//calculate resultCode based on UPC findings
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults:: calculating store results ------------------");
 		List<LinkedHashMap<String,String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);
-		String resultCode = calculateStoreResult(aggUPCs, projectDetail.get(0));
+		String resultCode = calculateStoreResult(aggUPCs, projectDetail.get(0), projectStoreData);
 		
 		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
 		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence  ) VALUES (?,?,?,?,?,?,?)";
@@ -1506,6 +1506,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		String countFacingConfidenceSql = " select count(distinct(upc)) as count, sum(facing) facing, sum(upcConfidence) confidence from ProjectStoreData "
 				+ "where customerCode=? and customerProjectId=? and storeId=? and upc !=\"999999999999\"";
 		
+		String upcFacingSql = " select upc,facing from ProjectStoreData where customerCode=? and customerProjectId=? and storeId=? and upc !=\"999999999999\"";
+		
 		Connection conn = null;
 	    try {
 	        conn = dataSource.getConnection();
@@ -1522,6 +1524,20 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        }
 	        rs.close();
 	        ps.close();
+	        
+	        PreparedStatement ps1 = conn.prepareStatement(upcFacingSql);
+	        ps1.setString(1, customerCode);
+	        ps1.setString(2, customerProjectId);
+	        ps1.setString(3, storeId);
+	        ResultSet rs1 = ps1.executeQuery();
+	        
+	        while(rs1.next()) {
+	        	projectStoreData.put(rs1.getString("upc"), rs1.getString("facing"));
+	        }
+	        rs1.close();
+	        ps1.close();
+	        
+	        
 	        LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreData ----------------\n");
 
 	        return projectStoreData;
@@ -1541,14 +1557,14 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	      }
 	}
 
-	private String calculateStoreResult(List<String> aggUPCs, Map<String,String> projectDetail) {
+	private String calculateStoreResult(List<String> aggUPCs, Map<String,String> projectDetail, Map<String, String> projectStoreData) {
 		String successCriteria = projectDetail.get("successCriteria");
 		String partialCriteria = projectDetail.get("partialCriteria");
 		String failedCriteria = projectDetail.get("failedCriteria");
 		//First evaluate success Criteria
 		if ( null != successCriteria && !successCriteria.isEmpty() ) {
 			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating success Criteria :: " + successCriteria + " ------------------");
-			boolean result = evaluate(successCriteria, aggUPCs);
+			boolean result = evaluate(successCriteria, aggUPCs, projectStoreData);
 			if (result){
 				return "1";
 			}
@@ -1556,7 +1572,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		//Then evaluate partial Criteria
 		if ( null != partialCriteria && !partialCriteria.isEmpty()){
 			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating partial Criteria :: " + partialCriteria + " ------------------");
-			boolean result = evaluate(partialCriteria, aggUPCs);
+			boolean result = evaluate(partialCriteria, aggUPCs, projectStoreData);
 			if (result){
 				return "2";
 			}
@@ -1564,7 +1580,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		//Then evaluate failed Criteria
 		if ( null != failedCriteria && !failedCriteria.isEmpty()){
 			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating failed Criteria :: " + failedCriteria + " ------------------");
-			boolean result = evaluate(failedCriteria, aggUPCs);
+			boolean result = evaluate(failedCriteria, aggUPCs, projectStoreData);
 			if (result){
 				return "3";
 			}
@@ -1574,48 +1590,59 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		return "3";
 	}
 	
-	private boolean evaluate(String Criteria, List<String> aggUPCs) {
+	private boolean evaluate(String Criteria, List<String> aggUPCs, Map<String, String> projectStoreData) {
 		boolean evaluateResult = false;
 		String[] CriteriaParts = Criteria.split(" ");
-		StringBuilder CriteriaBuilder = new StringBuilder();
+		StringBuilder criteriaBuilder = new StringBuilder();
 		for(String part : CriteriaParts ) {
 			if ( part.startsWith("containsAll") ) {
 				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
 				List<String> upcList = Arrays.asList(upcPart.split(","));
 				if ( aggUPCs.containsAll(upcList)){
-					CriteriaBuilder.append("true");
+					criteriaBuilder.append("true");
 				} else {
-					CriteriaBuilder.append("false");
+					criteriaBuilder.append("false");
 				}
 			} else if ( part.startsWith("containsAny")) {
 				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
 				List<String> upcList = Arrays.asList(upcPart.split(","));
 				if ( ifAnyPresentInList(upcList, aggUPCs)){
-					CriteriaBuilder.append("true");
+					criteriaBuilder.append("true");
 				} else {
-					CriteriaBuilder.append("false");
+					criteriaBuilder.append("false");
 				}
 			} else if ( part.startsWith("containsNone")) {
 				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
 				List<String> upcList = Arrays.asList(upcPart.split(","));
 				if ( !ifAnyPresentInList(upcList, aggUPCs)){
-					CriteriaBuilder.append("true");
+					criteriaBuilder.append("true");
 				} else {
-					CriteriaBuilder.append("false");
+					criteriaBuilder.append("false");
 				}
+			} else if ( part.startsWith("sumFacings")) {
+				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
+				List<String> upcList = Arrays.asList(upcPart.split(","));
+				int sumFacings = 0;
+				for(String upc : upcList) {
+					String facing =  projectStoreData.get(upc);
+					if (facing != null && !facing.isEmpty() ) {
+						sumFacings = sumFacings + Integer.parseInt(facing);
+					}
+				}
+				criteriaBuilder.append(sumFacings);
 			} else if ( part.equals("AND")){
-				CriteriaBuilder.append("&&");
+				criteriaBuilder.append("&&");
 			} else if ( part.equals("OR")) {
-				CriteriaBuilder.append("||");
+				criteriaBuilder.append("||");
 			} else {
-				CriteriaBuilder.append(part);
+				criteriaBuilder.append(part);
 			}
 		}
-		LOGGER.info("---------------ProcessImageDaoImpl--evaluate:: evaluating processed Criteria :: " + CriteriaBuilder.toString() + " ------------------");
+		LOGGER.info("---------------ProcessImageDaoImpl--evaluate:: evaluating processed Criteria :: " + criteriaBuilder.toString() + " ------------------");
 		try {
             ScriptEngineManager sem = new ScriptEngineManager();
             ScriptEngine se = sem.getEngineByName("JavaScript");
-            evaluateResult = (Boolean)se.eval(CriteriaBuilder.toString());
+            evaluateResult = (Boolean)se.eval(criteriaBuilder.toString());
         } catch (Exception e) {
            evaluateResult = false;
            LOGGER.error("---------------ProcessImageDaoImpl--evaluate:: evaluating processed Criteria failed :: " + e.getMessage() + " ------------------");
