@@ -1431,9 +1431,12 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults:: calculating store results ------------------");
 		List<LinkedHashMap<String,String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);
 		String resultCode = calculateStoreResult(aggUPCs, projectDetail.get(0), projectStoreData);
-		
-		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
-		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence  ) VALUES (?,?,?,?,?,?,?)";
+		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::Store Result :: " + resultCode + " ------------------");
+		String status = resultCode.equals("3") ? "0":"1";
+		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::Store Result Status :: " + status + " ------------------");
+
+		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ?, status = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
+		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence, status  ) VALUES (?,?,?,?,?,?,?,?)";
 		String doResultExistsSql = "SELECT COUNT(*) AS COUNT FROM ProjectStoreResult WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
 		int count = 0;
 		
@@ -1459,9 +1462,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        	updatePs.setInt(2, Integer.parseInt(countDistinctUpc));
 	        	updatePs.setInt(3, Integer.parseInt(sumFacing));
 	        	updatePs.setBigDecimal(4, new BigDecimal(sumUpcConfidence));
-	        	updatePs.setString(5, customerCode);
-	        	updatePs.setString(6, customerProjectId);
-	        	updatePs.setString(7, storeId);
+	        	updatePs.setString(5, status);
+	        	updatePs.setString(6, customerCode);
+	        	updatePs.setString(7, customerProjectId);
+	        	updatePs.setString(8, storeId);
 	        	updatePs.executeUpdate();
 	        	updatePs.close();
 	        	
@@ -1474,6 +1478,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        	insertPs.setInt(5, Integer.parseInt(countDistinctUpc));
 	        	insertPs.setInt(6, Integer.parseInt(sumFacing));
 	        	insertPs.setBigDecimal(7, new BigDecimal(sumUpcConfidence));
+	        	insertPs.setString(8, status);
 	        	insertPs.executeUpdate();
 	        	insertPs.close();
 	        }
@@ -1482,6 +1487,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        LinkedHashMap<String,String> map = new LinkedHashMap<String,String>();
 	        map.put("storeId", storeId);
 	        map.put("resultCode", resultCode);
+	        map.put("status", status);
 	        result.add(map);
 	        LOGGER.info("---------------ProcessImageDaoImpl Ends generateStoreResults result = "+map+"----------------\n");
 	        return result;
@@ -1702,7 +1708,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	@Override
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(String customerCode, String customerProjectId) {
 		 LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectAllStoreResults::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
-	        String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence "
+	        String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence, result.status "
 	        		+ "FROM ProjectStoreResult result, StoreMaster store, ResultsMaster resultsMaster WHERE result.customerCode = ? and result.customerProjectId = ? and result.storeId = store.storeId and result.resultCode = resultsMaster.resultCode order by result.resultCode asc, result.countDistinctUpc desc, result.sumFacing desc, result.sumUpcConfidence desc ";
 	        Connection conn = null;
 	        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
@@ -1729,6 +1735,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                map.put("countDistinctUpc", String.valueOf(rs.getInt("countDistinctUpc")));
 	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
 	                map.put("sumUpcConfidence", String.valueOf(rs.getBigDecimal("sumUpcConfidence")));
+	                map.put("status", rs.getString("status"));
 	                result.add(map);
 	            }
 	            rs.close();
@@ -1761,7 +1768,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		 //Get facing count for each UPC per store for ths project
 		 Map<String,Map<String,String>> upcFacingPerStoreMap = getUpcFacingPerStoreMap(customerCode,customerProjectId);
 		 
-		 String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence "
+		 String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence, result.status "
 	        		+ "FROM ProjectStoreResult result, StoreMaster store, ResultsMaster resultsMaster WHERE result.customerCode = ? and result.customerProjectId = ? and result.storeId = store.storeId and result.resultCode = resultsMaster.resultCode order by result.resultCode asc, result.countDistinctUpc desc, result.sumFacing desc, result.sumUpcConfidence desc ";
 	        Connection conn = null;
 
@@ -1788,6 +1795,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                map.put("countDistinctUpc", String.valueOf(rs.getInt("countDistinctUpc")));
 	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
 	                map.put("sumUpcConfidence", String.valueOf(rs.getBigDecimal("sumUpcConfidence")));
+	                map.put("status", rs.getString("status"));
 	                map.putAll(projectUpcFacingMap);
 	                if ( upcFacingPerStoreMap.containsKey(storeId)){
 		                map.putAll(upcFacingPerStoreMap.get(storeId));

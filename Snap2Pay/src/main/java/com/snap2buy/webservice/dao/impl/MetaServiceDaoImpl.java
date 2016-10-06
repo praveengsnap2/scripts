@@ -1353,11 +1353,11 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         String imagesProcessedSql = "select count(distinct(imageUUID)) as imagesProcessed from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
         		+ "and imageStatus in (\"done\", \"error\") " ;
         
-        String successfulStoresSql = "SELECT COUNT(*) as successfulStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"1\"";
+        String successfulStoresSql = "SELECT COUNT(*) as successfulStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"1\" AND status = \"1\"";
         
-        String partiallySuccessfulStoresSql = "SELECT COUNT(*) as partiallySuccessfulStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"2\"";
+        String partiallySuccessfulStoresSql = "SELECT COUNT(*) as partiallySuccessfulStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"2\" AND status = \"1\"";
         
-        String failedStoresSql = "SELECT COUNT(*) as failedStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"3\"";
+        String failedStoresSql = "SELECT COUNT(*) as failedStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"3\" AND status = \"1\"";
         
         String imagesInErrorStateSql = "select count(distinct(imageUUID)) as imagesInErrorState from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
         		+ "and imageStatus =\"error\"" ;
