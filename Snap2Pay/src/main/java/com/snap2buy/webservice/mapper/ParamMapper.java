@@ -41,7 +41,6 @@ public interface ParamMapper {
     String AGENT_ID="agentId";
     String ID="id";
     String LIMIT="limit";
-
-
-
+    String RESULT_CODE="resultCode";
+    String STATUS = "status";
 }

@@ -2472,6 +2472,84 @@ public class RestS2PController {
             return rio;
         }
     }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateProjectResultByStore")
+    public Snap2BuyOutput updateProjectResultByStore(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.RESULT_CODE) @DefaultValue("-9") String resultCode,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateProjectResultByStore----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setStoreId(storeId);
+            inputObject.setResultCode(resultCode);
+            return restS2PAction.updateProjectResultByStore(inputObject);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            inputList.put("storeId",storeId);
+            inputList.put("resultCode",resultCode);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateProjectResultByStore----------------\n");
+            return rio;
+        }
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/updateProjectResultStatusByStore")
+    public Snap2BuyOutput updateProjectResultStatusByStore(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.STATUS) @DefaultValue("-9") String status,
+            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateProjectResultStatusByStore----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+            inputObject.setStoreId(storeId);
+            inputObject.setStatus(status);
+            return restS2PAction.updateProjectResultStatusByStore(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            inputList.put("storeId",storeId);
+            inputList.put("status",status);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateProjectResultStatusByStore----------------\n");
+            return rio;
+        }
+    }
+    
 }
 

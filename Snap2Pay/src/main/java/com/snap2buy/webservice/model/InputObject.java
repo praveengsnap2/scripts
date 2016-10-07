@@ -70,8 +70,26 @@ public class InputObject {
     private String id;
     private String imageHashScore;
     private String imageRotation;
+    private String resultCode;
+    private String status;
 
-    public String getImageHashScore() {
+    public String getResultCode() {
+		return resultCode;
+	}
+
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getImageHashScore() {
         return imageHashScore;
     }
 

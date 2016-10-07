@@ -2047,4 +2047,111 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	      }
 		return storeIdsForProject;
 	}
+
+	@Override
+	public void updateProjectResultByStore(String customerCode,
+			String customerProjectId, List<String> storeIds, String resultCode) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts updateProjectResultByStore ----------------\n");
+
+		String updateResultCodeSql = "UPDATE ProjectStoreResult SET resultCode=? WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		
+		Connection conn = null;
+		PreparedStatement updateResultCodePs = null;
+		
+	    try {
+	        conn = dataSource.getConnection();
+	        conn.setAutoCommit(false);
+	        
+	        updateResultCodePs = conn.prepareStatement(updateResultCodeSql);
+	        
+	        for ( String storeId : storeIds ) {
+	        	updateResultCodePs.setString(1, resultCode);
+	        	updateResultCodePs.setString(2, customerCode);
+	        	updateResultCodePs.setString(3, customerProjectId);
+	        	updateResultCodePs.setString(4, storeId);
+	        	updateResultCodePs.addBatch();
+	        }
+	        
+	        updateResultCodePs.executeBatch();
+	        
+	        conn.commit();
+	        
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (updateResultCodePs != null) {
+	           try {   
+	        	   updateResultCodePs.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	         if (conn != null) {
+		           try {   
+		            	 conn.close();
+	                } catch (SQLException e) {
+		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+		                 LOGGER.error("exception", e);
+		            }
+		         }
+	         LOGGER.info("---------------ProcessImageDaoImpl Ends updateProjectResultByStore ----------------\n");
+	      }
+		
+	}
+
+	@Override
+	public void updateProjectResultStatusByStore(String customerCode,
+			String customerProjectId, List<String> storeIds, String status) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts updateProjectResultStatusByStore ----------------\n");
+
+		String updateStatusSql = "UPDATE ProjectStoreResult SET status=? WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		
+		Connection conn = null;
+		PreparedStatement updateStatusPs = null;
+		
+	    try {
+	        conn = dataSource.getConnection();
+	        conn.setAutoCommit(false);
+	        
+	        updateStatusPs = conn.prepareStatement(updateStatusSql);
+	        
+	        for ( String storeId : storeIds ) {
+	        	updateStatusPs.setString(1, status);
+	        	updateStatusPs.setString(2, customerCode);
+	        	updateStatusPs.setString(3, customerProjectId);
+	        	updateStatusPs.setString(4, storeId);
+	        	updateStatusPs.addBatch();
+	        }
+	        
+	        updateStatusPs.executeBatch();
+	        
+	        conn.commit();
+	        
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (updateStatusPs != null) {
+	           try {   
+	        	   updateStatusPs.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	         if (conn != null) {
+		           try {   
+		            	 conn.close();
+	                } catch (SQLException e) {
+		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+		                 LOGGER.error("exception", e);
+		            }
+		         }
+	         LOGGER.info("---------------ProcessImageDaoImpl Ends updateProjectResultStatusByStore ----------------\n");
+	      }
+	}
 }

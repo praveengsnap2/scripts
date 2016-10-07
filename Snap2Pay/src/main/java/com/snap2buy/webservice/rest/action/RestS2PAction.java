@@ -1344,4 +1344,34 @@ public class RestS2PAction {
 
         return reportIO;
 	}
+
+	public Snap2BuyOutput updateProjectResultByStore(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts updateProjectResultByStore----------------\n");
+        processImageService.updateProjectResultByStore(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+        reportInput.put("resultCode",inputObject.getResultCode());
+        Snap2BuyOutput reportIO = new Snap2BuyOutput(null, reportInput);
+        LOGGER.info("---------------RestAction Ends updateProjectResultByStore----------------\n");
+
+        return reportIO;
+	}
+
+	public Snap2BuyOutput updateProjectResultStatusByStore(InputObject inputObject) {
+		LOGGER.info("---------------RestAction Starts updateProjectResultStatusByStore----------------\n");
+        processImageService.updateProjectResultStatusByStore(inputObject);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("customerCode",inputObject.getCustomerCode());
+        reportInput.put("customerProjectId",inputObject.getCustomerProjectId());
+        reportInput.put("storeId",inputObject.getStoreId());
+        reportInput.put("status",inputObject.getStatus());
+        Snap2BuyOutput reportIO = new Snap2BuyOutput(null, reportInput);
+        LOGGER.info("---------------RestAction Ends updateProjectResultStatusByStore----------------\n");
+
+        return reportIO;
+	}
 }

@@ -850,6 +850,55 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
 	}
 
+	@Override
+	public void updateProjectResultByStore(InputObject inputObject) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts updateProjectResultByStore----------------\n");
+		
+		String customerCode = inputObject.getCustomerCode();
+		String customerProjectId = inputObject.getCustomerProjectId();
+		String storeId = inputObject.getStoreId();
+		String resultCode = inputObject.getResultCode();
+		List<String> storeIds = null;
+		if ( storeId != null && !storeId.isEmpty() ){ 
+			storeIds = Arrays.asList(storeId.split("\\s*,\\s*"));
+		}
+		
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultByStore for stores " + storeIds + "----------------\n");
+		
+		if ( storeIds != null && !storeIds.isEmpty() ) {
+			processImageDao.updateProjectResultByStore(customerCode,customerProjectId,storeIds,resultCode);
+		}
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends updateProjectResultByStore----------------\n");
+
+		
+	}
+
+	@Override
+	public void updateProjectResultStatusByStore(InputObject inputObject) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts updateProjectResultStatusByStore----------------\n");
+		
+		String customerCode = inputObject.getCustomerCode();
+		String customerProjectId = inputObject.getCustomerProjectId();
+		String storeId = inputObject.getStoreId();
+		String status = inputObject.getStatus();
+		List<String> storeIds = null;
+		if ( storeId != null && !storeId.isEmpty() ){ 
+			storeIds = Arrays.asList(storeId.split("\\s*,\\s*"));
+		}
+		
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatusByStore for stores " + storeIds + "----------------\n");
+		
+		if ( storeIds != null && !storeIds.isEmpty() ) {
+			processImageDao.updateProjectResultStatusByStore(customerCode,customerProjectId,storeIds,status);
+		}
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends updateProjectResultStatusByStore----------------\n");
+
+		
+		
+	}
+
     //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
 //        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );
