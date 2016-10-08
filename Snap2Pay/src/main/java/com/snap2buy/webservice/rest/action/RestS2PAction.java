@@ -8,6 +8,9 @@ package com.snap2buy.webservice.rest.action;
 //import com.mongodb.client.MongoDatabase;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.AuthenticationService;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author sachin
@@ -1373,5 +1377,45 @@ public class RestS2PAction {
         LOGGER.info("---------------RestAction Ends updateProjectResultStatusByStore----------------\n");
 
         return reportIO;
+	}
+
+	public Snap2BuyOutput updateProjectResultStatus(String input) {
+		LOGGER.info("---------------RestAction Starts updateProjectResultStatus----------------\n");
+		String customerCode = null;
+		String customerProjectId = null;
+		if ( input != null && !input.isEmpty() ) {
+			JsonParser parser = new JsonParser();
+			JsonObject object = parser.parse(input).getAsJsonObject();
+			customerCode = object.get("customerCode").getAsString();
+			customerProjectId = object.get("customerProjectId").getAsString();
+			
+			Map<String,String> statusMap = new LinkedHashMap<String,String>();
+			if ( object.get("status") != null ) {
+				JsonObject statusObject = object.get("status").getAsJsonObject();
+				Set<Map.Entry<String, JsonElement>> statusEntries = statusObject.entrySet();
+				for (Map.Entry<String, JsonElement> entry: statusEntries) {
+					statusMap.put(entry.getKey(),entry.getValue().getAsString());
+				}
+			}
+			
+			Map<String,String> resultsMap = new LinkedHashMap<String,String>();
+			if ( object.get("results") != null ) {
+				JsonObject resultObject = object.get("results").getAsJsonObject();
+				Set<Map.Entry<String, JsonElement>> resultsEntries = resultObject.entrySet();
+				for (Map.Entry<String, JsonElement> entry: resultsEntries) {
+					resultsMap.put(entry.getKey(),entry.getValue().getAsString());
+				}
+			}
+			
+			processImageService.updateProjectResultStatus(customerCode, customerProjectId, statusMap, resultsMap);
+
+		} 
+		
+		HashMap<String, String> reportInput = new HashMap<String, String>();
+	    reportInput.put("customerCode",customerCode);
+	    reportInput.put("customerProjectId",customerProjectId);
+	    Snap2BuyOutput reportIO = new Snap2BuyOutput(null, reportInput);
+	    LOGGER.info("---------------RestAction Ends updateProjectResultStatusByStore----------------\n");
+	    return reportIO;
 	}
 }

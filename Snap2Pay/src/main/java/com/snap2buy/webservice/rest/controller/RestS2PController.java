@@ -2551,5 +2551,39 @@ public class RestS2PController {
         }
     }
     
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/updateProjectResultStatus")
+    public Snap2BuyOutput updateProjectResultStatus(
+            String input,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts updateProjectResultStatus----------------\n");
+        try {
+        	LOGGER.debug("---------------Controller Starts updateProjectResultStatus :: input string : " + input + "----------------\n");
+        
+            return restS2PAction.updateProjectResultStatus(input);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends updateProjectResultStatus----------------\n");
+            return rio;
+        }
+    }
+    
+    
+    
+    
 }
 

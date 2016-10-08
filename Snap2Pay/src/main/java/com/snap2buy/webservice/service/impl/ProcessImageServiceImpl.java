@@ -899,6 +899,62 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 		
 	}
 
+	@Override
+	public void updateProjectResultStatus(String customerCode,
+			String customerProjectId, Map<String, String> statusMap,
+			Map<String, String> resultsMap) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts updateProjectResultStatus----------------\n");
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: customer code : " + customerCode 
+				+ " , customer project id : " + customerProjectId + "----------------\n");
+
+		List<String> successStores =  new ArrayList<String>();
+		List<String> partialStores =  new ArrayList<String>();
+		List<String> failedStores =  new ArrayList<String>();
+		for(Map.Entry<String, String> entry : resultsMap.entrySet() ) {
+			if ( entry.getValue().equals("1") ) {
+				successStores.add(entry.getKey());
+			} else if ( entry.getValue().equals("2")) {
+				partialStores.add(entry.getKey());
+			} else if ( entry.getValue().equals("3")) {
+				failedStores.add(entry.getKey());
+			}
+		}
+		
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: success stores " + successStores + "----------------\n");
+		if ( !successStores.isEmpty() ) {
+			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, successStores, "1");
+		}
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: partial stores " + partialStores + "----------------\n");
+		if ( !partialStores.isEmpty() ) {
+			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, partialStores, "2");
+		}
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: failed stores " + failedStores + "----------------\n");
+		if ( !failedStores.isEmpty() ) {
+			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, failedStores, "3");
+		}
+		
+		List<String> activeStores = new ArrayList<String>();
+		List<String> inactiveStores = new ArrayList<String>();
+		for(Map.Entry<String, String> entry : statusMap.entrySet() ) {
+			if ( entry.getValue().equals("0") ) {
+				inactiveStores.add(entry.getKey());
+			} else if ( entry.getValue().equals("1")) {
+				activeStores.add(entry.getKey());
+			}
+		}
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: active stores " + activeStores + "----------------\n");
+		if ( !activeStores.isEmpty() ) {
+			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, activeStores, "1");
+		}
+		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: inactive stores " + inactiveStores + "----------------\n");
+		if ( !inactiveStores.isEmpty() ) {
+			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, inactiveStores, "0");
+		}
+		
+        LOGGER.info("---------------ProcessImageServiceImpl Ends updateProjectResultStatus----------------\n");
+
+	}
+
     //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {
 //        LOGGER.info("---------------ProcessImageDaoImpl Starts readImageAnalysis----------------\n");
 //        LOGGER.info("---------------ProcessImageDaoImpl imageUUID=" + imageUUID );

@@ -5,6 +5,7 @@ import com.snap2buy.webservice.model.*;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sachin on 10/17/15.
@@ -40,4 +41,5 @@ public interface ProcessImageService {
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResultsDetail(InputObject inputObject);
 	public void updateProjectResultByStore(InputObject inputObject);
 	public void updateProjectResultStatusByStore(InputObject inputObject);
+	public void updateProjectResultStatus(String customerCode, String customerProjectId, Map<String, String> statusMap,	Map<String, String> resultsMap);
 }
