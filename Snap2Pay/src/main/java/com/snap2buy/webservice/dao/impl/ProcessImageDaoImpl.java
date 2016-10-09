@@ -262,7 +262,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 
     @Override
     public Integer getCronJobCount() {
-        LOGGER.info("---------------ProcessImageDaoImpl Starts getCronJobCount::shelfStatus="+shelfStatus+"----------------\n");
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getCronJobCount----------------\n");
         String sql = "SELECT count(*) FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\")";
 
         Connection conn = null;
