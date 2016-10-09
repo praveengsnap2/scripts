@@ -16,6 +16,7 @@ public interface ProcessImageDao {
     public ImageStore findByImageUUId(String imageUUId);
     public ImageStore getImageByStatus(String shelfStatus);
     public Integer getJobCount(String shelfStatus);
+    public Integer getCronJobCount();
     public String getImageAnalysisStatus(String imageUUID);
     public ImageStore getNextImageDetails();
     public void insert(ImageStore imageStore);

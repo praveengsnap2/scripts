@@ -143,6 +143,23 @@ public class RestS2PAction {
         return reportIO;
     }
 
+    public Snap2BuyOutput getJobCount(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getJobCount----------------\n");
+        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        result = processImageService.getJobCount(inputObject);
+
+        resultListToPass.add(result);
+
+        HashMap<String, String> reportInput = new HashMap<String, String>();
+        reportInput.put("hostId", inputObject.getHostId());
+
+        Snap2BuyOutput reportIO = new Snap2BuyOutput(resultListToPass, reportInput);
+        LOGGER.info("---------------RestAction Ends getJobCount----------------\n");
+        return reportIO;
+    }
+
     public Snap2BuyOutput getUpcDetails(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getUpcDetails----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();

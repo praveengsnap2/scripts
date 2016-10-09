@@ -218,6 +218,37 @@ public class RestS2PController {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getJobCount")
+    public Snap2BuyOutput getJobCount(
+            @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getJobCount::hostId::="+hostId+"----------------\n");
+        try {
+            InputObject inputObject = new InputObject();
+            inputObject.setHostId(hostId);
+
+            return restS2PAction.getJobCount(inputObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("hostId", hostId);
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getJobCount----------------\n");
+            return rio;
+        }
+    }
+
+    @GET
     @Produces({"image/jpeg", "image/png"})
     @Path("/getImage")
     public Response getImage(

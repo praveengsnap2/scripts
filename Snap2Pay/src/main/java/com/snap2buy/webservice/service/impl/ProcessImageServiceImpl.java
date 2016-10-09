@@ -222,11 +222,20 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         } else {
             unProcessedJob.put("remainingJob", newJobCount.toString());
         }
-        LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails----------------\n");
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getJob----------------\n");
 
         return unProcessedJob;
     }
 
+    @Override
+    public LinkedHashMap<String, String> getJobCount(InputObject inputObject) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getJobCount----------------\n");
+        LinkedHashMap<String, String> unProcessedJob = new LinkedHashMap<String, String>();
+        Integer newJobCount = processImageDao.getCronJobCount();
+        unProcessedJob.put("remainingJob", newJobCount.toString());
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getJobCount----------------\n");
+        return unProcessedJob;
+    }
 
     public List<ImageAnalysis> invokeImageAnalysis(ImageStore imageStore, String retailer, String projectTypeId,String hostId) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts invokeImageAnalysis----------------\n");

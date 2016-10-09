@@ -261,6 +261,42 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
     }
 
     @Override
+    public Integer getCronJobCount() {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getCronJobCount::shelfStatus="+shelfStatus+"----------------\n");
+        String sql = "SELECT count(*) FROM ImageStoreNew WHERE imageStatus in (\"cron\",\"cron1\",\"cron2\")";
+
+        Connection conn = null;
+        ImageStore imageStore = null;
+        try {
+            int numberOfRows = 0;
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getCronJobCount numberOfRows = "+numberOfRows+"----------------\n");
+
+            return numberOfRows;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+    }
+
+    @Override
     public void updateStatusAndHost(String hostId, String shelfStatus, String imageUUID) {
         LOGGER.info("---------------ProcessImageDaoImpl Starts updateStatusAndHost::hostId="+hostId+"::shelfStatus="+shelfStatus+"::imageUUID="+imageUUID+"----------------\n");
         String sql = "UPDATE ImageStoreNew SET shelfStatus = ? , hostId = ? WHERE imageUUID = ? ";
