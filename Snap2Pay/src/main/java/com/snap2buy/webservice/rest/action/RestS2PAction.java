@@ -145,7 +145,7 @@ public class RestS2PAction {
 
     public Integer getCronJobCount(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getCronJobCount----------------\n");
-        return getCronJobCount(inputObject);
+        return processImageService.getCronJobCount(inputObject);
 
     }
 
