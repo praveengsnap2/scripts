@@ -228,11 +228,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     }
 
     @Override
-    public Integer getCronJobCount(InputObject inputObject) {
+    public LinkedHashMap<String, String> getCronJobCount(InputObject inputObject) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getCronJobCount----------------\n");
+        LinkedHashMap<String, String> unProcessedJob = new LinkedHashMap<String, String>();
         Integer newJobCount = processImageDao.getCronJobCount();
+        unProcessedJob.put("remainingJob", newJobCount.toString());
         LOGGER.info("---------------ProcessImageServiceImpl Ends getCronJobCount----------------\n");
-        return newJobCount;
+        return unProcessedJob;
     }
 
     public List<ImageAnalysis> invokeImageAnalysis(ImageStore imageStore, String retailer, String projectTypeId,String hostId) {

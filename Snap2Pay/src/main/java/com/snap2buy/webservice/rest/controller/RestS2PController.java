@@ -218,8 +218,9 @@ public class RestS2PController {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/getCronJobCount")
-    public int getCronJobCount(
+    public Snap2BuyOutput getCronJobCount(
             @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
@@ -228,14 +229,22 @@ public class RestS2PController {
         try {
             InputObject inputObject = new InputObject();
             inputObject.setHostId(hostId);
+
             return restS2PAction.getCronJobCount(inputObject);
 
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("hostId", hostId);
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends getCronJobCount----------------\n");
-            return -9;
+            return rio;
         }
     }
 
