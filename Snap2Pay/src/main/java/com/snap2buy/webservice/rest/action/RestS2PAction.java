@@ -143,21 +143,10 @@ public class RestS2PAction {
         return reportIO;
     }
 
-    public Snap2BuyOutput getCronJobCount(InputObject inputObject) {
+    public Integer getCronJobCount(InputObject inputObject) {
         LOGGER.info("---------------RestAction Starts getCronJobCount----------------\n");
-        List<java.util.LinkedHashMap<String, String>> resultListToPass = new ArrayList<LinkedHashMap<String, String>>();
+        return getCronJobCount(inputObject);
 
-        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
-        result = processImageService.getCronJobCount(inputObject);
-
-        resultListToPass.add(result);
-
-        HashMap<String, String> reportInput = new HashMap<String, String>();
-        reportInput.put("hostId", inputObject.getHostId());
-
-        Snap2BuyOutput reportIO = new Snap2BuyOutput(resultListToPass, reportInput);
-        LOGGER.info("---------------RestAction Ends getCronJobCount----------------\n");
-        return reportIO;
     }
 
     public Snap2BuyOutput getUpcDetails(InputObject inputObject) {

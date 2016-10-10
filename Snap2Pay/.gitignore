@@ -1,4 +1,5 @@
-Snap2Pay.iml
 .idea/*
 target/*
 .settings/*
+.settings/
+target/

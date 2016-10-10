@@ -4,7 +4,6 @@
 WS_MACHINE="localhost"
 hostId=$1
 
-
 echo "********************************"
 echo "checking for already running job"
 

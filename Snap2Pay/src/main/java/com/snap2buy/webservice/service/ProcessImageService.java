@@ -18,7 +18,7 @@ public interface ProcessImageService {
     public List<LinkedHashMap<String, String>> runImageAnalysis (String imageUUID,String hostId);
     public List<LinkedHashMap<String, String>> processNextImage(String hostId);
     public LinkedHashMap<String, String> getJob(InputObject inputObject);
-    public LinkedHashMap<String, String> getCronJobCount(InputObject inputObject);
+    public Integer getCronJobCount(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getStoreOptions();
     public List<LinkedHashMap<String, String>> getImages(InputObject inputObject);
     public List<LinkedHashMap<String, String>> getProjectStoreImages(InputObject inputObject);
