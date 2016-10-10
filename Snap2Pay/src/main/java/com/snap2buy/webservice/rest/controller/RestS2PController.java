@@ -218,7 +218,6 @@ public class RestS2PController {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
     @Path("/getCronJobCount")
     public int getCronJobCount(
             @QueryParam(ParamMapper.HOST_ID) @DefaultValue("-9") String hostId,
