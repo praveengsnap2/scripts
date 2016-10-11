@@ -110,7 +110,8 @@
 //        System.out.println("before Rotation: \noriginalHeight="+originalHeight+"\noriginalWidth="+originalWidth);
 //        if (originalHeight<originalWidth){
 //            System.out.println("image is rotated ");
-//            Rotation rotation = rotateImage(inputFile);
+//            Scalr.Rotation rotation = rotateImage(inputFile);
+//            rotation.
 //        }
 //        System.out.println("after Rotation: \noriginalHeight="+originalHeight+"\noriginalWidth="+originalWidth);
 //
@@ -145,11 +146,11 @@
 //            case 1: // [Exif IFD0] Orientation - Top, left side (Horizontal / normal)
 //                return null;
 //            case 6: // [Exif IFD0] Orientation - Right side, top (Rotate 90 CW)
-//                return Rotation.CW_90;
+//                return Scalr.Rotation.CW_90;
 //            case 3: // [Exif IFD0] Orientation - Bottom, right side (Rotate 180)
-//                return Rotation.CW_180;
+//                return Scalr.Rotation.CW_180;
 //            case 8: // [Exif IFD0] Orientation - Left side, bottom (Rotate 270 CW)
-//                return Rotation.CW_270;
+//                return Scalr.Rotation.CW_270;
 //        }
 //    }
 //
