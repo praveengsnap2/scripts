@@ -7,18 +7,15 @@
 package com.snap2buy.webservice.model;
 //
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+//import org.springframework.data.annotation.Id;
+//
 import java.util.Map;
 
 /**
  * @author sachin
  */
-@Document
 public class InputObject {
 
-    @Id
     private String visitId;
     private String retailerChainCode;
     private String listId;

@@ -77,7 +77,7 @@ if [ "${check_status}" == "stopped" ] ; then
   fi
   done
 else
-  echo "START SUCCESS ==> ${1} machine is in ${check_status} state"
+  echo "START SKIPPED ==> ${1} machine is in ${check_status} state"
 fi
 }
 
@@ -99,21 +99,24 @@ if [ "${check_status}" == "running" ] ; then
   fi
   done
 else
-  echo "STOP SUCCESS ==> ${1} machine is in ${check_status} state"
+  echo "STOP SKIPPED ==> ${1} machine is in ${check_status} state"
 fi
 }
 
 echo "Making call to get jobs api curl http://$WS_MACHINE:8080/Snap2Buy-2.0/service/S2B/getCronJobCount?hostId=${hostId}"
 RESULT=`curl http://"${WS_MACHINE}":8080/Snap2Buy-2.0/service/S2B/getCronJobCount?hostId="${hostId}"`
 if [ $? -ne 0 ]; then
-   echo "RESULT=${RESULT}"
+   echo "count=${count}"
    echo "Failed: http://${WS_MACHINE}:8080/Snap2Buy-2.0/service/S2B/getCronJobCount?hostId=${hostId}"
    exit -1
 fi
+echo "RESULT=${RESULT}"
 
+count=`echo $RESULT |awk -F'"' '{ print $14 }'`
+echo "count=${count}"
 #RESULT=`cat i.txt`
 
-if [ "$RESULT" -eq 0 ]; then
+if [ "$count" -eq 0 ]; then
     echo "0"
     stop_machine $HOST_1
     stop_machine $HOST_2
@@ -121,35 +124,35 @@ if [ "$RESULT" -eq 0 ]; then
     stop_machine $HOST_4
     stop_machine $HOST_5
     exit 0
-    else if [ "$RESULT" -lt 25 ]; then
+    else if [ "$count" -lt 25 ]; then
         echo "0-25"
         start_machine $HOST_1
         stop_machine $HOST_2
         stop_machine $HOST_3
         stop_machine $HOST_4
         stop_machine $HOST_5
-        else if [ "$RESULT" -lt 50 ]; then
+        else if [ "$count" -lt 50 ]; then
             echo "25-50"
             start_machine $HOST_1
             start_machine $HOST_2
             stop_machine $HOST_3
             stop_machine $HOST_4
             stop_machine $HOST_5
-            else if [ "$RESULT" -lt 75 ]; then
+            else if [ "$count" -lt 75 ]; then
                 echo "50-75"
                 start_machine $HOST_1
                 start_machine $HOST_2
                 start_machine $HOST_3
                 stop_machine $HOST_4
                 stop_machine $HOST_5
-                else if [ "$RESULT" -lt 100 ]; then
+                else if [ "$count" -lt 100 ]; then
                     echo "75-100"
                     start_machine $HOST_1
                     start_machine $HOST_2
                     start_machine $HOST_3
                     start_machine $HOST_4
                     stop_machine $HOST_5
-                    else if [ "$RESULT" -gt 100 ]; then
+                    else if [ "$count" -gt 100 ]; then
                         echo "100-..."
                         start_machine $HOST_1
                         start_machine $HOST_2

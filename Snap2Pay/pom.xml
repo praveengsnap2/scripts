@@ -131,11 +131,11 @@
 
 
         <!-- Spring data mongodb -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>1.8.0.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.data</groupId>-->
+            <!--<artifactId>spring-data-mongodb</artifactId>-->
+            <!--<version>1.8.0.RELEASE</version>-->
+        <!--</dependency>-->
         <!-- AspectJ -->
         <dependency>
             <groupId>org.aspectj</groupId>

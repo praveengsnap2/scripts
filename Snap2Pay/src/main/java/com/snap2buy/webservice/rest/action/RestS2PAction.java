@@ -5,7 +5,6 @@
  */
 package com.snap2buy.webservice.rest.action;
 
-//import com.mongodb.client.MongoDatabase;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
