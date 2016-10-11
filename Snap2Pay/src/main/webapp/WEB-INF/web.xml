@@ -10,7 +10,7 @@
     </context-param>
     <context-param>
         <param-name>webAppRootKey</param-name>
-        <param-value>/usr/share/apache-tomcat-8.0.30/webapps/Snap2Buy-2.0/</param-value>
+        <param-value>/usr/share/apache-tomcat-8.0.26/webapps/Snap2Buy-2.0/</param-value>
         <!--<param-value>/Library/Tomcat/webapps/Snap2Buy/</param-value>-->
     </context-param>
 
