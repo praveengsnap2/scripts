@@ -953,11 +953,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 		}
 		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: active stores " + activeStores + "----------------\n");
 		if ( !activeStores.isEmpty() ) {
-			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, activeStores, "1");
+			processImageDao.updateProjectResultStatusByStore(customerCode, customerProjectId, activeStores, "1");
 		}
 		LOGGER.info("---------------ProcessImageServiceImpl updateProjectResultStatus :: inactive stores " + inactiveStores + "----------------\n");
 		if ( !inactiveStores.isEmpty() ) {
-			processImageDao.updateProjectResultByStore(customerCode, customerProjectId, inactiveStores, "0");
+			processImageDao.updateProjectResultStatusByStore(customerCode, customerProjectId, inactiveStores, "0");
 		}
 		
         LOGGER.info("---------------ProcessImageServiceImpl Ends updateProjectResultStatus----------------\n");
