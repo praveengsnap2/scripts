@@ -2089,7 +2089,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 			String customerProjectId, List<String> storeIds, String resultCode) {
 		LOGGER.info("---------------ProcessImageDaoImpl Starts updateProjectResultByStore ----------------\n");
 
-		String updateResultCodeSql = "UPDATE ProjectStoreResult SET resultCode=? WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		String updateResultCodeSql = "UPDATE ProjectStoreResult SET resultCode=? WHERE customerCode=? AND customerProjectId=? AND storeId=?";
 		
 		Connection conn = null;
 		PreparedStatement updateResultCodePs = null;
@@ -2143,7 +2143,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 			String customerProjectId, List<String> storeIds, String status) {
 		LOGGER.info("---------------ProcessImageDaoImpl Starts updateProjectResultStatusByStore ----------------\n");
 
-		String updateStatusSql = "UPDATE ProjectStoreResult SET status=? WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		String updateStatusSql = "UPDATE ProjectStoreResult SET status=? WHERE customerCode=? AND customerProjectId=? AND storeId=?";
 		
 		Connection conn = null;
 		PreparedStatement updateStatusPs = null;
