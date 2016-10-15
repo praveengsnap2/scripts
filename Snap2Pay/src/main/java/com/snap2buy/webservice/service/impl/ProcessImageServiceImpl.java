@@ -176,8 +176,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             LOGGER.info("---------------ProcessImageServiceImpl Ends storeImageDetails   sync----------------\n");
             return ConverterUtil.convertImageAnalysisObjectToMap(result);
         } else {
-
-            imageStore.setImageStatus("cron");
+        	if ( inputObject.getSync().equals("paused") ) {
+                imageStore.setImageStatus("paused");
+        	} else {
+                imageStore.setImageStatus("cron");
+        	}
             processImageDao.insert(imageStore);
             LOGGER.info("---------------ProcessImageServiceImpl start stored image details not sync----------------\n");
 
