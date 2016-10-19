@@ -170,7 +170,7 @@ public class StoreMasterImpl implements StoreMasterDao {
     @Override
     public List<LinkedHashMap<String, String>>  getStores(String retailerChainCode, String stateCode, String city) {
         LOGGER.info("---------------StoreMasterImpl Starts getStores::retailerChainCode="+retailerChainCode+"::stateCode="+stateCode+"::city="+city+"----------------\n");
-        String sql = "SELECT StoreID,Street,Latitude,Longitude FROM StoreMaster where RetailerChainCode = ? and StateCode = ? and City = ?";
+        String sql = "SELECT RetailerStoreID,StoreID,Street,Latitude,Longitude FROM StoreMaster where RetailerChainCode = ? and StateCode = ? and City = ?";
 
         Connection conn = null;
         StoreMaster storeMaster = null;
@@ -185,6 +185,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
+                map.put("RetailerStoreID", rs.getString("RetailerStoreID"));
                 map.put("storeId", rs.getString("StoreID"));
                 map.put("street",rs.getString("Street"));
                 map.put("latitude",rs.getString("Latitude"));
