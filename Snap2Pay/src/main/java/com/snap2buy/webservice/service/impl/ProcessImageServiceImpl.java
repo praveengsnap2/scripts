@@ -812,7 +812,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String info1="customerCode"+","+inputObject.getCustomerCode()+"\n";
             String info2="customerProjectId"+","+inputObject.getCustomerProjectId()+"\n";
             String line = " "+","+" "+"\n";
-
+            fileWriter.append(input+info1+info2+line);
 
             String headers="retailerStoreId,retailer,street,city,stateCode,zip,resultCode,description"+"\n";
             fileWriter.append(headers);
