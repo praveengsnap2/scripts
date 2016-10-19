@@ -113,57 +113,63 @@ fi
 echo "RESULT=${RESULT}"
 
 count=`echo $RESULT |awk -F'"' '{ print $14 }'`
-echo "count=${count}"
-#RESULT=`cat i.txt`
 
-if [ "$count" -eq 0 ]; then
-    echo "0"
-    stop_machine $HOST_1
-    stop_machine $HOST_2
-    stop_machine $HOST_3
-    stop_machine $HOST_4
-    stop_machine $HOST_5
-    exit 0
-    else if [ "$count" -lt 25 ]; then
-        echo "0-25"
-        start_machine $HOST_1
-        stop_machine $HOST_2
-        stop_machine $HOST_3
-        stop_machine $HOST_4
-        stop_machine $HOST_5
-        else if [ "$count" -lt 50 ]; then
-            echo "25-50"
-            start_machine $HOST_1
-            start_machine $HOST_2
-            stop_machine $HOST_3
-            stop_machine $HOST_4
-            stop_machine $HOST_5
-            else if [ "$count" -lt 75 ]; then
-                echo "50-75"
-                start_machine $HOST_1
-                start_machine $HOST_2
-                start_machine $HOST_3
-                stop_machine $HOST_4
-                stop_machine $HOST_5
-                else if [ "$count" -lt 100 ]; then
-                    echo "75-100"
-                    start_machine $HOST_1
-                    start_machine $HOST_2
-                    start_machine $HOST_3
-                    start_machine $HOST_4
-                    stop_machine $HOST_5
-                    else if [ "$count" -gt 100 ]; then
-                        echo "100-..."
-                        start_machine $HOST_1
-                        start_machine $HOST_2
-                        start_machine $HOST_3
-                        start_machine $HOST_4
-                        start_machine $HOST_5
-                        else
-                          exit -1
-                        fi
-                    fi
-                fi
-            fi
-        fi
-    fi
+echo "count=${count}"
+
+autoOnOffCheck=`cat autoOnOffCheck.txt`
+
+if [ "$autoOnOffCheck" -lt 0 ]; then
+  echo "exiting!! I am not allowed to change machine state as autoOnOffCheck=${autoOnOffCheck}"
+  exit 0;
+  else if [ "$count" -eq 0 ]; then
+      echo "0"
+      stop_machine $HOST_1
+      stop_machine $HOST_2
+      stop_machine $HOST_3
+      stop_machine $HOST_4
+      stop_machine $HOST_5
+      exit 0
+      else if [ "$count" -lt 25 ]; then
+          echo "0-25"
+          start_machine $HOST_1
+          stop_machine $HOST_2
+          stop_machine $HOST_3
+          stop_machine $HOST_4
+          stop_machine $HOST_5
+          else if [ "$count" -lt 50 ]; then
+              echo "25-50"
+              start_machine $HOST_1
+              start_machine $HOST_2
+              stop_machine $HOST_3
+              stop_machine $HOST_4
+              stop_machine $HOST_5
+              else if [ "$count" -lt 75 ]; then
+                  echo "50-75"
+                  start_machine $HOST_1
+                  start_machine $HOST_2
+                  start_machine $HOST_3
+                  stop_machine $HOST_4
+                  stop_machine $HOST_5
+                  else if [ "$count" -lt 100 ]; then
+                      echo "75-100"
+                      start_machine $HOST_1
+                      start_machine $HOST_2
+                      start_machine $HOST_3
+                      start_machine $HOST_4
+                      stop_machine $HOST_5
+                      else if [ "$count" -gt 100 ]; then
+                          echo "100-..."
+                          start_machine $HOST_1
+                          start_machine $HOST_2
+                          start_machine $HOST_3
+                          start_machine $HOST_4
+                          start_machine $HOST_5
+                          else
+                            exit -1
+                          fi
+                      fi
+                  fi
+              fi
+          fi
+      fi
+  fi

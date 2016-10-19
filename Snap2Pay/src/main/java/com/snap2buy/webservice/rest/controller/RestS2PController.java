@@ -2612,9 +2612,96 @@ public class RestS2PController {
             return rio;
         }
     }
-    
-    
-    
-    
+
+    @POST
+    @Path("/disableAutomation")
+    public Snap2BuyOutput disableAutomation(
+            String input,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        try {
+            LOGGER.info("---------------Controller Starts disableAutomation ----------------\n");
+            String content = "-1";
+            File file = new File("/root/autoOnOffCheck/autoOnOffCheck.txt");
+            FileOutputStream fop = new FileOutputStream(file,false);
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            byte[] contentInBytes = content.getBytes();
+
+            fop.write(contentInBytes);
+            fop.flush();
+            fop.close();
+            System.out.println("Done");
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("new value",content);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends disableAutomation----------------\n");
+            return rio;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends disableAutomation----------------\n");
+            return rio;
+        }
+    }
+
+    @POST
+    @Path("/enableAutomation")
+    public Snap2BuyOutput enableAutomation(
+            String input,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        try {
+            LOGGER.info("---------------Controller Starts enableAutomation ----------------\n");
+            String content = "1";
+            File file = new File("/root/autoOnOffCheck/autoOnOffCheck.txt");
+            FileOutputStream fop = new FileOutputStream(file,false);
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            byte[] contentInBytes = content.getBytes();
+
+            fop.write(contentInBytes);
+            fop.flush();
+            fop.close();
+            System.out.println("Done");
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("new value",content);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends enableAutomation----------------\n");
+            return rio;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends enableAutomation----------------\n");
+            return rio;
+        }
+    }
+
 }
 
