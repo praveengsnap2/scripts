@@ -4,6 +4,7 @@
 WS_MACHINE="localhost"
 hostId=$1
 
+
 echo "********************************"
 echo "checking for already running job"
 
@@ -12,7 +13,7 @@ if [ "${jobRunning}" -gt "1" ]; then
        echo "jobRunning = ${jobRunning} instance of job is already running "
        exit 1
 else {
-	    echo "jobRunning = ${jobRunning} instance of job is running moving ahead"
+            echo "jobRunning = ${jobRunning} instance of job is running moving ahead"
      }
 fi
 
@@ -46,7 +47,7 @@ fi
 ERROR_STRING1="no more job left to process"
 if echo "${RESULT}" | grep -q "${ERROR_STRING1}"
 then
-    echo "sleeping for 30 sec";	
+    echo "sleeping for 30 sec";
     sleep 30s;
 else
     echo "Continue"

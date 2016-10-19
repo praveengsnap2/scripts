@@ -18,10 +18,11 @@ scp ${Image_File_Path} ${hostId}:${Destination_Dir}/${Uuid}.jpg
 
 echo "pssh -e err -H ${hostId} -i -t 600 cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"
 
-/usr/local/bin/pssh -e err -H ${hostId} -i -t 600 "cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"
-if [ $? -ne 0 ]; then
-    count=/usr/local/bin/pssh -e err -H ${hostId} -i -t 100 "ps aux |grep shelfC |grep -v grep |grep -v bash |wc -l"
-    if [ $count -gt 0 ]; then
+pssh -e err -H ${hostId} -i -t 600 "cd /home/ubuntu/caffe; export LD_LIBRARY_PATH=/home/ubuntu/caffe/build/lib:/usr/local/lib:/usr/local/cuda/lib64:/home/ubuntu/anaconda3/lib; ./pipeline/shelfC ${Destination_Dir}/${Uuid}.jpg ${Category} ${Uuid} ${Retailer_Code} ${Store_Id}  ${User_Id} ${Project_type_id}"
+if [ $? -eq 3 ]; then
+    count=`/usr/local/bin/pssh -e err -H ${hostId} -i -t 100 "ps aux |grep shelfC |grep -v grep |grep -v bash |wc -l" |grep -v SUCCESS`
+    echo "job count to kill =$count"
+        if [ $count -gt 0 ]; then
             /usr/local/bin/pssh -e err -H ${hostId} -i -t 100 "pgrep shelfC|xargs kill"
         else
             echo "no shelfC code running"

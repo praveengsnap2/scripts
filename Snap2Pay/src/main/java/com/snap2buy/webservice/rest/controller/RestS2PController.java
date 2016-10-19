@@ -2614,9 +2614,10 @@ public class RestS2PController {
     }
 
     @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     @Path("/disableAutomation")
     public Snap2BuyOutput disableAutomation(
-            String input,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -2659,9 +2660,10 @@ public class RestS2PController {
     }
 
     @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     @Path("/enableAutomation")
     public Snap2BuyOutput enableAutomation(
-            String input,
             @Context HttpServletRequest request,
             @Context HttpServletResponse response
     ) {
@@ -2669,7 +2671,7 @@ public class RestS2PController {
             LOGGER.info("---------------Controller Starts enableAutomation ----------------\n");
             String content = "1";
             File file = new File("/root/autoOnOffCheck/autoOnOffCheck.txt");
-            FileOutputStream fop = new FileOutputStream(file,false);
+            FileOutputStream fop = new FileOutputStream(file, false);
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -2679,7 +2681,7 @@ public class RestS2PController {
             fop.write(contentInBytes);
             fop.flush();
             fop.close();
-            System.out.println("Done");
+            LOGGER.info("---------------Write to file Done---------------");
 
             Snap2BuyOutput rio;
             HashMap<String, String> inputList = new HashMap<String, String>();
