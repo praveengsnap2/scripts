@@ -185,7 +185,7 @@ public class StoreMasterImpl implements StoreMasterDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LinkedHashMap<String,String> map =new LinkedHashMap<String,String>();
-                map.put("RetailerStoreID", rs.getString("RetailerStoreID"));
+                map.put("retailerStoreId", rs.getString("RetailerStoreID"));
                 map.put("storeId", rs.getString("StoreID"));
                 map.put("street",rs.getString("Street"));
                 map.put("latitude",rs.getString("Latitude"));
