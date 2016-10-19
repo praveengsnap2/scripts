@@ -814,7 +814,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String line = " "+","+" "+"\n";
             fileWriter.append(input+info1+info2+line);
 
-            String headers="retailerStoreId,retailer,street,city,stateCode,zip,resultCode,description"+"\n";
+            String headers="Retailer Store Id,Retailer,Street,City,State Code,Zip,Result"+"\n";
             fileWriter.append(headers);
 
             for (LinkedHashMap<String, String> row : resultList) {
@@ -826,7 +826,6 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                     result.append(row.get("city") + ",");
                     result.append(row.get("stateCode") + ",");
                     result.append(row.get("zip") + ",");
-                    result.append(row.get("resultCode") + ",");
                     result.append(row.get("result"));
                     fileWriter.append(result.toString() + "\n");
                 }
