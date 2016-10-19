@@ -2204,7 +2204,41 @@ public class RestS2PController {
             return rio;
         }
     }
-    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getProjectAllStoreResultsCsv")
+    public Response getProjectAllStoreResultsCsv(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts getProjectAllStoreResultsCsv----------------\n");
+        try {
+
+            InputObject inputObject = new InputObject();
+            inputObject.setCustomerCode(customerCode);
+            inputObject.setCustomerProjectId(customerProjectId);
+
+            File f = restS2PAction.getProjectAllStoreResultsCsv(inputObject);
+            Response.ResponseBuilder r = Response.ok((Object) f);
+            r.header("Content-Disposition", "attachment; filename= projectAllStoreResults.csv");
+            return r.build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("error in Input","-9");
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getProjectAllStoreResultsCsv----------------\n");
+            return Response.serverError().build();
+        }
+    }
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getProjectAllStoreResultsDetail")

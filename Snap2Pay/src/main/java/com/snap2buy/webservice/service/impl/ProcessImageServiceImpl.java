@@ -798,6 +798,47 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
         return result;
 	}
+    @Override
+    public File getProjectAllStoreResultsCsv(InputObject inputObject, String tempFilePath) {
+        LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectAllStoreResultsCsv----------------\n");
+
+        List<LinkedHashMap<String, String>> resultList = processImageDao.getProjectAllStoreResults(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
+
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(tempFilePath);
+            String input="Input:"+"\n";
+            String info1="customerCode"+","+inputObject.getCustomerCode()+"\n";
+            String info2="customerProjectId"+","+inputObject.getCustomerProjectId()+"\n";
+            String line = " "+","+" "+"\n";
+
+
+            String headers="retailerStoreId,retailer,street,city,stateCode,zip,resultCode,description"+"\n";
+            fileWriter.append(headers);
+
+            for (LinkedHashMap<String, String> row : resultList) {
+                StringBuilder result = new StringBuilder();
+                result.append(row.get("retailerStoreId"));
+                result.append(row.get("retailer"));
+                result.append(row.get("street"));
+                result.append(row.get("city"));
+                result.append(row.get("stateCode"));
+                result.append(row.get("zip"));
+                result.append(row.get("resultCode"));
+                result.append(row.get("description"));
+                fileWriter.append(result.toString() + "\n");
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectAllStoreResultsCsv----------------\n");
+        File f = new File(tempFilePath);
+        return f;
+    }
 
 	@Override
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResultsDetail(InputObject inputObject) {

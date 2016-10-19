@@ -1164,7 +1164,18 @@ public class RestS2PAction {
 
         return reportIO;
 	}
-	
+
+    public File getProjectAllStoreResultsCsv(InputObject inputObject) {
+        LOGGER.info("---------------RestAction Starts getProjectAllStoreResultsCsv----------------\n");
+
+        String tempFilePath = "/tmp/csvDownload" + System.currentTimeMillis();
+
+        File projectAllStoreResultsCsv = processImageService.getProjectAllStoreResultsCsv(inputObject, tempFilePath);
+
+        LOGGER.info("---------------RestAction Ends getProjectAllStoreResultsCsv----------------\n");
+
+        return projectAllStoreResultsCsv;
+    }
 	public Snap2BuyOutput getProjectAllStoreResultsDetail(InputObject inputObject) {
 		LOGGER.info("---------------RestAction Starts getProjectAllStoreResultsDetail----------------\n");
         List<java.util.LinkedHashMap<String, String>> resultListToPass = processImageService.getProjectAllStoreResultsDetail(inputObject);
