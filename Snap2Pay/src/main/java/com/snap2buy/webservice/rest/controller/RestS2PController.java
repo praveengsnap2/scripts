@@ -2222,7 +2222,8 @@ public class RestS2PController {
 
             File f = restS2PAction.getProjectAllStoreResultsCsv(inputObject);
             Response.ResponseBuilder r = Response.ok((Object) f);
-            r.header("Content-Disposition", "attachment; filename= projectAllStoreResults.csv");
+            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            r.header("Content-Disposition", "attachment; filename= "+customerCode+"_"+customerProjectId+date+".csv");
             return r.build();
 
         } catch (Exception e) {
