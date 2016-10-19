@@ -2613,7 +2613,7 @@ public class RestS2PController {
         }
     }
 
-    @POST
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/disableAutomation")
@@ -2659,7 +2659,7 @@ public class RestS2PController {
         }
     }
 
-    @POST
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/enableAutomation")
