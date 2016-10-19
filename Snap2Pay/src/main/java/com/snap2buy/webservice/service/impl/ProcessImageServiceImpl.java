@@ -819,13 +819,13 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 
             for (LinkedHashMap<String, String> row : resultList) {
                 StringBuilder result = new StringBuilder();
-                result.append(row.get("retailerStoreId"));
-                result.append(row.get("retailer"));
-                result.append(row.get("street"));
-                result.append(row.get("city"));
-                result.append(row.get("stateCode"));
-                result.append(row.get("zip"));
-                result.append(row.get("resultCode"));
+                result.append(row.get("retailerStoreId")+",");
+                result.append(row.get("retailer")+",");
+                result.append(row.get("street")+",");
+                result.append(row.get("city")+",");
+                result.append(row.get("stateCode")+",");
+                result.append(row.get("zip")+",");
+                result.append(row.get("resultCode")+",");
                 result.append(row.get("description"));
                 fileWriter.append(result.toString() + "\n");
             }
