@@ -44,4 +44,6 @@ public interface ProcessImageService {
 	public void updateProjectResultByStore(InputObject inputObject);
 	public void updateProjectResultStatusByStore(InputObject inputObject);
 	public void updateProjectResultStatus(String customerCode, String customerProjectId, Map<String, String> statusMap,	Map<String, String> resultsMap);
+	public void bulkUploadProjectImage(String customerCode, String customerProjectId, String sync, String filenamePath);
+	public List<String> getProjectStoreIds(String customerCode, String customerProjectId);
 }

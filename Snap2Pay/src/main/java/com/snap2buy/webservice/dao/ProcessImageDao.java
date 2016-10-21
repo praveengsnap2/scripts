@@ -49,5 +49,6 @@ public interface ProcessImageDao {
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResultsDetail(String customerCode, String customerProjectId);
 	public void updateProjectResultByStore(String customerCode,	String customerProjectId, List<String> storeIds, String resultCode);
 	public void updateProjectResultStatusByStore(String customerCode,String customerProjectId, List<String> storeIds, String status);
+	public List<String> getProjectStoreIds(String customerCode,	String customerProjectId);
 
 }

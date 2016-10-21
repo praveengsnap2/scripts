@@ -1445,4 +1445,10 @@ public class RestS2PAction {
 	    LOGGER.info("---------------RestAction Ends updateProjectResultStatusByStore----------------\n");
 	    return reportIO;
 	}
+
+	public void bulkUploadProjectImages(String customerCode,String customerProjectId, String sync, String filenamePath) {
+		LOGGER.info("---------------RestAction Starts bulkUploadProjectImages----------------\n");
+		processImageService.bulkUploadProjectImage(customerCode,customerProjectId,sync,filenamePath);
+		LOGGER.info("---------------RestAction Ends bulkUploadProjectImages -- Upload will run in background----------------\n");
+	}
 }

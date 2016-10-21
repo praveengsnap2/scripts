@@ -8,6 +8,7 @@ import com.snap2buy.webservice.dao.*;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.service.ProcessImageService;
+import com.snap2buy.webservice.upload.BulkUploadEngine;
 import com.snap2buy.webservice.util.ConverterUtil;
 import com.snap2buy.webservice.util.ShellUtil;
 
@@ -57,12 +58,12 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public List<LinkedHashMap<String, String>> storeImageDetails(InputObject inputObject) {
 
         LOGGER.info("---------------ProcessImageServiceImpl Starts storeImageDetails----------------\n");
-
+        
         if (inputObject.getStoreId().equalsIgnoreCase("-9")){
             inputObject.setStoreId(storeMasterDao.getStoreId(inputObject.getLongitude(), inputObject.getLatitude()));
         }
         LOGGER.info("--------------storeId=" + inputObject.getStoreId() + "-----------------\n");
-
+        
         if ((inputObject.getUserId().isEmpty())
                 || (inputObject.getUserId().equalsIgnoreCase("") )
                 || (inputObject.getUserId().equalsIgnoreCase("-9"))){
@@ -1007,6 +1008,37 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 		
         LOGGER.info("---------------ProcessImageServiceImpl Ends updateProjectResultStatus----------------\n");
 
+	}
+
+	@Override
+	public void bulkUploadProjectImage(String customerCode,
+			String customerProjectId, String sync, String filenamePath) {
+		List<LinkedHashMap<String, String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);
+	    String categoryId = "";
+		if ( projectDetail != null && !projectDetail.isEmpty() ) {
+	     	categoryId = projectDetail.get(0).get("categoryId");
+	    }
+		BulkUploadEngine engine = new BulkUploadEngine();
+		engine.setCustomerCode(customerCode);
+		engine.setCustomerProjectId(customerProjectId);
+		engine.setSync(sync);
+		engine.setCategoryId(categoryId);
+		engine.setFilenamePath(filenamePath);
+		engine.setProcessImageService(this);
+		Thread uploadThread = new Thread(engine);
+		uploadThread.start();
+	}
+
+	@Override
+	public List<String> getProjectStoreIds(String customerCode,
+			String customerProjectId) {
+		LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectStoreIds----------------\n");
+
+        List<String> result = processImageDao.getProjectStoreIds(customerCode,customerProjectId);
+
+        LOGGER.info("---------------ProcessImageServiceImpl Ends getProjectStoreIds----------------\n");
+
+        return result;
 	}
 
     //    public List<java.util.LinkedHashMap<String, String>> readImageAnalysis(String imageUUID) {

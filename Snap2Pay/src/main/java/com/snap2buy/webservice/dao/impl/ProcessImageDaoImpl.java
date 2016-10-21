@@ -2190,4 +2190,40 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	         LOGGER.info("---------------ProcessImageDaoImpl Ends updateProjectResultStatusByStore ----------------\n");
 	      }
 	}
+
+	@Override
+	public List<String> getProjectStoreIds(String customerCode,	String customerProjectId) {
+        LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreIds::customerCode="+customerCode+",::customerProjectId::"+customerProjectId+"----------------\n");
+        String sql = "SELECT distinct(storeId) FROM ImageStoreNew WHERE customerCode = ? and customerProjectId = ?";
+        List<String> storeIds = new ArrayList<String>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                storeIds.add(rs.getString(1));
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreIds numberOfStores = "+storeIds.size()+"----------------\n");
+
+            return storeIds;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+	}
 }

@@ -120,7 +120,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public List<LinkedHashMap<String, String>> listProject(String customerCode) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts listProject----------------\n");
-        String sql = "SELECT * FROM Project where status = 1 and customerCode = ?";
+        String sql = "SELECT * FROM Project where status = 1 and customerCode = ? order by id desc";
         List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
         Connection conn = null;
         try {

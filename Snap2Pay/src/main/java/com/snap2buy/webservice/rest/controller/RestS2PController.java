@@ -2739,6 +2739,85 @@ public class RestS2PController {
             return rio;
         }
     }
+    
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/bulkUploadProjectImages")
+    public Snap2BuyOutput bulkUploadProjectImages(
+            @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+            @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @QueryParam(ParamMapper.SYNC) @DefaultValue("false") String sync,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        LOGGER.info("---------------Controller Starts bulkUploadProjectImages----------------\n");
+        String filenamePath = "";
+        try {
+       	
+            //Create a factory for disk-based file items
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+
+            // Configure a repository (to ensure a secure temp location is used)
+            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+            factory.setRepository(repository);
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            // Parse the request
+            List<FileItem> items = upload.parseRequest(request);
+            // Process the uploaded items
+            Iterator<FileItem> iter = items.iterator();
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+                String name = item.getFieldName();
+                String value = item.getString();
+                if (item.isFormField()) {
+                    LOGGER.info("Form field " + name + " with value " + value + " detected.");
+                } else {
+                    LOGGER.info("File field " + name + " with file name "+ item.getName() + " detected.");
+                    filenamePath = "/usr/share/s2pImages/upload/"+customerCode+"/"+customerProjectId+"/"+item.getName();
+                    File uploadedFile = new File(filenamePath);
+                    if (!uploadedFile.exists()) {
+                        uploadedFile.getParentFile().mkdirs();
+                        uploadedFile.getParentFile().setReadable(true);
+                        uploadedFile.getParentFile().setWritable(true);
+                        uploadedFile.getParentFile().setExecutable(true);
+                    }
+                    item.write(uploadedFile);
+                }
+            }
+            
+            if ( filenamePath != null ) {
+            	restS2PAction.bulkUploadProjectImages(customerCode,customerProjectId,sync,filenamePath);
+            }
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("customerCode", customerCode);
+            inputList.put("customerProjectId", customerProjectId);
+            inputList.put("sync", sync);
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends bulkUploadProjectImages---Upload will begin in async mode----------------\n");
+            return rio;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("customerCode", customerCode);
+            inputList.put("customerProjectId", customerProjectId);
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends----------------\n");
+            return rio;
+        }
+    }
 
 }
 
