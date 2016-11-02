@@ -1806,7 +1806,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
 	                map.put("sumUpcConfidence", String.valueOf(rs.getBigDecimal("sumUpcConfidence")));
 	                map.put("status", rs.getString("status"));
-	                map.put("imageURL", rs.getString("imageURL"));
+	                String imageUrl = rs.getString("imageURL");
+	                if (imageUrl == null || imageUrl.isEmpty() ) {
+	                	imageUrl = "Not Available";
+	                }
+	                map.put("imageURL", imageUrl );
 	                result.add(map);
 	            }
 	            rs.close();
@@ -2266,7 +2270,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	public void saveRepResponses(String customerCode, String customerProjectId,
 			String storeId, Map<String, String> repResponses) {
 		LOGGER.info("---------------ProcessImageDaoImpl Starts saveRepResponses::responses=" + repResponses + ", storeId = " + storeId+  ", customerProjectId = " + customerProjectId + "customerCode = " + customerCode + "----------------\n");
-        String sql = "INSERT INTO ProjectRepResponses ( customerCode, customerProjectId, storeId, questionId, repResponse) VALUES (?, ?, ?, ?, ?)";
+        String deleteSql = "DELETE FROM ProjectRepResponses WHERE customerCode = ? AND customerProjectId = ? AND storeId = ? AND questionId = ?";
+		String sql = "INSERT INTO ProjectRepResponses ( customerCode, customerProjectId, storeId, questionId, repResponse) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
 
         if (repResponses != null && !repResponses.isEmpty()) {
@@ -2274,6 +2279,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
                     conn = dataSource.getConnection();
                     conn.setAutoCommit(false);
                     PreparedStatement ps = conn.prepareStatement(sql);
+                    PreparedStatement deletePs = conn.prepareStatement(deleteSql);
                     
                     for( String questionId : repResponses.keySet()) {
 	                    ps.setString(1, customerCode);
@@ -2282,11 +2288,21 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                    ps.setInt(4, Integer.parseInt(questionId));
 	                    ps.setString(5, repResponses.get(questionId));
 	                    ps.addBatch();
+	                    
+	                    deletePs.setString(1, customerCode);
+	                    deletePs.setString(2, customerProjectId);
+	                    deletePs.setString(3, storeId);
+	                    deletePs.setInt(4, Integer.parseInt(questionId));
+	                    deletePs.addBatch();
+	                    
                     }
                     
                     ps.executeBatch();
+                    deletePs.executeBatch();
+                    
                     conn.commit();
                     ps.close();
+                    deletePs.close();
 
                     LOGGER.info("---------------ProcessImageDaoImpl Ends saveRepResponses----------------\n");
 

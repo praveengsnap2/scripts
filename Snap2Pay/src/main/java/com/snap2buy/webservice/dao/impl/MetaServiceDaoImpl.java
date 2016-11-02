@@ -1361,6 +1361,8 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
         
         String failedStoresSql = "SELECT COUNT(*) as failedStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"3\" AND status = \"1\"";
         
+        String notProcessedStoresSql = "SELECT COUNT(*) as notProcessedStores FROM ProjectStoreResult WHERE customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" AND resultCode = \"0\" AND status = \"1\"";
+        
         String imagesInErrorStateSql = "select count(distinct(imageUUID)) as imagesInErrorState from ImageStoreNew where customerProjectId =\"" + customerProjectId + "\" and customerCode=\"" + customerCode + "\" "
         		+ "and imageStatus =\"error\"" ;
         
@@ -1394,6 +1396,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             PreparedStatement successfulStoresPs = conn.prepareStatement(successfulStoresSql);
             PreparedStatement partiallySuccessfulStoresPs = conn.prepareStatement(partiallySuccessfulStoresSql);
             PreparedStatement failedStoresPs = conn.prepareStatement(failedStoresSql);
+            PreparedStatement notProcessedStoresPs = conn.prepareStatement(notProcessedStoresSql);
             PreparedStatement imagesInErrorStatePs = conn.prepareStatement(imagesInErrorStateSql);
             PreparedStatement imagesInProcessingStatePs = conn.prepareStatement(imagesInProcessingStateSql);
             
@@ -1502,6 +1505,16 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
             failedStoresRs.close();
             failedStoresPs.close();
+            
+            ResultSet notProcessedStoresRs = notProcessedStoresPs.executeQuery();
+            if (notProcessedStoresRs.next()) {
+                LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
+                String notProcessedStoresVal = notProcessedStoresRs.getString("notProcessedStores");
+                map1.put("notProcessedStores", notProcessedStoresVal);
+                resultList.add(map1);
+            }
+            notProcessedStoresRs.close();
+            notProcessedStoresPs.close();
             
             ResultSet imagesInErrorStateRs = imagesInErrorStatePs.executeQuery();
             if (imagesInErrorStateRs.next()) {

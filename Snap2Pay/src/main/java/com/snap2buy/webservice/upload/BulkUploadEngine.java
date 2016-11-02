@@ -198,6 +198,31 @@ public class BulkUploadEngine implements Runnable {
 						LOGGER.info("---------------BulkUploadEngine :: Error inserting one record in store results table for this store..." + t + "\n");
 					}
 					
+					LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB Start :: Responses Expected :: " + projectQuestions.size() + " ----------------\n");
+					//Store project rep responses for each store
+					Map<String,String> repResponses = new HashMap<String,String>();
+					for(ProjectQuestion question : projectQuestions ) {
+						String responseColumn = question.getResponseColumn();
+						if ( responseColumn != null && !responseColumn.isEmpty() ) {
+							CellReference cr = new CellReference(responseColumn);
+							if (row.getCell(cr.getCol()) != null) {
+								String repResponse = "";
+								CellType type = row.getCell(cr.getCol()).getCellTypeEnum();
+								if (type == CellType.NUMERIC) {
+									repResponse = format.format(row.getCell(cr.getCol()).getNumericCellValue());
+								} else {
+									repResponse = row.getCell(cr.getCol()).getStringCellValue();
+								}
+								repResponses.put(question.getId(), repResponse);	
+							}
+						}
+					}
+					try {
+						processImageDao.saveRepResponses(customerCode,customerProjectId, storeIdWithRetailCode, repResponses);
+						LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB End----------------\n");
+					} catch (Throwable t) {
+						LOGGER.error("---------------BulkUploadEngine :: Storing Rep Responses to DB Failed :: " + t + "----------------\n");
+					}
 					
 					//For CMK, we need to scrape the imageLink for actual images
 					//For PRM, imageLink can be used as-is for download
@@ -319,32 +344,6 @@ public class BulkUploadEngine implements Runnable {
 								LOGGER.error("---------------BulkUploadEngine :: Download Failed :: Unexpected HTTP response code"+ code + "----------------\n");
 							}
 						}
-						LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB Start :: Responses Expected :: " + projectQuestions.size() + " ----------------\n");
-						//Store project rep responses for each store
-						Map<String,String> repResponses = new HashMap<String,String>();
-						for(ProjectQuestion question : projectQuestions ) {
-							String responseColumn = question.getResponseColumn();
-							if ( responseColumn != null && !responseColumn.isEmpty() ) {
-								CellReference cr = new CellReference(responseColumn);
-								if (row.getCell(cr.getCol()) != null) {
-									String repResponse = "";
-									CellType type = row.getCell(cr.getCol()).getCellTypeEnum();
-									if (type == CellType.NUMERIC) {
-										repResponse = format.format(row.getCell(cr.getCol()).getNumericCellValue());
-									} else {
-										repResponse = row.getCell(cr.getCol()).getStringCellValue();
-									}
-									repResponses.put(question.getId(), repResponse);	
-								}
-							}
-						}
-						try {
-							processImageDao.saveRepResponses(customerCode,customerProjectId, storeIdWithRetailCode, repResponses);
-							LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB End----------------\n");
-						} catch (Throwable t) {
-							LOGGER.error("---------------BulkUploadEngine :: Storing Rep Responses to DB Failed :: " + t + "----------------\n");
-						}
-						
 					}	
 				}
 			}
