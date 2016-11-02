@@ -112,7 +112,7 @@ public class RestS2PAction {
         reportInput.put("customerProjectId", inputObject.getCustomerProjectId());
         reportInput.put("customerCode", inputObject.getCustomerCode());
         reportInput.put("dateId", inputObject.getVisitDate());
-        reportInput.put("storeId", inputObject.getStoreId());
+        reportInput.put("retailerStoreId", inputObject.getStoreId());
         reportInput.put("responseCode", "200");
         reportInput.put("responseMessage", "Image Stored Successfully");
         reportInput.put("imageFilePath", inputObject.getImageFilePath());

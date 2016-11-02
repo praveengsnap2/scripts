@@ -1452,6 +1452,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		String sumFacing = projectStoreData.get("facing");
 		String sumUpcConfidence = projectStoreData.get("confidence");
 		
+		Map<String,String> repResponses = getRepResponsesByStore(customerCode, customerProjectId, storeId);
+		
 		//Set value to 0 if null or empty.. Set precision to 10 digits in case of decimals
 		countDistinctUpc = (null==countDistinctUpc || "".equals(countDistinctUpc)) ? "0" : countDistinctUpc;
 		sumFacing = (null==sumFacing || "".equals(sumFacing)) ? "0" : sumFacing;
@@ -1466,13 +1468,28 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		//calculate resultCode based on UPC findings
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults:: calculating store results ------------------");
 		List<LinkedHashMap<String,String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);
-		String resultCode = calculateStoreResult(aggUPCs, projectDetail.get(0), projectStoreData);
+		
+		String resultCode = calculateStoreResult(aggUPCs, projectDetail.get(0), projectStoreData, repResponses);
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::Store Result :: " + resultCode + " ------------------");
 		String status = resultCode.equals("3") ? "0":"1";
 		LOGGER.info("---------------ProcessImageDaoImpl--generateStoreResults::Store Result Status :: " + status + " ------------------");
 
+		return insertOrUpdateStoreResult(customerCode, customerProjectId,
+				storeId, countDistinctUpc, sumFacing, sumUpcConfidence,
+				resultCode, status, "dummyURL");
+	}
+
+	@Override
+	public List<LinkedHashMap<String, String>> insertOrUpdateStoreResult(
+			String customerCode, String customerProjectId, String storeId,
+			String countDistinctUpc, String sumFacing, String sumUpcConfidence,
+			String resultCode, String status, String imageUrl) {
+		
 		String updateStoreResultSql = "UPDATE ProjectStoreResult SET resultCode = ?, countDistinctUpc = ?, sumFacing = ?, sumUpcConfidence = ?, status = ? WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
 		String insertStoreResultSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence, status  ) VALUES (?,?,?,?,?,?,?,?)";
+		
+		String insertStoreResultWithUrlSql = "INSERT INTO ProjectStoreResult (customerCode, customerProjectId, storeId, resultCode, countDistinctUpc,sumFacing,sumUpcConfidence, status, imageURL  ) VALUES (?,?,?,?,?,?,?,?,?)";
+		
 		String doResultExistsSql = "SELECT COUNT(*) AS COUNT FROM ProjectStoreResult WHERE customerCode = ? and customerProjectId = ? and storeId = ?";
 		int count = 0;
 		
@@ -1492,21 +1509,30 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        doResultExistsRs.close();
 	        doResultExistsPs.close();
 	        
-	        if ( count > 0 ) {
-	        	PreparedStatement updatePs = conn.prepareStatement(updateStoreResultSql);
-	        	updatePs.setString(1, resultCode);
-	        	updatePs.setInt(2, Integer.parseInt(countDistinctUpc));
-	        	updatePs.setInt(3, Integer.parseInt(sumFacing));
-	        	updatePs.setBigDecimal(4, new BigDecimal(sumUpcConfidence));
-	        	updatePs.setString(5, status);
-	        	updatePs.setString(6, customerCode);
-	        	updatePs.setString(7, customerProjectId);
-	        	updatePs.setString(8, storeId);
-	        	updatePs.executeUpdate();
-	        	updatePs.close();
-	        	
+	        boolean withoutURL = ( imageUrl != null && imageUrl.equals("dummyURL") );
+	        
+	        if ( count > 0 ) { //if there exists an entry for the store already
+	        	if ( withoutURL ) {//AND input URL is dummyURL i.e. call from store result generation
+		        	PreparedStatement updatePs = conn.prepareStatement(updateStoreResultSql);
+		        	updatePs.setString(1, resultCode);
+		        	updatePs.setInt(2, Integer.parseInt(countDistinctUpc));
+		        	updatePs.setInt(3, Integer.parseInt(sumFacing));
+		        	updatePs.setBigDecimal(4, new BigDecimal(sumUpcConfidence));
+		        	updatePs.setString(5, status);
+		        	updatePs.setString(6, customerCode);
+		        	updatePs.setString(7, customerProjectId);
+		        	updatePs.setString(8, storeId);
+		        	updatePs.executeUpdate();
+		        	updatePs.close();
+	        	}
 	        } else {
-	        	PreparedStatement insertPs = conn.prepareStatement(insertStoreResultSql);
+	        	PreparedStatement insertPs = null;
+	        	if ( withoutURL ) {
+	        		insertPs = conn.prepareStatement(insertStoreResultSql);	
+	        	} else {
+	        		insertPs = conn.prepareStatement(insertStoreResultWithUrlSql);
+	        	}
+	        	
 	        	insertPs.setString(1, customerCode);
 	        	insertPs.setString(2, customerProjectId);
 	        	insertPs.setString(3, storeId);
@@ -1515,6 +1541,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        	insertPs.setInt(6, Integer.parseInt(sumFacing));
 	        	insertPs.setBigDecimal(7, new BigDecimal(sumUpcConfidence));
 	        	insertPs.setString(8, status);
+	        	if ( !withoutURL ) {
+		        	insertPs.setString(9, imageUrl);
+	        	}
 	        	insertPs.executeUpdate();
 	        	insertPs.close();
 	        }
@@ -1599,14 +1628,14 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	      }
 	}
 
-	private String calculateStoreResult(List<String> aggUPCs, Map<String,String> projectDetail, Map<String, String> projectStoreData) {
+	private String calculateStoreResult(List<String> aggUPCs, Map<String,String> projectDetail, Map<String, String> projectStoreData, Map<String, String> repResponses) {
 		String successCriteria = projectDetail.get("successCriteria");
 		String partialCriteria = projectDetail.get("partialCriteria");
 		String failedCriteria = projectDetail.get("failedCriteria");
 		//First evaluate success Criteria
 		if ( null != successCriteria && !successCriteria.isEmpty() ) {
 			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating success Criteria :: " + successCriteria + " ------------------");
-			boolean result = evaluate(successCriteria, aggUPCs, projectStoreData);
+			boolean result = evaluate(successCriteria, aggUPCs, projectStoreData, repResponses);
 			if (result){
 				return "1";
 			}
@@ -1614,7 +1643,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		//Then evaluate partial Criteria
 		if ( null != partialCriteria && !partialCriteria.isEmpty()){
 			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating partial Criteria :: " + partialCriteria + " ------------------");
-			boolean result = evaluate(partialCriteria, aggUPCs, projectStoreData);
+			boolean result = evaluate(partialCriteria, aggUPCs, projectStoreData, repResponses);
 			if (result){
 				return "2";
 			}
@@ -1622,7 +1651,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		//Then evaluate failed Criteria
 		if ( null != failedCriteria && !failedCriteria.isEmpty()){
 			LOGGER.info("---------------ProcessImageDaoImpl--calculateStoreResult:: evaluating failed Criteria :: " + failedCriteria + " ------------------");
-			boolean result = evaluate(failedCriteria, aggUPCs, projectStoreData);
+			boolean result = evaluate(failedCriteria, aggUPCs, projectStoreData, repResponses);
 			if (result){
 				return "3";
 			}
@@ -1632,7 +1661,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		return "3";
 	}
 	
-	private boolean evaluate(String Criteria, List<String> aggUPCs, Map<String, String> projectStoreData) {
+	private boolean evaluate(String Criteria, List<String> aggUPCs, Map<String, String> projectStoreData, Map<String,String> repResponses) {
 		boolean evaluateResult = false;
 		String[] CriteriaParts = Criteria.split(" ");
 		StringBuilder criteriaBuilder = new StringBuilder();
@@ -1672,6 +1701,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 					}
 				}
 				criteriaBuilder.append(sumFacings);
+			} else if ( part.startsWith("response")) {
+				String questionIdPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
+				String response = repResponses.get(questionIdPart);
+				if ( response == null ) response = "" ;
+				criteriaBuilder.append(response);
 			} else if ( part.equals("AND")){
 				criteriaBuilder.append("&&");
 			} else if ( part.equals("OR")) {
@@ -1744,7 +1778,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	@Override
 	public List<LinkedHashMap<String, String>> getProjectAllStoreResults(String customerCode, String customerProjectId) {
 		 LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectAllStoreResults::customerCode="+customerCode+"::customerProjectId="+customerProjectId+"----------------\n");
-	        String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence, result.status "
+	        String sql = "SELECT result.storeId, store.retailerStoreId, store.retailerChainCode, store.retailer, store.street, store.city, store.stateCode, store.state, store.zip, result.resultCode, resultsMaster.description, result.countDistinctUpc, result.sumFacing, result.sumUpcConfidence, result.status, result.imageURL "
 	        		+ "FROM ProjectStoreResult result, StoreMaster store, ResultsMaster resultsMaster WHERE result.customerCode = ? and result.customerProjectId = ? and result.storeId = store.storeId and result.resultCode = resultsMaster.resultCode order by result.resultCode asc, result.countDistinctUpc desc, result.sumFacing desc, result.sumUpcConfidence desc ";
 	        Connection conn = null;
 	        List<LinkedHashMap<String,String>> result=new ArrayList<LinkedHashMap<String,String>>();
@@ -1772,6 +1806,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                map.put("sumFacing", String.valueOf(rs.getInt("sumFacing")));
 	                map.put("sumUpcConfidence", String.valueOf(rs.getBigDecimal("sumUpcConfidence")));
 	                map.put("status", rs.getString("status"));
+	                map.put("imageURL", rs.getString("imageURL"));
 	                result.add(map);
 	            }
 	            rs.close();
@@ -2211,6 +2246,88 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreIds numberOfStores = "+storeIds.size()+"----------------\n");
 
             return storeIds;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+	}
+
+	@Override
+	public void saveRepResponses(String customerCode, String customerProjectId,
+			String storeId, Map<String, String> repResponses) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts saveRepResponses::responses=" + repResponses + ", storeId = " + storeId+  ", customerProjectId = " + customerProjectId + "customerCode = " + customerCode + "----------------\n");
+        String sql = "INSERT INTO ProjectRepResponses ( customerCode, customerProjectId, storeId, questionId, repResponse) VALUES (?, ?, ?, ?, ?)";
+        Connection conn = null;
+
+        if (repResponses != null && !repResponses.isEmpty()) {
+                try {
+                    conn = dataSource.getConnection();
+                    conn.setAutoCommit(false);
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    
+                    for( String questionId : repResponses.keySet()) {
+	                    ps.setString(1, customerCode);
+	                    ps.setString(2, customerProjectId);
+	                    ps.setString(3, storeId);
+	                    ps.setInt(4, Integer.parseInt(questionId));
+	                    ps.setString(5, repResponses.get(questionId));
+	                    ps.addBatch();
+                    }
+                    
+                    ps.executeBatch();
+                    conn.commit();
+                    ps.close();
+
+                    LOGGER.info("---------------ProcessImageDaoImpl Ends saveRepResponses----------------\n");
+
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+
+                } finally {
+                    if (conn != null) {
+                        try {
+                            conn.close();
+                        } catch (SQLException e) {
+                            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                            LOGGER.error("exception", e);
+                        }
+                    }
+                }
+            }
+        }
+	
+	@Override
+	public Map<String,String> getRepResponsesByStore(String customerCode, String customerProjectId,String storeId) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts getRepResponsesByStore:: storeId = " + storeId+  ", customerProjectId = " + customerProjectId + "customerCode = " + customerCode + "----------------\n");
+        String sql = "SELECT * FROM ProjectRepResponses WHERE customerCode = ? AND customerProjectId = ? AND storeId = ?";
+        Connection conn = null;
+        Map<String,String> repResponses = new LinkedHashMap<String,String>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ps.setString(3, storeId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                repResponses.put(""+rs.getInt("questionId"), rs.getString("repResponse"));
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------ProcessImageDaoImpl Ends getRepResponsesByStore numberOfResponses = "+repResponses.size()+"----------------\n");
+
+            return repResponses;
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);

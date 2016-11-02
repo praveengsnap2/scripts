@@ -11,8 +11,10 @@ import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.mapper.ParamMapper;
 import com.snap2buy.webservice.model.*;
 import com.snap2buy.webservice.rest.action.RestS2PAction;
+import com.snap2buy.webservice.upload.UploadStatusTracker;
 import com.snap2buy.webservice.util.CustomSnap2BuyOutput;
 import com.snap2buy.webservice.util.Snap2BuyOutput;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -32,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.JAXBElement;
+
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -73,7 +76,7 @@ public class RestS2PController {
             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
             @QueryParam(ParamMapper.TASK_ID) @DefaultValue("-9") String taskId,
             @QueryParam(ParamMapper.AGENT_ID) @DefaultValue("-9") String agentId,
-            @QueryParam(ParamMapper.STORE_ID) @DefaultValue("-9") String storeId,
+            @QueryParam(ParamMapper.RETAILER_STORE_ID) @DefaultValue("-9") String storeId,
             @QueryParam(ParamMapper.DATE_ID) @DefaultValue("-9") String dateId,
 
             @Context HttpServletRequest request,
@@ -142,8 +145,8 @@ public class RestS2PController {
                 } else {
                     LOGGER.info("File field " + name + " with file name "+ item.getName() + " detected.");
 
-                    String filenamePath = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + ".jpg";
-                    String thumbnailPath  = "/usr/share/s2pImages/" + inputObject.getVisitDate() + "/" + uniqueKey.toString() + "-thm.jpg";
+                    String filenamePath = "/usr/share/s2pImages/" + inputObject.getCustomerCode() + "/" + inputObject.getCustomerProjectId() + "/" + uniqueKey.toString() + ".jpg";
+                    String thumbnailPath  = "/usr/share/s2pImages/" + inputObject.getCustomerCode() + "/" + inputObject.getCustomerProjectId() + "/" + uniqueKey.toString() + "-thm.jpg";
                     inputObject.setImageFilePath(filenamePath);
                     inputObject.setOrigWidth("0");
                     inputObject.setOrigHeight("0");
@@ -2815,6 +2818,47 @@ public class RestS2PController {
 
             rio = new Snap2BuyOutput(null, inputList);
             LOGGER.info("---------------Controller Ends----------------\n");
+            return rio;
+        }
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/getUploadStatus")
+    public Snap2BuyOutput getUploadStatus(
+    		 @QueryParam(ParamMapper.CUSTOMER_CODE) @DefaultValue("-9") String customerCode,
+             @QueryParam(ParamMapper.CUSTOMER_PROJECT_ID) @DefaultValue("-9") String customerProjectId,
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response
+    ) {
+        try {
+            LOGGER.info("---------------Controller Starts getUploadStatus ----------------\n");
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+            inputList.put("customerCode",customerCode);
+            inputList.put("customerProjectId",customerProjectId);
+            
+            List<LinkedHashMap<String, String>> resultList = new ArrayList<LinkedHashMap<String, String>>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<String,String>();
+            map.put("status",UploadStatusTracker.get(customerCode, customerProjectId));
+            resultList.add(map);
+            
+            rio = new Snap2BuyOutput(resultList, inputList);
+            LOGGER.info("---------------Controller Ends getUploadStatus----------------\n");
+            return rio;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+
+            Snap2BuyOutput rio;
+            HashMap<String, String> inputList = new HashMap<String, String>();
+
+            inputList.put("error in Input","-9");
+
+            rio = new Snap2BuyOutput(null, inputList);
+            LOGGER.info("---------------Controller Ends getUploadStatus----------------\n");
             return rio;
         }
     }

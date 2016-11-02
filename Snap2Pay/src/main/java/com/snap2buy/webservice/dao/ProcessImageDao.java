@@ -7,6 +7,7 @@ import com.snap2buy.webservice.model.StoreWithImages;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sachin on 10/17/15.
@@ -50,5 +51,9 @@ public interface ProcessImageDao {
 	public void updateProjectResultByStore(String customerCode,	String customerProjectId, List<String> storeIds, String resultCode);
 	public void updateProjectResultStatusByStore(String customerCode,String customerProjectId, List<String> storeIds, String status);
 	public List<String> getProjectStoreIds(String customerCode,	String customerProjectId);
+	public List<LinkedHashMap<String, String>> insertOrUpdateStoreResult(String customerCode, String customerProjectId, String storeId,
+			String countDistinctUpc, String sumFacing, String sumUpcConfidence,	String resultCode, String status, String imageUrl);
+	public void saveRepResponses(String customerCode, String customerProjectId,	String storeId, Map<String, String> repResponses);
+	Map<String, String> getRepResponsesByStore(String customerCode,	String customerProjectId, String storeId);
 
 }

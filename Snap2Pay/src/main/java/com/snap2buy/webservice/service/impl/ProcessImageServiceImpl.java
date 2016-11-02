@@ -64,6 +64,11 @@ public class ProcessImageServiceImpl implements ProcessImageService {
         }
         LOGGER.info("--------------storeId=" + inputObject.getStoreId() + "-----------------\n");
         
+        String retailerCode = metaServiceDao.getProjectDetail(inputObject.getCustomerProjectId(), inputObject.getCustomerCode()).get(0).get("retailerCode");
+        inputObject.setStoreId(retailerCode+"_"+inputObject.getStoreId());
+        LOGGER.info("--------------Converted StoreId=" + inputObject.getStoreId() + "-----------------\n");
+
+        
         if ((inputObject.getUserId().isEmpty())
                 || (inputObject.getUserId().equalsIgnoreCase("") )
                 || (inputObject.getUserId().equalsIgnoreCase("-9"))){
@@ -815,7 +820,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String line = " "+","+" "+"\n";
             fileWriter.append(input+info1+info2+line);
 
-            String headers="Retailer Store Id,Retailer,Street,City,State Code,Zip,Result"+"\n";
+            String headers="Retailer Store Id,Retailer,Street,City,State Code,Zip,Result,Photos"+"\n";
             fileWriter.append(headers);
 
             for (LinkedHashMap<String, String> row : resultList) {
@@ -827,7 +832,8 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                     result.append(row.get("city") + ",");
                     result.append(row.get("stateCode") + ",");
                     result.append(row.get("zip") + ",");
-                    result.append(row.get("result"));
+                    result.append(row.get("result") + ",");
+                    result.append(row.get("imageURL") );
                     fileWriter.append(result.toString() + "\n");
                 }
             }
@@ -1015,16 +1021,24 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 			String customerProjectId, String sync, String filenamePath) {
 		List<LinkedHashMap<String, String>> projectDetail = metaServiceDao.getProjectDetail(customerProjectId, customerCode);
 	    String categoryId = "";
+	    String retailerCode = "";
 		if ( projectDetail != null && !projectDetail.isEmpty() ) {
 	     	categoryId = projectDetail.get(0).get("categoryId");
+	     	retailerCode =  projectDetail.get(0).get("retailerCode");
 	    }
+		
+		List<ProjectQuestion> projectQuestions = metaServiceDao.getProjectQuestionsDetail(customerCode, customerProjectId);
+		
 		BulkUploadEngine engine = new BulkUploadEngine();
 		engine.setCustomerCode(customerCode);
 		engine.setCustomerProjectId(customerProjectId);
 		engine.setSync(sync);
 		engine.setCategoryId(categoryId);
+		engine.setRetailerCode(retailerCode);
 		engine.setFilenamePath(filenamePath);
+		engine.setProjectQuestions(projectQuestions);
 		engine.setProcessImageService(this);
+		engine.setProcessImageDao(processImageDao);
 		Thread uploadThread = new Thread(engine);
 		uploadThread.start();
 	}

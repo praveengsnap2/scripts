@@ -22,6 +22,7 @@ public interface ParamMapper {
     String TIMESTAMP = "timeStamp";
     String FREQUENCY = "frequency";
     String STORE_ID = "storeId";
+    String RETAILER_STORE_ID = "retailerStoreId";
     String DATE_ID = "dateId";
     String BRAND_ID = "brandId";
     String CHAIN_ID= "chainId";

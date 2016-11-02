@@ -11,8 +11,11 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -20,24 +23,36 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.CellType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import com.snap2buy.webservice.dao.ProcessImageDao;
 import com.snap2buy.webservice.model.InputObject;
+import com.snap2buy.webservice.model.ProjectQuestion;
 import com.snap2buy.webservice.service.ProcessImageService;
 
 public class BulkUploadEngine implements Runnable {
     private static Logger LOGGER = Logger.getLogger("s2b");
     
-	String customerCode;
-	String customerProjectId;
-	String sync;
-	String filenamePath;
-	String categoryId;
-	ProcessImageService processImageService;
+	private String customerCode;
+	private String customerProjectId;
+	private String sync;
+	private String filenamePath;
+	private String categoryId;
+	private String retailerCode;
+	private List<ProjectQuestion> projectQuestions;
+	private ProcessImageService processImageService;
+	private ProcessImageDao processImageDao;
 	
+	public ProcessImageDao getProcessImageDao() {
+		return processImageDao;
+	}
+	public void setProcessImageDao(ProcessImageDao processImageDao) {
+		this.processImageDao = processImageDao;
+	}
 	public ProcessImageService getProcessImageService() {
 		return processImageService;
 	}
@@ -78,6 +93,9 @@ public class BulkUploadEngine implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.info("---------------BulkUploadEngine :: Start Processing file :: " + filenamePath + "----------------\n");
+		//Add this project status as IN PROGRESS in tracker
+		UploadStatusTracker.add(customerCode, customerProjectId);
+		//Proceed
 		DecimalFormat format = new DecimalFormat("0.#");
 		long currTimestamp = System.currentTimeMillis() / 1000L;
 		Date date = new Date(currTimestamp);
@@ -87,14 +105,10 @@ public class BulkUploadEngine implements Runnable {
 
         //Create the directory for images to download.
         String imageDirectoryForProject = "/usr/share/s2pImages/" + customerCode + "/" + customerProjectId + "/";
-		File imageDirectory = new File(imageDirectoryForProject);
-		boolean success = imageDirectory.mkdirs();
-        if (!success) {
-			LOGGER.error("---------------BulkUploadEngine :: Failed to create directory :: " + imageDirectoryForProject + "----------------\n");
-			LOGGER.error("---------------BulkUploadEngine :: Exitting----------------\n");
-			return;
-        }
         
+		File imageDirectory = new File(imageDirectoryForProject);
+		imageDirectory.mkdirs();
+                
         //Get already uploaded stores for this project, to detect rows to be skipped.
         List<String> storeIdsInDB = processImageService.getProjectStoreIds(customerCode,customerProjectId);
         
@@ -109,6 +123,14 @@ public class BulkUploadEngine implements Runnable {
 		
 		if ( continueProcessing == true ) {
 			HSSFSheet imagesSheet = workbook.getSheet("Images");
+			String internalCustomerCode = "";
+			if ( customerCode.equals("DEM")) {
+				HSSFSheet demSheet = workbook.getSheet("customerData");
+				internalCustomerCode = demSheet.getRow(0).getCell(0).getStringCellValue();
+			} else {
+				internalCustomerCode = customerCode;
+			}
+			
 			int numRows = imagesSheet.getPhysicalNumberOfRows();
 			LOGGER.info("---------------BulkUploadEngine :: Number of records :: " + numRows + "----------------\n");
             
@@ -125,10 +147,10 @@ public class BulkUploadEngine implements Runnable {
 							storeId = row.getCell(0).getStringCellValue();
 						}
 					}
-					
+					String storeIdWithRetailCode = retailerCode+"_"+storeId;
 					//Check if storeId already in DB, if yes, skip to next row.
-					if ( storeIdsInDB.contains(storeId) ) {
-						LOGGER.info("---------------BulkUploadEngine :: storeId exists in DB ..Skipping this store:: " + storeId + "----------------\n");
+					if ( storeIdsInDB.contains(storeIdWithRetailCode) ) {
+						LOGGER.info("---------------BulkUploadEngine :: storeId exists in DB ..Skipping this store:: " + storeIdWithRetailCode + "----------------\n");
 						continue;
 					}
 					
@@ -166,27 +188,58 @@ public class BulkUploadEngine implements Runnable {
 						}
 					}
 					
-					LOGGER.info("---------------BulkUploadEngine :: Record Data :: storeId=" + storeId + ", agentId=" + agentId +",taskId="+ticketId+",dateId="+dateId+"----------------\n");
-					LOGGER.info("---------------BulkUploadEngine :: Accessing Image Download Link :: "+ imageLink + "----------------\n");
-					Document document = null;
+					LOGGER.info("---------------BulkUploadEngine :: Record Data :: storeId=" + storeIdWithRetailCode + ", agentId=" + agentId +",taskId="+ticketId+",dateId="+dateId+"----------------\n");
+					
+					//Make an entry in project store results table for this store
 					try {
-						document = Jsoup.connect(imageLink).get();
-					} catch (Exception e) {
-						LOGGER.error("---------------BulkUploadEngine :: Error Accessing image store link :: "+ e.getMessage() + "----------------\n");
-						LOGGER.error("---------------BulkUploadEngine :: Proceeding with next row----------------\n");
-						continue;
+						processImageDao.insertOrUpdateStoreResult(customerCode, customerProjectId, storeIdWithRetailCode, "0", "0", "0", "0", "1", imageLink);
+						LOGGER.info("---------------BulkUploadEngine :: Inserted one record in store results table for this store...\n");
+					} catch (Throwable t) {
+						LOGGER.info("---------------BulkUploadEngine :: Error inserting one record in store results table for this store..." + t + "\n");
 					}
+					
+					
+					//For CMK, we need to scrape the imageLink for actual images
+					//For PRM, imageLink can be used as-is for download
+					List<URL> imageURLs = new ArrayList<URL>();
+					if ( customerCode.equals("CMK") || (customerCode.equals("DEM") && internalCustomerCode.equals("CMK")) ) {
+						Document document = null;
+						try {
+							document = Jsoup.connect(imageLink).get();
+						} catch (Exception e) {
+							LOGGER.error("---------------BulkUploadEngine :: Error Accessing image store link :: "+ e.getMessage() + "----------------\n");
+							LOGGER.error("---------------BulkUploadEngine :: Proceeding with next row----------------\n");
+							continue;
+						}
 						Elements elements = document.select("img[src^=https://gigwalk]");
 						LOGGER.info("---------------BulkUploadEngine :: Number of images to download :: "+ elements.size() + "----------------\n");
 						for ( int j=0;j<elements.size();j++){
 							URL imageURL = null;
 							try {
 								imageURL = new URL(elements.get(j).attr("src"));
+								imageURLs.add(imageURL);
 							} catch (Exception e) {
 								LOGGER.error("---------------BulkUploadEngine :: Error creating URL for Image Download Link :: "+ e.getMessage() + "----------------\n");
 								LOGGER.error("---------------BulkUploadEngine :: Proceeding with next image link----------------\n");
 								continue;
 							}
+						}
+						LOGGER.info("---------------BulkUploadEngine :: Accessing Image Download Link :: "+ imageLink + "----------------\n");
+					} else {
+						URL imageURL = null;
+						try {
+							imageURL = new URL(imageLink);
+							imageURLs.add(imageURL);
+						} catch (Exception e) {
+							LOGGER.error("---------------BulkUploadEngine :: Error creating URL for Image Download Link :: "+ e.getMessage() + "----------------\n");
+							LOGGER.error("---------------BulkUploadEngine :: Proceeding with next image link----------------\n");
+							continue;
+						}
+					}
+					
+					//now iterate over all imageURLs, download the image and saveImage in tables.
+						for ( URL imageURL : imageURLs) {
+							
 							LOGGER.info("---------------BulkUploadEngine :: Downloading from :: "+ imageURL.toString() + "----------------\n");
 							
 							int code = 200;
@@ -266,10 +319,35 @@ public class BulkUploadEngine implements Runnable {
 								LOGGER.error("---------------BulkUploadEngine :: Download Failed :: Unexpected HTTP response code"+ code + "----------------\n");
 							}
 						}
+						LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB Start :: Responses Expected :: " + projectQuestions.size() + " ----------------\n");
+						//Store project rep responses for each store
+						Map<String,String> repResponses = new HashMap<String,String>();
+						for(ProjectQuestion question : projectQuestions ) {
+							String responseColumn = question.getResponseColumn();
+							if ( responseColumn != null && !responseColumn.isEmpty() ) {
+								CellReference cr = new CellReference(responseColumn);
+								if (row.getCell(cr.getCol()) != null) {
+									String repResponse = "";
+									CellType type = row.getCell(cr.getCol()).getCellTypeEnum();
+									if (type == CellType.NUMERIC) {
+										repResponse = format.format(row.getCell(cr.getCol()).getNumericCellValue());
+									} else {
+										repResponse = row.getCell(cr.getCol()).getStringCellValue();
+									}
+									repResponses.put(question.getId(), repResponse);	
+								}
+							}
+						}
+						try {
+							processImageDao.saveRepResponses(customerCode,customerProjectId, storeIdWithRetailCode, repResponses);
+							LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB End----------------\n");
+						} catch (Throwable t) {
+							LOGGER.error("---------------BulkUploadEngine :: Storing Rep Responses to DB Failed :: " + t + "----------------\n");
+						}
+						
 					}	
 				}
 			}
-			LOGGER.info("---------------BulkUploadEngine :: Completed Processing file :: " + filenamePath + "----------------\n");
 		
 		if ( workbook != null ) {
 				try {
@@ -280,5 +358,23 @@ public class BulkUploadEngine implements Runnable {
 				}
 			}
 		
+		//Remove this project from upload tracker
+		UploadStatusTracker.remove(customerCode, customerProjectId);
+		//Done
+		LOGGER.info("---------------BulkUploadEngine :: Completed Processing file :: " + filenamePath + "----------------\n");
+
 	}
+	public List<ProjectQuestion> getProjectQuestions() {
+		return projectQuestions;
+	}
+	public void setProjectQuestions(List<ProjectQuestion> projectQuestions) {
+		this.projectQuestions = projectQuestions;
+	}
+	public String getRetailerCode() {
+		return retailerCode;
+	}
+	public void setRetailerCode(String retailerCode) {
+		this.retailerCode = retailerCode;
+	}
+	
 }

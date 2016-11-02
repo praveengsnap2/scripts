@@ -12,7 +12,7 @@ import java.util.Map;
 @XmlRootElement(name = "Project")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Project {
-    @XmlElement
+	@XmlElement
     String id;
     @XmlElement
     String projectName;
@@ -55,6 +55,9 @@ public class Project {
 	@XmlElement(name = "projectUpcList")
     List<ProjectUpc> projectUpcList = new ArrayList<>();
 
+    @XmlElement(name = "projectQuestionsList")
+    List<ProjectQuestion> projectQuestionsList = new ArrayList<>();
+    
     public Project() {
         super();
     }
@@ -297,6 +300,13 @@ public class Project {
 			this.failedCriteria = failedCriteria;
 		}
 	
+	public List<ProjectQuestion> getProjectQuestionsList() {
+		 return projectQuestionsList;
+	}
+
+	public void setProjectQuestionsList(List<ProjectQuestion> projectQuestionsList) {
+		this.projectQuestionsList = projectQuestionsList;
+	}
 
     @Override
     public String toString() {

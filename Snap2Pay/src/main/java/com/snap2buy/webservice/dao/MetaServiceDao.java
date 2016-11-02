@@ -43,4 +43,7 @@ public interface MetaServiceDao {
     public List<LinkedHashMap<String, String>> getStoreDetail(String storeId);
 
     public List<LinkedHashMap<String, String>> getProjectSummary(String customerProjectId, String customerCode);
+	public void addQuestionsListToProjectId(List<ProjectQuestion> projectQuestionsList, String customerCode, String customerProjectId);
+	public void updateQuestionsListToProjectId(	List<ProjectQuestion> projectQuestionsList, String customerCode,String customerProjectId);
+	public List<ProjectQuestion> getProjectQuestionsDetail(String customerCode,	String customerProjectId);
 }

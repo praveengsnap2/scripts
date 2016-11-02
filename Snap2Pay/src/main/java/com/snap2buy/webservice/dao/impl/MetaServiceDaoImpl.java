@@ -4,12 +4,14 @@ import com.mysql.jdbc.Statement;
 import com.snap2buy.webservice.dao.MetaServiceDao;
 import com.snap2buy.webservice.mapper.BeanMapper;
 import com.snap2buy.webservice.model.*;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1539,4 +1541,132 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
             }
         }
     }
+
+	@Override
+	public void addQuestionsListToProjectId(List<ProjectQuestion> projectQuestionsList, String customerCode, String customerProjectId) {
+		LOGGER.info("---------------MetaServiceDaoImpl Starts addQuestionsListToProjectId::projectQuestionsList=" + projectQuestionsList + "customerProjectId = " + customerProjectId + "customerCode = " + customerCode + "----------------\n");
+        String sql = "INSERT INTO ProjectRepQuestions ( customerCode, customerProjectId, questionId, questionDesc, questionResponseColumn) VALUES (?, ?, ?, ?, ?)";
+        Connection conn = null;
+
+        if (!projectQuestionsList.isEmpty()) {
+            for (ProjectQuestion projectQuestion : projectQuestionsList) {
+                try {
+                    conn = dataSource.getConnection();
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setString(1, customerCode);
+                    ps.setString(2, customerProjectId);
+                    ps.setInt(3, Integer.parseInt(projectQuestion.getId()));
+                    ps.setString(4, projectQuestion.getDesc());
+                    ps.setString(5, projectQuestion.getResponseColumn());
+                    ps.executeUpdate();
+                    ps.close();
+
+                    LOGGER.info("---------------MetaServiceDaoImpl Ends addQuestionsListToProjectId----------------\n");
+
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+
+                } finally {
+                    if (conn != null) {
+                        try {
+                            conn.close();
+                        } catch (SQLException e) {
+                            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                            LOGGER.error("exception", e);
+                        }
+                    }
+                }
+            }
+        }
+		
+	}
+
+	@Override
+	public void updateQuestionsListToProjectId(List<ProjectQuestion> projectQuestionsList, String customerCode,	String customerProjectId) {
+	        LOGGER.info("---------------MetaServiceDaoImpl Starts updateQuestionsListToProjectId::projectQuestionsList=" + projectQuestionsList + "customerProjectId = " + customerProjectId + "customerCode = " + customerCode + "----------------\n");
+	        String deleteSql = "delete from ProjectRepQuestions where customerProjectId = \"" + customerProjectId + "\" and customerCode = \"" + customerCode + "\"";
+	        String sql = "INSERT INTO ProjectRepQuestions ( customerCode, customerProjectId, questionId, questionDesc, questionResponseColumn) VALUES (?, ?, ?, ?, ?)";
+	        Connection conn = null;
+
+
+	        if (!projectQuestionsList.isEmpty()) {
+	            try {
+	                conn = dataSource.getConnection();
+	                PreparedStatement deletePs = conn.prepareStatement(deleteSql);
+	                deletePs.execute();
+	                deletePs.close();
+
+	                for (ProjectQuestion projectQuestion : projectQuestionsList) {
+	                    PreparedStatement ps = conn.prepareStatement(sql);
+	                    ps.setString(1, customerCode);
+	                    ps.setString(2, customerProjectId);
+	                    ps.setInt(3, Integer.parseInt(projectQuestion.getId()));
+	                    ps.setString(4, projectQuestion.getDesc());
+	                    ps.setString(5, projectQuestion.getResponseColumn());
+	                    ps.executeUpdate();
+	                    ps.close();
+
+	                    LOGGER.info("---------------MetaServiceDaoImpl Ends updateQuestionsListToProjectId----------------\n");
+
+	                }
+	            } catch (SQLException e) {
+	                LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                LOGGER.error("exception", e);
+
+	            } finally {
+	                if (conn != null) {
+	                    try {
+	                        conn.close();
+	                    } catch (SQLException e) {
+	                        LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                        LOGGER.error("exception", e);
+	                    }
+	                }
+	            }
+	        }
+	}
+
+	@Override
+	public List<ProjectQuestion> getProjectQuestionsDetail(	String customerCode, String customerProjectId) {
+		LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectQuestionsDetail----------------\n");
+        String sql = "SELECT * FROM ProjectRepQuestions  where customerCode = ? and customerProjectId = ?";
+        List<ProjectQuestion> resultList = new ArrayList<ProjectQuestion>();
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customerCode);
+            ps.setString(2, customerProjectId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProjectQuestion question = new ProjectQuestion();
+                question.setCustomerCode(customerCode);
+                question.setCustomerProjectId(customerProjectId);
+                question.setId(""+rs.getInt("questionId"));
+                question.setDesc(rs.getString("questionDesc"));
+                question.setResponseColumn(rs.getString("questionResponseColumn"));
+                resultList.add(question);
+            }
+            rs.close();
+            ps.close();
+            LOGGER.info("---------------MetaServiceDaoImpl Ends getProjectQuestionsDetail----------------\n");
+
+            return resultList;
+        } catch (SQLException e) {
+            LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+            LOGGER.error("exception", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+                    LOGGER.error("exception", e);
+                }
+            }
+        }
+	}
 }

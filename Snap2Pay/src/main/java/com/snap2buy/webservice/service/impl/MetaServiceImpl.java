@@ -142,13 +142,18 @@ public class MetaServiceImpl implements MetaService {
     @Override
     public List<Project> getProjectDetail(InputObject inputObject) {
         LOGGER.info("---------------MetaServiceImpl Starts getProjectDetail customerProjectId = " + inputObject.getCustomerProjectId() + "customerCode="+inputObject.getCustomerCode()+"----------------\n");
+        
         List<ProjectUpc> productUpcList = metaServiceDao.getProjectUpcDetail(inputObject.getCustomerProjectId(), inputObject.getCustomerCode());
-
         LOGGER.info("---------------MetaServiceImpl getProjectUpcDetail got size ="+productUpcList.size()+"----------------\n");
+
+        List<ProjectQuestion> projectQuestionsList = metaServiceDao.getProjectQuestionsDetail(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
+        LOGGER.info("---------------MetaServiceImpl getProjectQuestionsDetail got size ="+projectQuestionsList.size()+"----------------\n");
+        
         List<LinkedHashMap<String, String>> resultList = metaServiceDao.getProjectDetail(inputObject.getCustomerProjectId(), inputObject.getCustomerCode());
         
         Project project = new Project(resultList.get(0));
         project.setProjectUpcList(productUpcList);
+        project.setProjectQuestionsList(projectQuestionsList);
         List<Project> projectList = new ArrayList<Project>();
         projectList.add(project);
         
@@ -230,10 +235,14 @@ public class MetaServiceImpl implements MetaService {
     public void createProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceImpl Starts createProject Project code = " + projectInput.getProjectName()+ "----------------\n");
         metaServiceDao.createProject(projectInput);
-
         LOGGER.info("---------------MetaServiceImpl project created with id ="+projectInput.getId()+"now adding upc list -------------");
+        
         metaServiceDao.addUpcListToProjectId(projectInput.getProjectUpcList(), projectInput.getCustomerProjectId(), projectInput.getCustomerCode());
         LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
+        
+        metaServiceDao.addQuestionsListToProjectId(projectInput.getProjectQuestionsList(), projectInput.getCustomerCode(),  projectInput.getCustomerProjectId());
+        LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
+        
         LOGGER.info("---------------MetaServiceImpl Ends createProject id generate = "+projectInput.getId()+"----------------\n");
     }
 
@@ -288,13 +297,17 @@ public class MetaServiceImpl implements MetaService {
     }
     @Override
     public void updateProject(Project projectInput) {
-        LOGGER.info("---------------MetaServiceImpl Starts createProject Project code = " + projectInput.getProjectName()+ "----------------\n");
+        LOGGER.info("---------------MetaServiceImpl Starts updateProject Project code = " + projectInput.getProjectName()+ "----------------\n");
         metaServiceDao.updateProject(projectInput);
-
-        LOGGER.info("---------------MetaServiceImpl project created with id ="+projectInput.getId()+"now adding upc list -------------");
+        LOGGER.info("---------------MetaServiceImpl project updated with id ="+projectInput.getId()+"now adding upc list -------------");
+        
         metaServiceDao.updateUpcListToProjectId(projectInput.getProjectUpcList(), projectInput.getCustomerProjectId(), projectInput.getCustomerCode());
-        LOGGER.info("---------------MetaServiceImpl upc list addded -------------");
-        LOGGER.info("---------------MetaServiceImpl Ends createProject id generate = "+projectInput.getId()+"----------------\n");
+        LOGGER.info("---------------MetaServiceImpl upc list updated -------------");
+        
+        metaServiceDao.updateQuestionsListToProjectId(projectInput.getProjectQuestionsList(), projectInput.getCustomerCode(), projectInput.getCustomerProjectId());
+        LOGGER.info("---------------MetaServiceImpl questions list updated -------------");
+        
+        LOGGER.info("---------------MetaServiceImpl Ends updateProject id generate = "+projectInput.getId()+"----------------\n");
     }
 
     public List<LinkedHashMap<String, String>> getProjectSummary(InputObject inputObject){
