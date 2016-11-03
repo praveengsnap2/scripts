@@ -2296,9 +2296,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                    deletePs.addBatch();
 	                    
                     }
-                    
-                    ps.executeBatch();
+                    //First Delete existing records
                     deletePs.executeBatch();
+                    //Then Insert new records
+                    ps.executeBatch();
                     
                     conn.commit();
                     ps.close();
