@@ -1643,7 +1643,7 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
 	@Override
 	public List<ProjectQuestion> getProjectQuestionsDetail(	String customerCode, String customerProjectId) {
 		LOGGER.info("---------------MetaServiceDaoImpl Starts getProjectQuestionsDetail----------------\n");
-        String sql = "SELECT * FROM ProjectRepQuestions  where customerCode = ? and customerProjectId = ?";
+        String sql = "SELECT * FROM ProjectRepQuestions  where customerCode = ? and customerProjectId = ? order by questionId";
         List<ProjectQuestion> resultList = new ArrayList<ProjectQuestion>();
         Connection conn = null;
         try {

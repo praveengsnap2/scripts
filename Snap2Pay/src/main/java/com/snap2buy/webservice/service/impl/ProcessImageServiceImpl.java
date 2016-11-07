@@ -808,6 +808,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
     public File getProjectAllStoreResultsCsv(InputObject inputObject, String tempFilePath) {
         LOGGER.info("---------------ProcessImageServiceImpl Starts getProjectAllStoreResultsCsv----------------\n");
 
+        List<ProjectQuestion> projectQuestions = metaServiceDao.getProjectQuestionsDetail(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
         List<LinkedHashMap<String, String>> resultList = processImageDao.getProjectAllStoreResults(inputObject.getCustomerCode(), inputObject.getCustomerProjectId());
 
 
@@ -820,7 +821,14 @@ public class ProcessImageServiceImpl implements ProcessImageService {
             String line = " "+","+" "+"\n";
             fileWriter.append(input+info1+info2+line);
 
-            String headers="Retailer Store Id,Retailer,Street,City,State Code,Zip,Result,Photos"+"\n";
+            String headers="Retailer Store Id,Retailer,Street,City,State Code,Zip,Result,Photos";
+            if ( projectQuestions != null && !projectQuestions.isEmpty() ) {
+            	for(ProjectQuestion question : projectQuestions){
+            		headers = headers.concat(","+question.getDesc());
+            	}
+            }
+            headers = headers.concat("\n");            
+            
             fileWriter.append(headers);
 
             for (LinkedHashMap<String, String> row : resultList) {
@@ -834,6 +842,15 @@ public class ProcessImageServiceImpl implements ProcessImageService {
                     result.append(row.get("zip") + ",");
                     result.append(row.get("result") + ",");
                     result.append(row.get("imageURL") );
+                    if ( projectQuestions != null && !projectQuestions.isEmpty() ) {
+                    	Map<String,String> repResponses = processImageDao.getRepResponsesByStore(inputObject.getCustomerCode(), inputObject.getCustomerProjectId(), row.get("storeId"));
+                    	for(ProjectQuestion question : projectQuestions){
+                    		String response = repResponses.get(question.getId());
+                    		if ( response == null) response = "";
+                    		result.append("," + response );
+                    	}
+                    }
+                    
                     fileWriter.append(result.toString() + "\n");
                 }
             }

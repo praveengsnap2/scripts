@@ -1663,9 +1663,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	
 	private boolean evaluate(String Criteria, List<String> aggUPCs, Map<String, String> projectStoreData, Map<String,String> repResponses) {
 		boolean evaluateResult = false;
-		String[] CriteriaParts = Criteria.split(" ");
+		List<String> criteriaParts = Arrays.asList(Criteria.split(" "));
 		StringBuilder criteriaBuilder = new StringBuilder();
-		for(String part : CriteriaParts ) {
+		int currentPartIndex =0;
+		for(String part : criteriaParts ) {
 			if ( part.startsWith("containsAll") ) {
 				String upcPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
 				List<String> upcList = Arrays.asList(upcPart.split(","));
@@ -1704,7 +1705,11 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 			} else if ( part.startsWith("response")) {
 				String questionIdPart = part.substring(part.indexOf("(") + 1, part.lastIndexOf(")"));
 				String response = repResponses.get(questionIdPart);
-				if ( response == null ) response = "" ;
+				if ( response == null ) response = "null" ;
+				//If value to compare is a string, wrap the rep response value in double quotes. Else, leave it as it is.
+				if ( criteriaParts.get(currentPartIndex + 2).startsWith("\"") ){
+					response="\""+response+"\"";
+				}
 				criteriaBuilder.append(response);
 			} else if ( part.equals("AND")){
 				criteriaBuilder.append("&&");
@@ -1713,6 +1718,8 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 			} else {
 				criteriaBuilder.append(part);
 			}
+			criteriaBuilder.append(" ");
+			currentPartIndex++;
 		}
 		LOGGER.info("---------------ProcessImageDaoImpl--evaluate:: evaluating processed Criteria :: " + criteriaBuilder.toString() + " ------------------");
 		try {
@@ -1985,14 +1992,14 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	public void reprocessProjectByStore(String customerCode, String customerProjectId, List<String> storeIdsToReprocess) {
 		LOGGER.info("---------------ProcessImageDaoImpl Starts reprocessProjectByStore ----------------\n");
 
-		String deleteImageAnalysisSql = "DELETE FROM ImageAnalysisNew WHERE customercode=? AND customerProjectId=? AND storeId=?";
-		String deleteProjectStoreResultsSql = "DELETE FROM ProjectStoreResult WHERE customercode=? AND customerProjectId=? AND storeId=?";
-		String deleteProjectStoreDataSql = "DELETE FROM ProjectStoreData WHERE customercode=? AND customerProjectId=? AND storeId=?";
-		String updateImageStatusSql = "UPDATE ImageStoreNew SET imageStatus=? WHERE customercode=? AND customerProjectId=? AND storeId=?";
+		String deleteImageAnalysisSql = "DELETE FROM ImageAnalysisNew WHERE customerCode=? AND customerProjectId=? AND storeId=?";
+		String updateProjectStoreResultsSql = "UPDATE ProjectStoreResult SET resultCode = '0' , status = '1' WHERE customerCode=? AND customerProjectId=? AND storeId=?";
+		String deleteProjectStoreDataSql = "DELETE FROM ProjectStoreData WHERE customerCode=? AND customerProjectId=? AND storeId=?";
+		String updateImageStatusSql = "UPDATE ImageStoreNew SET imageStatus=? WHERE customerCode=? AND customerProjectId=? AND storeId=?";
 		
 		Connection conn = null;
 		PreparedStatement deleteImageAnalysisPs = null;
-	    PreparedStatement deleteProjectStoreResultsPs = null;
+	    PreparedStatement updateProjectStoreResultsPs = null;
 	    PreparedStatement deleteProjectStoreDataPs = null;
 	    PreparedStatement updateImageStatusPs = null;
 		
@@ -2001,7 +2008,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        conn.setAutoCommit(false);
 	        
 	        deleteImageAnalysisPs = conn.prepareStatement(deleteImageAnalysisSql);
-	        deleteProjectStoreResultsPs = conn.prepareStatement(deleteProjectStoreResultsSql);
+	        updateProjectStoreResultsPs = conn.prepareStatement(updateProjectStoreResultsSql);
 	        deleteProjectStoreDataPs = conn.prepareStatement(deleteProjectStoreDataSql);
 	        updateImageStatusPs = conn.prepareStatement(updateImageStatusSql);
 	        
@@ -2011,10 +2018,10 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 		        deleteImageAnalysisPs.setString(3, storeId);
 		        deleteImageAnalysisPs.addBatch();
 		        
-		        deleteProjectStoreResultsPs.setString(1, customerCode);
-		        deleteProjectStoreResultsPs.setString(2, customerProjectId);
-		        deleteProjectStoreResultsPs.setString(3, storeId);
-		        deleteProjectStoreResultsPs.addBatch();
+		        updateProjectStoreResultsPs.setString(1, customerCode);
+		        updateProjectStoreResultsPs.setString(2, customerProjectId);
+		        updateProjectStoreResultsPs.setString(3, storeId);
+		        updateProjectStoreResultsPs.addBatch();
 		        
 		        deleteProjectStoreDataPs.setString(1, customerCode);
 		        deleteProjectStoreDataPs.setString(2, customerProjectId);
@@ -2029,7 +2036,7 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	        }
 	        
 	        deleteImageAnalysisPs.executeBatch();
-	        deleteProjectStoreResultsPs.executeBatch();
+	        updateProjectStoreResultsPs.executeBatch();
 	        deleteProjectStoreDataPs.executeBatch();
 	        updateImageStatusPs.executeBatch();
 	        
@@ -2048,9 +2055,9 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
 	                 LOGGER.error("exception", e);
 	            }
 	         }
-	         if (deleteProjectStoreResultsPs != null) {
+	         if (updateProjectStoreResultsPs != null) {
 		           try {   
-		        	   deleteProjectStoreResultsPs.close();
+		        	   updateProjectStoreResultsPs.close();
 	                } catch (SQLException e) {
 		                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
 		                 LOGGER.error("exception", e);
