@@ -818,33 +818,18 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void createProjectType(ProjectType projectTypeInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts createProjectType::projectTypeInput=" + projectTypeInput + "----------------\n");
-        String sql = "INSERT INTO ProjectType ( name, createdDate, status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO ProjectType (id, name, createdDate, status) VALUES ( (SELECT MAX(id)+1 FROM ProjectType pt), ?, ?, ?)";
         Connection conn = null;
         Integer id = -1;
         try {
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ;
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, projectTypeInput.getName());
             ps.setString(2, projectTypeInput.getCreatedDate());
             ps.setString(3, projectTypeInput.getStatus());
-            id = ps.executeUpdate();
-
-            if (id == 0) {
-                throw new SQLException("Creating user failed, no rows affected.");
-            }
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    projectTypeInput.setId(generatedKeys.getString(1));
-                } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
-                }
-            }
+            ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends createProjectType----------------\n");
-
-
         } catch (SQLException e) {
             LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
             LOGGER.error("exception", e);

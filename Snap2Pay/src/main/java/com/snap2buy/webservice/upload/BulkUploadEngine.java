@@ -122,16 +122,64 @@ public class BulkUploadEngine implements Runnable {
 		}
 		
 		if ( continueProcessing == true ) {
-			HSSFSheet imagesSheet = workbook.getSheet("Images");
-			String internalCustomerCode = "";
-			if ( customerCode.equals("DEM")) {
-				HSSFSheet demSheet = workbook.getSheet("customerData");
-				internalCustomerCode = demSheet.getRow(0).getCell(0).getStringCellValue();
-			} else {
-				internalCustomerCode = customerCode;
+			String imageSheetName = "Images";
+			String internalCustomerCode = customerCode;
+			String storeIdColumn = "";
+			String agentIdColumn = "";
+			String taskIdColumn = "";
+			String dateIdColumn = "";
+			List<String> imageLinkColumns = new ArrayList<String>();
+			Map<String,String> repResponseColumnMap = new HashMap<String,String>();
+			
+			HSSFSheet metaDataSheet = workbook.getSheet("metaDataSheet");
+			int numRows = metaDataSheet.getPhysicalNumberOfRows();
+			for ( int i=0; i < numRows; i++){
+				HSSFRow row = metaDataSheet.getRow(i);
+				if ( row != null ) {
+					String column = "";
+					if ( row.getCell(0) != null ) {
+						CellType type = row.getCell(0).getCellTypeEnum();
+						if ( type == CellType.NUMERIC ) {
+							column = format.format(row.getCell(0).getNumericCellValue());
+						} else {
+							column = row.getCell(0).getStringCellValue();
+						}
+					}
+					column = column.trim();
+					String value = "";
+					if ( row.getCell(1) != null ) {
+						CellType type = row.getCell(1).getCellTypeEnum();
+						if ( type == CellType.NUMERIC ) {
+							value = format.format(row.getCell(1).getNumericCellValue());
+						} else {
+							value = row.getCell(1).getStringCellValue();
+						}
+					}
+					value = value.trim();
+					
+					if ( column.startsWith("imageSheet") ) {
+						imageSheetName = value;
+					} else if ( column.startsWith("internalCustomerCode") ) {
+						internalCustomerCode = value;
+					} else if ( column.startsWith("retailerStoreId")) {
+						storeIdColumn = value;
+					} else if ( column.startsWith("agentId")) {
+						agentIdColumn = value;
+					} else if ( column.startsWith("taskId")) {
+						taskIdColumn = value;
+					} else if ( column.startsWith("dateId")) {
+						dateIdColumn = value;
+					} else if ( column.startsWith("photo")) {
+						imageLinkColumns.add(value);
+					} else if ( column.startsWith("response")) {
+						String respQuestionId = column.replace("response", "").trim();
+						repResponseColumnMap.put(respQuestionId,value);
+					}
+				}
 			}
 			
-			int numRows = imagesSheet.getPhysicalNumberOfRows();
+			HSSFSheet imagesSheet = workbook.getSheet(imageSheetName);
+			numRows = imagesSheet.getPhysicalNumberOfRows();
 			LOGGER.info("---------------BulkUploadEngine :: Number of records :: " + numRows + "----------------\n");
             
 			for ( int i = 1 ; i < numRows; i++){
@@ -139,12 +187,13 @@ public class BulkUploadEngine implements Runnable {
 				HSSFRow row = imagesSheet.getRow(i);
 				if ( row != null ) {
 					String storeId = "";
-					if ( row.getCell(0) != null ) {
-						CellType type = row.getCell(0).getCellTypeEnum();
+					CellReference storeCell = new CellReference(storeIdColumn);
+					if ( row.getCell(storeCell.getCol()) != null ) {
+						CellType type = row.getCell(storeCell.getCol()).getCellTypeEnum();
 						if ( type == CellType.NUMERIC ) {
-							storeId = format.format(row.getCell(0).getNumericCellValue());
+							storeId = format.format(row.getCell(storeCell.getCol()).getNumericCellValue());
 						} else {
-							storeId = row.getCell(0).getStringCellValue();
+							storeId = row.getCell(storeCell.getCol()).getStringCellValue();
 						}
 					}
 					String storeIdWithRetailCode = retailerCode+"_"+storeId;
@@ -155,44 +204,50 @@ public class BulkUploadEngine implements Runnable {
 					}
 					
 					String agentId = "";
-					if ( row.getCell(1) != null ) {
-						CellType type = row.getCell(1).getCellTypeEnum();
+					CellReference agentCell = new CellReference(agentIdColumn);
+					if ( row.getCell(agentCell.getCol()) != null ) {
+						CellType type = row.getCell(agentCell.getCol()).getCellTypeEnum();
 						if ( type == CellType.NUMERIC ) {
-							agentId = format.format(row.getCell(1).getNumericCellValue());
+							agentId = format.format(row.getCell(agentCell.getCol()).getNumericCellValue());
 						} else {
-							agentId = row.getCell(1).getStringCellValue();
+							agentId = row.getCell(agentCell.getCol()).getStringCellValue();
 						}
 					}
 					String ticketId = "";
-					if ( row.getCell(2) != null ) {
-						CellType type = row.getCell(2).getCellTypeEnum();
+					CellReference taskCell = new CellReference(taskIdColumn);
+					if ( row.getCell(taskCell.getCol()) != null ) {
+						CellType type = row.getCell(taskCell.getCol()).getCellTypeEnum();
 						if ( type == CellType.NUMERIC ) {
-							ticketId = format.format(row.getCell(2).getNumericCellValue());
+							ticketId = format.format(row.getCell(taskCell.getCol()).getNumericCellValue());
 						} else {
-							ticketId = row.getCell(2).getStringCellValue();
+							ticketId = row.getCell(taskCell.getCol()).getStringCellValue();
 						}
 					}
 					String dateId = "";
-					if ( row.getCell(3) != null ) {
-						CellType type = row.getCell(3).getCellTypeEnum();
+					CellReference dateCell = new CellReference(dateIdColumn);
+					if ( row.getCell(dateCell.getCol()) != null ) {
+						CellType type = row.getCell(dateCell.getCol()).getCellTypeEnum();
 						if ( type == CellType.NUMERIC ) {
-							dateId = format.format(row.getCell(3).getNumericCellValue());
+							dateId = format.format(row.getCell(dateCell.getCol()).getNumericCellValue());
 						} else {
-							dateId = row.getCell(3).getStringCellValue();
+							dateId = row.getCell(dateCell.getCol()).getStringCellValue();
 						}
 					}
-					String imageLink = "";
-					if ( row.getCell(4) != null ) {
-						if (row.getCell(4).getHyperlink() != null ) {
-							imageLink = row.getCell(4).getHyperlink().getAddress();
-						}
+					List<String> imageLinkList = new ArrayList<String>();
+					for ( String imageColumn : imageLinkColumns ) {
+						CellReference imageCell = new CellReference(imageColumn);
+						if ( row.getCell(imageCell.getCol()) != null ) {
+							if (row.getCell(imageCell.getCol()).getHyperlink() != null ) {
+								imageLinkList.add(row.getCell(imageCell.getCol()).getHyperlink().getAddress());
+							}
+						}						
 					}
 					
 					LOGGER.info("---------------BulkUploadEngine :: Record Data :: storeId=" + storeIdWithRetailCode + ", agentId=" + agentId +",taskId="+ticketId+",dateId="+dateId+"----------------\n");
 					
 					//Make an entry in project store results table for this store
 					try {
-						processImageDao.insertOrUpdateStoreResult(customerCode, customerProjectId, storeIdWithRetailCode, "0", "0", "0", "0", "1", imageLink);
+						processImageDao.insertOrUpdateStoreResult(customerCode, customerProjectId, storeIdWithRetailCode, "0", "0", "0", "0", "1", (imageLinkList.isEmpty() ? "" : imageLinkList.get(0)) );
 						LOGGER.info("---------------BulkUploadEngine :: Inserted one record in store results table for this store...\n");
 					} catch (Throwable t) {
 						LOGGER.info("---------------BulkUploadEngine :: Error inserting one record in store results table for this store..." + t + "\n");
@@ -201,8 +256,8 @@ public class BulkUploadEngine implements Runnable {
 					LOGGER.info("---------------BulkUploadEngine :: Storing Rep Responses to DB Start :: Responses Expected :: " + projectQuestions.size() + " ----------------\n");
 					//Store project rep responses for each store
 					Map<String,String> repResponses = new HashMap<String,String>();
-					for(ProjectQuestion question : projectQuestions ) {
-						String responseColumn = question.getResponseColumn();
+					for(String repResponseQuestionId : repResponseColumnMap.keySet()) {
+						String responseColumn = repResponseColumnMap.get(repResponseQuestionId);
 						if ( responseColumn != null && !responseColumn.isEmpty() ) {
 							CellReference cr = new CellReference(responseColumn);
 							if (row.getCell(cr.getCol()) != null) {
@@ -213,7 +268,7 @@ public class BulkUploadEngine implements Runnable {
 								} else {
 									repResponse = row.getCell(cr.getCol()).getStringCellValue();
 								}
-								repResponses.put(question.getId(), repResponse);	
+								repResponses.put(repResponseQuestionId, repResponse);	
 							}
 						}
 					}
@@ -227,21 +282,34 @@ public class BulkUploadEngine implements Runnable {
 					//For CMK, we need to scrape the imageLink for actual images
 					//For PRM, imageLink can be used as-is for download
 					List<URL> imageURLs = new ArrayList<URL>();
-					if ( customerCode.equals("CMK") || (customerCode.equals("DEM") && internalCustomerCode.equals("CMK")) ) {
-						Document document = null;
-						try {
-							document = Jsoup.connect(imageLink).get();
-						} catch (Exception e) {
-							LOGGER.error("---------------BulkUploadEngine :: Error Accessing image store link :: "+ e.getMessage() + "----------------\n");
-							LOGGER.error("---------------BulkUploadEngine :: Proceeding with next row----------------\n");
-							continue;
-						}
-						Elements elements = document.select("img[src^=https://gigwalk]");
-						LOGGER.info("---------------BulkUploadEngine :: Number of images to download :: "+ elements.size() + "----------------\n");
-						for ( int j=0;j<elements.size();j++){
+					for ( String imageLink : imageLinkList ) {
+						if ( customerCode.equals("CMK") || ( customerCode.equals("DEM") && internalCustomerCode.equals("CMK") ) ) {
+							Document document = null;
+							try {
+								document = Jsoup.connect(imageLink).get();
+							} catch (Exception e) {
+								LOGGER.error("---------------BulkUploadEngine :: Error Accessing image store link :: "+ e.getMessage() + "----------------\n");
+								LOGGER.error("---------------BulkUploadEngine :: Proceeding with next row----------------\n");
+								continue;
+							}
+							Elements elements = document.select("img[src^=https://gigwalk]");
+							LOGGER.info("---------------BulkUploadEngine :: Number of images to download :: "+ elements.size() + "----------------\n");
+							for ( int j=0;j<elements.size();j++){
+								URL imageURL = null;
+								try {
+									imageURL = new URL(elements.get(j).attr("src"));
+									imageURLs.add(imageURL);
+								} catch (Exception e) {
+									LOGGER.error("---------------BulkUploadEngine :: Error creating URL for Image Download Link :: "+ e.getMessage() + "----------------\n");
+									LOGGER.error("---------------BulkUploadEngine :: Proceeding with next image link----------------\n");
+									continue;
+								}
+							}
+							LOGGER.info("---------------BulkUploadEngine :: Accessing Image Download Link :: "+ imageLink + "----------------\n");
+						} else {
 							URL imageURL = null;
 							try {
-								imageURL = new URL(elements.get(j).attr("src"));
+								imageURL = new URL(imageLink);
 								imageURLs.add(imageURL);
 							} catch (Exception e) {
 								LOGGER.error("---------------BulkUploadEngine :: Error creating URL for Image Download Link :: "+ e.getMessage() + "----------------\n");
@@ -249,19 +317,7 @@ public class BulkUploadEngine implements Runnable {
 								continue;
 							}
 						}
-						LOGGER.info("---------------BulkUploadEngine :: Accessing Image Download Link :: "+ imageLink + "----------------\n");
-					} else {
-						URL imageURL = null;
-						try {
-							imageURL = new URL(imageLink);
-							imageURLs.add(imageURL);
-						} catch (Exception e) {
-							LOGGER.error("---------------BulkUploadEngine :: Error creating URL for Image Download Link :: "+ e.getMessage() + "----------------\n");
-							LOGGER.error("---------------BulkUploadEngine :: Proceeding with next image link----------------\n");
-							continue;
-						}
 					}
-					
 					//now iterate over all imageURLs, download the image and saveImage in tables.
 						for ( URL imageURL : imageURLs) {
 							
