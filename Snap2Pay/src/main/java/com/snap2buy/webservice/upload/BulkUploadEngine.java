@@ -335,12 +335,24 @@ public class BulkUploadEngine implements Runnable {
 								continue;
 							} 
 							if ( code == 200 || code == 303 ){
+								URL downloadURL = imageURL;
+								if ( code == 303 ) {
+									String downloadLink = imageURL.toExternalForm();
+									downloadLink = downloadLink.replace("http:", "https:");
+									try {
+										downloadURL = new URL(downloadLink);
+									} catch (Exception e) {
+										LOGGER.error("---------------BulkUploadEngine :: Error creating URL for Image Download Link :: "+ e.getMessage() + "----------------\n");
+										LOGGER.error("---------------BulkUploadEngine :: Proceeding with next image----------------\n");
+										continue;
+									}
+								}
 								UUID uniqueKey = UUID.randomUUID();
 								
 								String imageFilePath = imageDirectoryForProject + uniqueKey.toString().trim() + ".jpg";
 								String imageThumbnailPath = imageDirectoryForProject + uniqueKey.toString().trim() + "-thm.jpg";
 								try {
-									InputStream is = imageURL.openStream();
+									InputStream is = downloadURL.openStream();
 									OutputStream os = new FileOutputStream(imageFilePath);
 									byte[] b = new byte[2048];
 									int length;
