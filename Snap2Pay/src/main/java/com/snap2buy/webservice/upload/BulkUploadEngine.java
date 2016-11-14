@@ -334,7 +334,7 @@ public class BulkUploadEngine implements Runnable {
 								LOGGER.error("---------------BulkUploadEngine :: Proceeding with next image link----------------\n");
 								continue;
 							} 
-							if ( code == 200 ){
+							if ( code == 200 || code == 303 ){
 								UUID uniqueKey = UUID.randomUUID();
 								
 								String imageFilePath = imageDirectoryForProject + uniqueKey.toString().trim() + ".jpg";
