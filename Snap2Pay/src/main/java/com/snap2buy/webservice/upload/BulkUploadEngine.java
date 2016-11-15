@@ -318,6 +318,7 @@ public class BulkUploadEngine implements Runnable {
 							}
 						}
 					}
+					boolean atleastOneImageUploaded = false;
 					//now iterate over all imageURLs, download the image and saveImage in tables.
 						for ( URL imageURL : imageURLs) {
 							
@@ -405,12 +406,18 @@ public class BulkUploadEngine implements Runnable {
 										LOGGER.info("---------------BulkUploadEngine :: Storing Image details to DB Start----------------\n");
 					                    processImageService.storeImageDetails(inputObject);
 										LOGGER.info("---------------BulkUploadEngine :: Storing Image details to DB End----------------\n");
+										atleastOneImageUploaded = true;
 								} else {
 									LOGGER.error("---------------BulkUploadEngine :: Download Failed :: 0 byte file :: "+ imageFilePath + "----------------\n");
 								}
 							} else {
 								LOGGER.error("---------------BulkUploadEngine :: Download Failed :: Unexpected HTTP response code"+ code + "----------------\n");
 							}
+						}
+						
+						if ( !atleastOneImageUploaded ) {
+							// do compute result for store using rep responses, if any. As this store won't be computed for results because of no images.
+							processImageDao.generateStoreResults(customerCode, customerProjectId, storeIdWithRetailCode);
 						}
 					}	
 				}
