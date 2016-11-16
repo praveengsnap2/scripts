@@ -1272,30 +1272,51 @@ public class MetaServiceDaoImpl implements MetaServiceDao {
     @Override
     public void updateProject(Project projectInput) {
         LOGGER.info("---------------MetaServiceDaoImpl Starts updateProject::projectInput=" + projectInput + "----------------\n");
+        
         String sql = "UPDATE Project  " +
-                "set projectName=\"" + projectInput.getProjectName() + "\"  " +
-                ", projectTypeId=\"" + projectInput.getProjectTypeId() + "\"  " +
-                ", categoryId=\"" + projectInput.getCategoryId() + "\"  " +
-                ", retailerCode=\"" + projectInput.getRetailerCode() + "\"  " +
-                ", storeCount=\"" + projectInput.getStoreCount() + "\"  " +
-                ", startDate=\"" + projectInput.getStartDate() + "\"  " +
-                ", createdDate=\"" + projectInput.getCreatedDate() + "\"  " +
-                ", createdBy=\"" + projectInput.getCreatedBy() + "\"  " +
-                ", updatedDate=\"" + projectInput.getUpdatedDate() + "\"  " +
-                ", updatedBy=\"" + projectInput.getUpdatedBy() + "\"  " +
-                ", status=\"" + projectInput.getStatus() + "\"  " +
-                ", description=\"" + projectInput.getDescription() + "\"  " +
-                ", owner=\"" + projectInput.getOwner() + "\"  " +
-                ", endDate=\"" + projectInput.getEndDate() + "\"  " +
-                ", successCriteria=\"" + projectInput.getSuccessCriteria() + "\"  " +
-                ", partialCriteria=\"" + projectInput.getPartialCriteria() + "\"  " +
-                ", failedCriteria=\"" + projectInput.getFailedCriteria() + "\"  " +
-                "where customerCode = \""+projectInput.getCustomerCode()+"\" and customerProjectId= \""+projectInput.getCustomerProjectId() +"\" ";
+                "set projectName=?  " +
+                ", projectTypeId=?  " +
+                ", categoryId=?  " +
+                ", retailerCode=?  " +
+                ", storeCount=?  " +
+                ", startDate=?  " +
+                ", createdDate=?  " +
+                ", createdBy=?  " +
+                ", updatedDate=?  " +
+                ", updatedBy=?  " +
+                ", status=?  " +
+                ", description=?  " +
+                ", owner=?  " +
+                ", endDate=?  " +
+                ", successCriteria=?  " +
+                ", partialCriteria=?  " +
+                ", failedCriteria=?  " +
+                "where customerCode = ? and customerProjectId= ? ";
 
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, projectInput.getProjectName());
+            ps.setString(2, projectInput.getProjectTypeId());
+            ps.setString(3, projectInput.getCategoryId());
+            ps.setString(4, projectInput.getRetailerCode());
+            ps.setString(5, projectInput.getStoreCount());
+            ps.setString(6, projectInput.getStartDate());
+            ps.setString(7, projectInput.getCreatedDate());
+            ps.setString(8, projectInput.getCreatedBy());
+            ps.setString(9, projectInput.getUpdatedDate());
+            ps.setString(10, projectInput.getUpdatedBy());
+            ps.setString(11, projectInput.getStatus());
+            ps.setString(12, projectInput.getDescription());
+            ps.setString(13,projectInput.getOwner());
+            ps.setString(14,projectInput.getEndDate());            				 
+            ps.setString(15,projectInput.getSuccessCriteria());
+            ps.setString(16,projectInput.getPartialCriteria());
+            ps.setString(17,projectInput.getFailedCriteria());
+            ps.setString(18,projectInput.getCustomerCode());
+            ps.setString(19,projectInput.getCustomerProjectId());
+
             int id = ps.executeUpdate();
             ps.close();
             LOGGER.info("---------------MetaServiceDaoImpl Ends updateStore----------------\n");
