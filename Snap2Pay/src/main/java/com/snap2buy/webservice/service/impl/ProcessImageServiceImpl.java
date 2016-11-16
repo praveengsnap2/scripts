@@ -886,7 +886,7 @@ public class ProcessImageServiceImpl implements ProcessImageService {
 		String storeId = inputObject.getStoreId();
 		List<String> storeIdsToRecompute = null;
 		if ( storeId.equalsIgnoreCase("all") ){//If not supplied in user input, recompute all
-			storeIdsToRecompute = processImageDao.getProjectStoreIds(customerCode, customerProjectId,true);
+			storeIdsToRecompute = processImageDao.getProjectStoreIdsForRecompute(customerCode, customerProjectId);
 		} else {
 			storeIdsToRecompute = Arrays.asList(storeId.split("\\s*,\\s*"));
 		}

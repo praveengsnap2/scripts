@@ -55,5 +55,6 @@ public interface ProcessImageDao {
 			String countDistinctUpc, String sumFacing, String sumUpcConfidence,	String resultCode, String status, String imageUrl);
 	public void saveRepResponses(String customerCode, String customerProjectId,	String storeId, Map<String, String> repResponses);
 	Map<String, String> getRepResponsesByStore(String customerCode,	String customerProjectId, String storeId);
+	public List<String> getProjectStoreIdsForRecompute(String customerCode,	String customerProjectId);
 
 }

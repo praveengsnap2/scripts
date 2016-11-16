@@ -2367,4 +2367,42 @@ public class ProcessImageDaoImpl implements ProcessImageDao {
             }
         }
 	}
+
+	@Override
+	public List<String> getProjectStoreIdsForRecompute(String customerCode,
+			String customerProjectId) {
+		LOGGER.info("---------------ProcessImageDaoImpl Starts getProjectStoreIdsForRecompute ----------------\n");
+		List<String> storeIdsForProject = new ArrayList<String>();
+		StringBuilder getAllStoresForRecomputeSqlBuilder = new StringBuilder("SELECT DISTINCT(storeId) FROM ProjectStoreResult WHERE customerCode=? AND customerProjectId=?");
+		
+		Connection conn = null;
+	    try {
+	        conn = dataSource.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(getAllStoresForRecomputeSqlBuilder.toString());
+	        ps.setString(1, customerCode);
+	        ps.setString(2, customerProjectId);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        while (rs.next()) {
+	        	storeIdsForProject.add(rs.getString("storeId"));
+	        }
+	        rs.close();
+	        ps.close();
+	     } catch (SQLException e) {
+	         LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	         LOGGER.error("exception", e);
+	         throw new RuntimeException(e);
+	     } finally {
+	         if (conn != null) {
+	           try {   
+	            	 conn.close();
+                } catch (SQLException e) {
+	                 LOGGER.error("EXCEPTION [" + e.getMessage() + " , " + e);
+	                 LOGGER.error("exception", e);
+	            }
+	         }
+	         LOGGER.info("---------------ProcessImageDaoImpl Ends getProjectStoreIdsForRecompute ----------------\n");
+	      }
+		return storeIdsForProject;
+	}
 }
